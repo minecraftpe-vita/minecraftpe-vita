@@ -718,6 +718,29 @@ void Minecraft::tickInput() {
 					#endif
 				}
 			#endif
+
+			// PATCH:
+			// make controls nicer - Li
+
+			#if defined(_VITA) || defined(_WIN32)
+			if (key == Keyboard::KEY_E) {
+				// open inventory
+				screenChooser.setScreen(SCREEN_BLOCKSELECTION);
+			}
+			if (key == Keyboard::KEY_ESCAPE) {
+				// pause the game
+				pauseGame(false);
+			}
+			if(key == Keyboard::KEY_K) {
+				// drop currently selected inventory slot.
+
+				if (player->inventory->getItem(player->inventory->selected)) {
+					player->inventory->dropSlot(player->inventory->selected, false);
+				}
+
+			}
+			#endif
+
 			#if defined(RPI)
 				if (key == Keyboard::KEY_E) {
 					screenChooser.setScreen(SCREEN_BLOCKSELECTION);
@@ -835,7 +858,7 @@ void Minecraft::tickInput() {
 			#endif
 
 			#ifndef RPI
-				if (key == 82)
+				if (key == 82) // R ???
 					pauseGame(false);
 			#else
 				if (key == Keyboard::KEY_ESCAPE)

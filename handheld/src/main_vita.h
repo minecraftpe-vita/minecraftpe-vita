@@ -17,6 +17,7 @@
 #include <psp2/ctrl.h>
 #include <psp2/gxm.h>
 #include <psp2/net/net.h>
+#include <psp2/apputil.h>
 #include <psp2/net/netctl.h>
 #include <gpu_es4/psp2_pvr_hint.h>
 
@@ -320,14 +321,15 @@ void handleController() {
 	sceCtrlReadBufferPositive(0, &ctrl, 1);
 
 	//sceClibPrintf("ctrl.rx = %d ctrl.ry = %d\n", ctrl.rx, ctrl.ry);
+	trackpadPress(2, ctrl.rx, ctrl.ry);
 	trackpadPress(1, ctrl.lx, ctrl.ly);
-    trackpadPress(2, ctrl.rx, ctrl.ry);
 
 	uint32_t changedButtons = ctrl.buttons ^ prevCtrl.buttons;
 	prevCtrl = ctrl;
 	if(changedButtons) {
 		//sceClibPrintf("changedButtons = %08x\n", changedButtons);
 	}
+	// dpad movement .. (maybe controls should be simular to LCE (?))
 	if(changedButtons & SCE_CTRL_UP) {
 		Keyboard::feed(Keyboard::KEY_W, BTN_STATE(ctrl.buttons, SCE_CTRL_UP));
 	}
@@ -343,18 +345,58 @@ void handleController() {
 	if(changedButtons & SCE_CTRL_SQUARE) {
 		Keyboard::feed(Keyboard::KEY_E, BTN_STATE(ctrl.buttons, SCE_CTRL_SQUARE));
 	}
+
+	// sneak
 	if(changedButtons & SCE_CTRL_CIRCLE) {
 		Keyboard::feed(Keyboard::KEY_LSHIFT, BTN_STATE(ctrl.buttons, SCE_CTRL_CIRCLE));
 	}
+	// jump
 	if(changedButtons & SCE_CTRL_CROSS) {
 		Keyboard::feed(Keyboard::KEY_SPACE, BTN_STATE(ctrl.buttons, SCE_CTRL_CROSS));
 	}
+
+	// crafting menu
+	if(changedButtons & SCE_CTRL_SQUARE) {
+		Keyboard::feed(Keyboard::KEY_Q, BTN_STATE(ctrl.buttons, SCE_CTRL_SQUARE));
+	}
+	// drop item
+	if(changedButtons & SCE_CTRL_CIRCLE) {
+		Keyboard::feed(Keyboard::KEY_K, BTN_STATE(ctrl.buttons, SCE_CTRL_CIRCLE));
+	}
+	// inventory item
+	if(changedButtons & SCE_CTRL_TRIANGLE) {
+		Keyboard::feed(Keyboard::KEY_E, BTN_STATE(ctrl.buttons, SCE_CTRL_TRIANGLE));
+	}
+
+	// pause
+	if(changedButtons & SCE_CTRL_START) {
+		Keyboard::feed(Keyboard::KEY_ESCAPE, BTN_STATE(ctrl.buttons, SCE_CTRL_START));
+	}
+
+	// psvita: mouse
+	if(changedButtons & SCE_CTRL_RTRIGGER) {
+		Mouse::feed(MouseAction::ACTION_RIGHT, BTN_STATE(ctrl.buttons, SCE_CTRL_RTRIGGER), width / 2, height / 2);
+	}
+	if(changedButtons & SCE_CTRL_LTRIGGER) {
+		Mouse::feed(MouseAction::ACTION_LEFT, BTN_STATE(ctrl.buttons, SCE_CTRL_LTRIGGER), width / 2, height / 2);
+	}
+
+	// pstv: mouse
+	if(changedButtons & SCE_CTRL_R1) {
+		Mouse::feed(MouseAction::ACTION_RIGHT, BTN_STATE(ctrl.buttons, SCE_CTRL_R1), width / 2, height / 2);
+	}
+	if(changedButtons & SCE_CTRL_L1) {
+		Mouse::feed(MouseAction::ACTION_LEFT, BTN_STATE(ctrl.buttons, SCE_CTRL_L1), width / 2, height / 2);
+	}
+
 }
 
 
 int main(int argc, char** argv) {
 	int ret;
 	sceSysmoduleLoadModule(SCE_SYSMODULE_NET);
+	sceSysmoduleLoadModule(SCE_SYSMODULE_APPUTIL);
+
 	static char netMem[0x10000];
 	SceNetInitParam netInit = {
 		.memory = netMem,
@@ -364,10 +406,19 @@ int main(int argc, char** argv) {
 	sceNetInit(&netInit);
 	sceNetCtlInit();
 
+	SceAppUtilInitParam initParam = {0};
+	SceAppUtilBootParam bootParam = {0};
+
+	sceAppUtilInit(&initParam, &bootParam);
+	sceAppUtilCacheMount();
+
 	MAIN_CLASS* app = new MAIN_CLASS();
+	//app->externalStoragePath = "savedata0:.minecraft/";
+	//app->externalCacheStoragePath = "cache0:.minecraft/";
+	// TODO: figure out why using savedata and cache is slow ?
+
 	app->externalStoragePath = "ux0:data/.minecraft/";
 	app->externalCacheStoragePath = "ux0:data/.minecraft/";
-
 	int commandPort = 0;
 	if (argc > 1) {
 		commandPort = atoi(argv[1]);
