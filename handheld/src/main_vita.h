@@ -6,8 +6,6 @@
 #include "EGL/egl.h"
 #include "EGL/eglext.h"
 
-#include <fstream>
-#include <png.h>
 
 #include <psp2/kernel/modulemgr.h>
 #include <psp2/sysmodule.h>

@@ -105,7 +105,7 @@ void ExternalFileLevelStorageSource::getLevelList(LevelSummaryList& dest)
 			LOGI("Error listing base folder %s: %d", basePath.c_str(), ret);
 			return;
 		}
-		if(SCE_SO_ISDIR(ent.d_stat.st_mode)) {
+		if(SCE_S_ISDIR(ent.d_stat.st_mode)) {
 			addLevelSummaryIfExists(dest, ent.d_name);
 		}
 	}
