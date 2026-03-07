@@ -45,20 +45,10 @@ public:
 		static const Option LEFT_HANDED;
 		static const Option USE_TOUCHSCREEN;
 		static const Option USE_TOUCH_JOYPAD;
-		static const Option AUTO_JUMP;
 		static const Option DESTROY_VIBRATION;
-		static const Option HIGH_PERFORMANCE;
 
 		static const Option PIXELS_PER_MILLIMETER;
-
 		static const Option RENDER_DEBUG;
-		static const Option FPS_METER;
-		static const Option VSYNC;
-		static const Option RPI_MENUS;
-		static const Option DAY_COUNTER;
-		static const Option FOV;
-		static const Option SHOW_COORDINATES;
-		static const Option MSAA_4X;
 
 		/*
 		 s tatic Option* getItem(int id) {    *
@@ -124,14 +114,12 @@ public:
 	int viewDistance;
 	bool bobView;
 	bool anaglyph3d;
-	bool vsync;
-	bool msaa4x;
+	bool limitFramerate;
 	bool fancyGraphics;
 	bool ambientOcclusion;
 	bool useMouseForDigging;
 	bool isLeftHanded;
 	bool destroyVibration;
-	bool highPerformance;
 	//std::string skin;
 
 	KeyMapping keyUp;
@@ -149,8 +137,6 @@ public:
 	KeyMapping keyUse;
 
 	KeyMapping keyMenuNext;
-
-	bool rpiMenus;
 	KeyMapping keyMenuPrevious;
 	KeyMapping keyMenuOk;
 	KeyMapping keyMenuCancel;
@@ -162,20 +148,14 @@ public:
 
 	int difficulty;
 	bool hideGui;
-	int thirdPersonView;
+	bool thirdPersonView;
 	bool renderDebug;
-	bool debugLogging;
-	int fpsDisplay;
-	bool autoJump;
 
 	bool isFlying;
 	bool smoothCamera;
 	bool fixedCamera;
 	float flySpeed;
 	float cameraSpeed;
-	bool showDayCounter;
-	float fovSetting;
-	bool showCoordinates;
 	int guiScale;
 	std::string username;
 
@@ -228,24 +208,19 @@ public:
 		}
 		if (option == &Option::GUI_SCALE)		guiScale = (guiScale + dir) & 3;
 		if (option == &Option::VIEW_BOBBING)	bobView = !bobView;
-		if (option == &Option::THIRD_PERSON)	thirdPersonView = (thirdPersonView + 1) % 3;
+		if (option == &Option::THIRD_PERSON)	thirdPersonView = !thirdPersonView;
 		if (option == &Option::HIDE_GUI)		hideGui = !hideGui;
 		if (option == &Option::SERVER_VISIBLE)		serverVisible = !serverVisible;
 		if (option == &Option::LEFT_HANDED) isLeftHanded = !isLeftHanded;
 		if (option == &Option::USE_TOUCHSCREEN) useTouchScreen = !useTouchScreen;
 		if (option == &Option::USE_TOUCH_JOYPAD) isJoyTouchArea = !isJoyTouchArea;
-		if (option == &Option::AUTO_JUMP) autoJump = !autoJump;
 		if (option == &Option::DESTROY_VIBRATION) destroyVibration = !destroyVibration;
-		if (option == &Option::HIGH_PERFORMANCE) highPerformance = !highPerformance;
 		if (option == &Option::RENDER_DEBUG) renderDebug = !renderDebug;
-		if (option == &Option::FPS_METER) fpsDisplay = (fpsDisplay + 1) % 3;
 		if (option == &Option::ANAGLYPH) {
 			anaglyph3d = !anaglyph3d;
 			//minecraft->textures.reloadAll();
 		}
 		if (option == &Option::LIMIT_FRAMERATE) {}
-		if (option == &Option::VSYNC) vsync = !vsync;
-		if (option == &Option::MSAA_4X) msaa4x = !msaa4x;
 		if (option == &Option::DIFFICULTY) difficulty = (difficulty + dir) & 3;
 		if (option == &Option::GRAPHICS) {
 			fancyGraphics = !fancyGraphics;
@@ -255,11 +230,6 @@ public:
 			ambientOcclusion = !ambientOcclusion;
 			//minecraft->levelRenderer.allChanged();
 		}
-		if (option == &Option::RPI_MENUS) {
-			rpiMenus = !rpiMenus;
-		}
-		if (option == &Option::DAY_COUNTER) showDayCounter = !showDayCounter;
-		if (option == &Option::SHOW_COORDINATES) showCoordinates = !showCoordinates;
 		notifyOptionUpdate(option, getBooleanValue(option));
 		save();
 	}
@@ -275,7 +245,6 @@ public:
 		if (item == &Option::SENSITIVITY) return sensitivity;
 		if (item == &Option::RENDER_DISTANCE) return viewDistance;
 		if (item == &Option::PIXELS_PER_MILLIMETER) return pixelsPerMillimeter;
-		if (item == &Option::FOV) return (fovSetting - 40.0f) / 60.0f;
 		return 0;
 	}
 
@@ -304,26 +273,10 @@ public:
 			return useTouchScreen;
 		if (item == &Option::USE_TOUCH_JOYPAD)
 			return isJoyTouchArea;
-		if (item == &Option::AUTO_JUMP)
-			return autoJump;
 		if (item == &Option::DESTROY_VIBRATION)
 			return destroyVibration;
-		if (item == &Option::HIGH_PERFORMANCE)
-			return highPerformance;
 		if (item == &Option::RENDER_DEBUG)
 			return renderDebug;
-		if (item == &Option::FPS_METER)
-			return fpsDisplay > 0;
-		if (item == &Option::VSYNC)
-			return vsync;
-		if (item == &Option::MSAA_4X)
-			return msaa4x;
-		if (item == &Option::RPI_MENUS)
-			return rpiMenus;
-		if (item == &Option::DAY_COUNTER)
-			return showDayCounter;
-		if (item == &Option::SHOW_COORDINATES)
-			return showCoordinates;
 		return false;
 	}
 

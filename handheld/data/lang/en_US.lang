@@ -188,6 +188,12 @@ options.lefthanded=Left Handed
 options.usetouchscreen=Use Touchscreen
 options.usetouchpad=Use Touchpad
 options.destroyvibration=Vibration Feedback
+options.renderDebug=Debug Rendering
+
+options.group.video=Video Settings
+options.group.game=Game Settings
+options.group.control=Control Settings
+options.group.audio=Audio Settings
 
 performance.max=Max FPS
 performance.balanced=Balanced

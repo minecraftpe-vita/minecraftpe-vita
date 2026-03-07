@@ -4,6 +4,7 @@
 #include "../../../platform/log.h"
 #include "../../../util/Mth.h"
 #include "../../renderer/Textures.h"
+#include "../../sound/SoundEngine.h"
 
 
 ImageButton::ImageButton(int id, const std::string& msg)
@@ -154,6 +155,7 @@ void OptionButton::updateImage(Options* options) {
 void OptionButton::mouseClicked( Minecraft* minecraft, int x, int y, int buttonNum ) {
 	if(buttonNum == MouseAction::ACTION_LEFT) {
 		if(clicked(minecraft, x, y)) {
+			minecraft->soundEngine->playUI("random.click", 1, 1);
 			toggle(&minecraft->options);
 		}
 	}

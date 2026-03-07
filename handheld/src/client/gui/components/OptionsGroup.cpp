@@ -5,6 +5,7 @@
 #include "Slider.h"
 #include "Button.h"
 #include "../../../locale/I18n.h"
+#include "../../sound/SoundEngine.h"
 OptionsGroup::OptionsGroup( std::string labelID )  {
 	label = I18n::get(labelID);
 }
@@ -74,6 +75,7 @@ public:
 	}
 	virtual void mouseClicked(Minecraft* minecraft, int x, int y, int buttonNum) {
 		if(buttonNum == MouseAction::ACTION_LEFT && clicked(minecraft, x, y)) {
+			minecraft->soundEngine->playUI("random.click", 1, 1);
 			minecraft->options.toggle(_option, 1);
 			std::string key = minecraft->options.getMessage(_option);
 			msg = I18n::get(key);
@@ -90,6 +92,7 @@ public:
 	}
 	virtual void mouseClicked(Minecraft* minecraft, int x, int y, int buttonNum) {
 		if(buttonNum == MouseAction::ACTION_LEFT && clicked(minecraft, x, y)) {
+			minecraft->soundEngine->playUI("random.click", 1, 1);
 			minecraft->options.toggle(_option, 1);
 			std::string key = minecraft->options.getMessage(_option);
 			msg = I18n::get(key);

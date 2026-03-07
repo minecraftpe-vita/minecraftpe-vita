@@ -14,6 +14,7 @@ public:
 	void setSettingsPath(const std::string& path) { settingsPath = path; }
 	
 private:
+	void createDirectories(std::string& path);
 	std::string settingsPath;
 };
 

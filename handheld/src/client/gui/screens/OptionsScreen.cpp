@@ -14,7 +14,6 @@ OptionsScreen::OptionsScreen()
   bHeader(NULL),
   btnNextPage(NULL),
   btnPrevPage(NULL),
-  btnResetFov(NULL),
   optionPane(NULL) {
   	isEditingUsername = false;
   	btnUsername = NULL;
@@ -39,10 +38,6 @@ OptionsScreen::~OptionsScreen() {
 		delete btnPrevPage;
 		btnPrevPage = NULL;
 	}
-	if(btnResetFov != NULL) {
-		delete btnResetFov;
-		btnResetFov = NULL;
-	}
 	if(optionPane != NULL) {
 		delete optionPane;
 		optionPane = NULL;
@@ -66,9 +61,6 @@ void OptionsScreen::init() {
 	buttons.push_back(btnPrevPage);
 	buttons.push_back(btnNextPage);
 	buttons.push_back(btnClose);
-
-	btnResetFov = new Button(101, "Reset FOV");
-	buttons.push_back(btnResetFov);
 	
 	generateOptionScreens();
 }
@@ -86,12 +78,6 @@ void OptionsScreen::setupPositions() {
 	btnNextPage->height = btnClose->height;
 	btnNextPage->x = width - btnNextPage->width - 20;
 	btnNextPage->y = height - btnNextPage->height - 10;
-
-	btnResetFov->width = 80;
-	btnResetFov->height = btnClose->height;
-	btnResetFov->x = (width - btnResetFov->width) / 2;
-	btnResetFov->y = height - btnResetFov->height - 10;
-	btnResetFov->visible = (currentPage == 0 && minecraft->options.fovSetting != 70.0f);
 
 	bHeader->x = 0;
 	bHeader->y = 0;
@@ -148,7 +134,6 @@ void OptionsScreen::buttonClicked( Button* button ) {
 #endif
 		isEditingUsername = true;
 	} else if (button->id == 101) {
-		minecraft->options.fovSetting = 70.0f;
 		minecraft->options.save();
 		generateOptionScreens();
 	}
@@ -164,47 +149,39 @@ void OptionsScreen::generateOptionScreens() {
 	if (bHeader) bHeader->msg = buf;
 	
 	if (currentPage == 0) {
-		optionPane->createOptionsGroup("Video")
+		optionPane->createOptionsGroup("options.group.video")
 			.addOptionItem(&Options::Option::GRAPHICS, minecraft)
-			.addOptionItem(&Options::Option::FOV, minecraft)
 			.addOptionItem(&Options::Option::RENDER_DISTANCE, minecraft)
-			.addOptionItem(&Options::Option::VSYNC, minecraft)
-			.addOptionItem(&Options::Option::MSAA_4X, minecraft)
 			.addOptionItem(&Options::Option::AMBIENT_OCCLUSION, minecraft)
 			.addOptionItem(&Options::Option::VIEW_BOBBING, minecraft)
 			.addOptionItem(&Options::Option::ANAGLYPH, minecraft)
-			.addOptionItem(&Options::Option::HIGH_PERFORMANCE, minecraft)
+			.addOptionItem(&Options::Option::RENDER_DEBUG, minecraft)
             .addOptionItem(&Options::Option::GUI_SCALE, minecraft);
 	} else if (currentPage == 1) {
-		optionPane->createOptionsGroup("Game")
+		optionPane->createOptionsGroup("options.group.game")
 			.addOptionItem(&Options::Option::DIFFICULTY, minecraft)
 			.addOptionItem(&Options::Option::THIRD_PERSON, minecraft)
-			.addOptionItem(&Options::Option::DAY_COUNTER, minecraft)
-			.addOptionItem(&Options::Option::SHOW_COORDINATES, minecraft)
 			.addOptionItem(&Options::Option::HIDE_GUI, minecraft)
-			.addOptionItem(&Options::Option::SERVER_VISIBLE, minecraft)
-			.addOptionItem(&Options::Option::FPS_METER, minecraft)
-			.addOptionItem(&Options::Option::RPI_MENUS, minecraft);
+			.addOptionItem(&Options::Option::SERVER_VISIBLE, minecraft);
 	} else if (currentPage == 2) {
-		optionPane->createOptionsGroup("Controls")
+		optionPane->createOptionsGroup("options.group.control")
 			.addOptionItem(&Options::Option::SENSITIVITY, minecraft)
 			.addOptionItem(&Options::Option::INVERT_MOUSE, minecraft)
 			.addOptionItem(&Options::Option::LEFT_HANDED, minecraft)
 			.addOptionItem(&Options::Option::USE_TOUCHSCREEN, minecraft)
 			.addOptionItem(&Options::Option::USE_TOUCH_JOYPAD, minecraft)
-			.addOptionItem(&Options::Option::AUTO_JUMP, minecraft)
 			.addOptionItem(&Options::Option::DESTROY_VIBRATION, minecraft);
 
-		optionPane->createOptionsGroup("Sound & Username")
-			.addOptionItem(&Options::Option::SOUND, minecraft)
+		optionPane->createOptionsGroup("options.group.audio")
+			.addOptionItem(&Options::Option::SOUND, minecraft);
+#ifndef __VITA__
 			.addOptionTextEntry(minecraft->options.username, 100, minecraft, &btnUsername);
+#endif
 	}
 	
 	if (optionPane != NULL) {
 		this->setupPositions();
 	}
-	if (btnResetFov)
-		btnResetFov->visible = (currentPage == 0 && minecraft->options.fovSetting != 70.0f);
 }
 
 void OptionsScreen::mouseClicked( int x, int y, int buttonNum ) {

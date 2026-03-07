@@ -33,7 +33,6 @@ private:
 	ImageButton* btnClose;
 	Button* btnNextPage;
 	Button* btnPrevPage;
-	Button* btnResetFov;
 	OptionsPane* optionPane;
 	bool isEditingUsername;
 	Button* btnUsername;
