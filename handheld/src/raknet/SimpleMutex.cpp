@@ -65,8 +65,8 @@ SimpleMutex::~SimpleMutex()
 #ifdef _WIN32
 	//	CloseHandle(hMutex);
 	DeleteCriticalSection(&criticalSection);
-
-
+#elif defined(__VITA__)
+	sceKernelDeleteMutex(mutex);
 
 
 
@@ -127,10 +127,10 @@ void SimpleMutex::Lock(void)
 	EnterCriticalSection(&criticalSection);
 
 
-
-
-
-
+#elif defined(__VITA__)
+	int error = sceKernelLockMutex(mutex, 1, NULL);
+	(void) error;
+	RakAssert(error==0);
 #else
 	int error = pthread_mutex_lock(&hMutex);
 	(void) error;
@@ -147,10 +147,10 @@ void SimpleMutex::Unlock(void)
 	LeaveCriticalSection(&criticalSection);
 
 
-
-
-
-
+#elif defined(__VITA__)
+	int error = sceKernelUnlockMutex(mutex, 1);
+	(void) error;
+	RakAssert(error==0);
 #else
 	int error = pthread_mutex_unlock(&hMutex);
 	(void) error;
@@ -170,8 +170,8 @@ void SimpleMutex::Init(void)
 
 
 
-
-
+#elif defined(__VITA__)
+	mutex = sceKernelCreateMutex("SimpleMutex", 0, 0, NULL);
 #else
 	int error = pthread_mutex_init(&hMutex, 0);
 	(void) error;

@@ -361,6 +361,7 @@ add_executable(minecraftcpp
   ${HANDHELD}/client/gui/GuiComponent.cpp
   ${HANDHELD}/client/gui/Gui.cpp
   ${HANDHELD}/client/gui/Font.cpp
+  ${HANDHELD}/client/gui/Keyboard.cpp  
   ${HANDHELD}/client/gui/components/OptionsPane.cpp
   ${HANDHELD}/client/gui/components/ScrolledSelectionList.cpp
   ${HANDHELD}/client/gui/components/InventoryPane.cpp
@@ -439,14 +440,12 @@ target_link_libraries(minecraftcpp PUBLIC
   SceCtrl_stub
   SceDisplay_stub
   SceAudio_stub
-  SceNgs_stub
+  SceNgsUser_stub
   SceNet_stub
   SceAppUtil_stub
   SceNetCtl_stub
 
-  SceNgs
   raknet
-  pthread
   png
   z
 )

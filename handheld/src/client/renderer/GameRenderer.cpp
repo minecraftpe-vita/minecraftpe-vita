@@ -219,6 +219,10 @@ void GameRenderer::render(float a) {
 		if (mc->screen && !mc->screen->isInGameScreen())
 			sleepMs(15);
     }
+
+    if(mc->platform()->isKeyboardVisible()) {
+        //mc->keyboard.render(mc, xMouse, yMouse);
+    }
 }
 
 /*public*/

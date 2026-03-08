@@ -6,8 +6,8 @@
 #if   defined(_WIN32)
 #include <windows.h>
 
-
-
+#elif defined(__VITA__)
+#include <psp2/kernel/threadmgr.h>
 #else
 	#include <pthread.h>
 	#include <sys/types.h>
@@ -39,9 +39,9 @@ protected:
 	HANDLE eventList;
 
 
-
-
-
+#elif defined(__VITA__)
+	SceUID mutex;
+	SceUID cond;
 #else
 	SimpleMutex isSignaledMutex;
 	bool isSignaled;
