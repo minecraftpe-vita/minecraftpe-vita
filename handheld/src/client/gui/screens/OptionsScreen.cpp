@@ -72,7 +72,7 @@ void OptionsScreen::init() {
 }
 
 void OptionsScreen::setupPositions() {
-	btnClose->x = width - btnClose->width - 20;
+	btnClose->x = width - btnClose->width;
 	btnClose->y = 0;
 
 	btnPrevPage->width = 40;
@@ -87,7 +87,7 @@ void OptionsScreen::setupPositions() {
 
 	bHeader->x = 0;
 	bHeader->y = 0;
-	bHeader->width = width; 
+	bHeader->width = width - btnClose->width;
 	bHeader->height = btnClose->height;
 
 	if (optionPane != NULL) {

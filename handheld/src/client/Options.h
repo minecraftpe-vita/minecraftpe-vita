@@ -257,7 +257,7 @@ public:
 		if (item == &Option::ANAGLYPH)
 			return anaglyph3d;
 		if (item == &Option::LIMIT_FRAMERATE)
-			return false;
+			return limitFramerate;
 		if (item == &Option::AMBIENT_OCCLUSION)
 			return ambientOcclusion;
 		if (item == &Option::THIRD_PERSON)
