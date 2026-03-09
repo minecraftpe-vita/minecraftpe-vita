@@ -324,6 +324,7 @@ int main(int argc, char** argv) {
 	sceSysmoduleLoadModule(SCE_SYSMODULE_NET);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_APPUTIL);
 	sceSysmoduleLoadModule(SCE_SYSMODULE_NP);
+	sceSysmoduleLoadModule(SCE_SYSMODULE_IME);
 
 	static char netMem[0x10000];
 	SceNetInitParam netInit = {

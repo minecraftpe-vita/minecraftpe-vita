@@ -444,6 +444,7 @@ target_link_libraries(minecraftcpp PUBLIC
   SceAppUtil_stub
   SceNetCtl_stub
   SceNpManager_stub
+  SceIme_stub
 
   SceNgs
   raknet

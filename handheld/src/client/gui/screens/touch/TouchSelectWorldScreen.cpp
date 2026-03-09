@@ -401,8 +401,12 @@ void SelectWorldScreen::tick()
 			minecraft->hostMultiplayer();
 			minecraft->setScreen(new ProgressScreen());
 			_hasStartedLevel = true;
-		#elif defined(WIN32) || defined(__VITA__)
+		#elif defined(_WIN32)
 			std::string name = getUniqueLevelName("perf");
+			minecraft->setScreen(new SimpleChooseLevelScreen(name));
+		#elif defined(__VITA__)
+			StringVector vec = minecraft->platform()->getUserInput();
+			std::string name = getUniqueLevelName(vec[0]);
 			minecraft->setScreen(new SimpleChooseLevelScreen(name));
 		#else
 			int status = minecraft->platform()->getUserInputStatus();
