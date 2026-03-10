@@ -54,8 +54,9 @@ Gui::~Gui()
 {
 	if (_slotFont)
 		delete _slotFont;
-
+#ifndef __3DS__
 	glDeleteBuffers(1, &_inventoryRc.vboId);
+#endif
 }
 
 void Gui::render(float a, bool mouseFree, int xMouse, int yMouse) {
@@ -526,7 +527,9 @@ void Gui::renderProgressIndicator( const bool isTouchInterface, const int screen
 			const float x = InvGuiScale * minecraft->inputHolder->mousex;
 			const float y = InvGuiScale * minecraft->inputHolder->mousey;
 			glTranslatef2(x, y, 0);
+#ifndef __3DS__
 			drawArrayVT(rcFeedbackOuter.vboId, rcFeedbackOuter.vertexCount, 24);
+#endif
 			glTranslatef2(-x, -y, 0);
 
 			glEnable2(GL_TEXTURE_2D);
@@ -547,12 +550,16 @@ void Gui::renderProgressIndicator( const bool isTouchInterface, const int screen
 			const float y = InvGuiScale * minecraft->inputHolder->mousey;
 			glPushMatrix2();
 			glTranslatef2(x, y, 0);
+#ifndef __3DS__
 			drawArrayVT(rcFeedbackOuter.vboId, rcFeedbackOuter.vertexCount, 24);
+#endif
 			glScalef2(0.5f + progress, 0.5f + progress, 1);
 			//glDisable2(GL_CULL_FACE);
 			glColor4f2(1, 1, 1, 1);
 			glBlendFunc2(GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR);
+#ifndef __3DS__
 			drawArrayVT(rcFeedbackInner.vboId, rcFeedbackInner.vertexCount, 24, GL_TRIANGLE_FAN);
+#endif
 			glPopMatrix2();
 
 			glDisable(GL_BLEND);

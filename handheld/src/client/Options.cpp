@@ -64,7 +64,7 @@ void Options::initDefaultValues() {
 	keyDestroy=KeyMapping("key.destroy", 88);
 	keyUse   = KeyMapping("key.use", Keyboard::KEY_U);
 	#endif
-	#ifdef __VITA__
+	#if defined(__VITA__) || defined(__SWITCH__)
 	keyCraft   = KeyMapping("key.crafting", Keyboard::KEY_C);
 	keyUse     = KeyMapping("key.use", Keyboard::KEY_X);
 	keyDestroy = KeyMapping("key.destroy", Keyboard::KEY_Z);

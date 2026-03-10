@@ -66,12 +66,18 @@ void PerfRenderer::renderFpsMeter( float tickTime )
 	glMatrixMode(GL_PROJECTION);
 	glEnable2(GL_COLOR_MATERIAL);
 	glLoadIdentity2();
+
+#ifdef __3DS__
+	glOrtho(0, (GLfloat)_mc->width, (GLfloat)_mc->height, 0, 1000, 3000);
+#else
 	glOrthof(0, (GLfloat)_mc->width, (GLfloat)_mc->height, 0, 1000, 3000);
+#endif
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity2();
 	glTranslatef2(0, 0, -2000);
-
+#ifndef __3DS__
 	glLineWidth(1);
+#endif
 	glDisable2(GL_TEXTURE_2D);
 	Tesselator& t = Tesselator::instance;
 

@@ -351,7 +351,7 @@ void SelectWorldScreen::buttonClicked(Button* button)
 {
 	if (button->id == bCreate.id) {
 		if (_state == _STATE_DEFAULT && !_hasStartedLevel) {
-#ifndef __VITA__
+#if !defined(__VITA__) && !defined(__SWITCH__)
 			minecraft->platform()->createUserInput(DialogDefinitions::DIALOG_CREATE_NEW_WORLD);
 #endif
 			_state = _STATE_CREATEWORLD;
@@ -407,7 +407,7 @@ void SelectWorldScreen::tick()
 		#elif defined(_WIN32)
 			std::string name = getUniqueLevelName("perf");
 			minecraft->setScreen(new SimpleChooseLevelScreen(name));
-		#elif defined(__VITA__)
+		#elif defined(__VITA__) || defined(__SWITCH__)
 			minecraft->setScreen(new CreateWorldScreen());
 			return;
 		#else

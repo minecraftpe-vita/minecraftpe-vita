@@ -233,7 +233,11 @@ void NinecraftApp::initGLStates()
 	//glClearDepthf(1.0f);
 	glEnable2(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
+#ifdef __3DS__
+	glDepthRange(0, 1);
+#else
 	glDepthRangef(0, 1);
+#endif
 	glEnable2(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.1f);
 	glEnable(GL_CULL_FACE);

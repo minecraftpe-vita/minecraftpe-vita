@@ -24,7 +24,7 @@ using namespace RakNet;
 SocketLayerOverride *SocketLayer::slo=0;
 
 #ifdef _WIN32
-#elif defined(__VITA__)
+#elif defined(__VITA__) || defined(__SWITCH__) || defined(__3DS__)
 #include <string.h> // memcpy
 #include <unistd.h>
 #include <fcntl.h>
@@ -32,9 +32,14 @@ SocketLayerOverride *SocketLayer::slo=0;
 #include <errno.h>  // error numbers
 #include <stdio.h> // RAKNET_DEBUG_PRINTF
 #include <sys/socket.h>
+#if !defined(__SWITCH__) &&  !defined(__3DS__)
 #include <psp2/net/netctl.h>
 #define SCE_NET_CTL_INFO_IP_ADDRESS 15
 #define SCE_NET_CTL_INFO_NETMASK 16
+#elif defined(__SWITCH__)
+#include <switch.h>
+#endif
+#include <arpa/inet.h>
 #else
 #include <string.h> // memcpy
 #include <unistd.h>
@@ -371,86 +376,6 @@ SOCKET SocketLayer::CreateBoundSocket_PS3Lobby( unsigned short port, bool blocki
 	(void) blockingSocket;
 	(void) forceHostAddress;
 	(void) socketFamily;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	return 0;
 
 }
@@ -460,92 +385,12 @@ SOCKET SocketLayer::CreateBoundSocket_PSP2( unsigned short port, bool blockingSo
 	(void) blockingSocket;
 	(void) forceHostAddress;
 	(void) socketFamily;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	return 0;
 
 }
 SOCKET SocketLayer::CreateBoundSocket_Old( unsigned short port, bool blockingSocket, const char *forceHostAddress, unsigned int sleepOn10048, unsigned int extraSocketOptions )
 {
 	(void) blockingSocket;
-
 	int ret;
 	SOCKET listenSocket;
 	sockaddr_in listenerSocketAddress;
@@ -593,14 +438,6 @@ SOCKET SocketLayer::CreateBoundSocket_Old( unsigned short port, bool blockingSoc
 		//		RAKNET_DEBUG_PRINTF("Binding any on port %i\n", port);
 		listenerSocketAddress.sin_addr.s_addr = INADDR_ANY;
 	}
-
-
-
-
-
-
-
-
 	// bind our name to the socket
 	ret = bind__( listenSocket, ( struct sockaddr * ) & listenerSocketAddress, sizeof( listenerSocketAddress ) );
 
@@ -1422,8 +1259,22 @@ RakNet::RakString SocketLayer::GetSubNetForSocketAndIp(SOCKET inSock, RakNet::Ra
 
 
 
+#if defined(__SWITCH__)
+	NifmIpV4Address ip, subnet, gw, dns1, dns2;
 
-#if   defined(_WIN32)
+	if (R_SUCCEEDED(nifmGetCurrentIpConfigInfo((u32*)&ip, (u32*)&subnet, (u32*)&gw, (u32*)&dns1, (u32*)&dns2))) {
+		struct in_addr mask_addr;
+
+		memcpy(&mask_addr.s_addr, subnet.addr, 4);
+		netMaskString = inet_ntoa(mask_addr);
+
+		return netMaskString;
+	}
+
+	return "255.255.255.0";
+#elif defined(__3DS__)
+	return "255.255.255.0";
+#elif   defined(_WIN32)
 	INTERFACE_INFO InterfaceList[20];
 	unsigned long nBytesReturned;
 	if (WSAIoctl(inSock, SIO_GET_INTERFACE_LIST, 0, 0, &InterfaceList,

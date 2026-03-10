@@ -52,7 +52,9 @@
 #include "player/input/ControllerTurnInput.h"
 #include "player/input/XperiaPlayInput.h"
 #endif
-
+#if defined(__SWITCH__)
+#include "player/input/NxInput.h"
+#endif
 #if defined(__VITA__)
 #include "player/input/VitaInput.h"
 #include <psp2/power.h>
@@ -743,7 +745,7 @@ void Minecraft::tickInput() {
 			// PATCH:
 			// make controls nicer - Li
 
-			#if defined(__VITA__) || defined(_WIN32)
+			#if defined(__VITA__) || defined(_WIN32) || defined(__SWITCH__)
 				if(true) { //TODO: only do this if the world is loaded ..
 
 					if (key == Keyboard::KEY_E) {
@@ -965,7 +967,7 @@ void Minecraft::tickInput() {
 	handleMouseDown(MouseAction::ACTION_LEFT, isTryingToDestroyBlock);
 	handleMouseClick(buildHandled && bai.isInteract()
 		|| options.useMouseForDigging && Mouse::isButtonDown(MouseAction::ACTION_RIGHT));
-#elif __VITA__
+#elif __VITA__ || defined(__SWITCH__)
 	// can someone explain why ??!!! is interact is dig??
 	handleMouseDown(MouseAction::ACTION_LEFT, isTryingToDestroyBlock && buildHandled);
 #else
@@ -991,7 +993,7 @@ void Minecraft::handleMouseDown(int button, bool down) {
 #ifndef STANDALONE_SERVER
 #ifndef RPI
 	if(player->isUsingItem()) {
-#if defined(__VITA__) || defined(_WIN32) // honestly this seems like just a genuine bug in the game tbh
+#if defined(__VITA__) || defined(_WIN32) || defined(__SWITCH__) // honestly this seems like just a genuine bug in the game tbh
 		if(!down && !Keyboard::isKeyDown(options.keyUse.key) && !Mouse::isButtonDown(MouseAction::ACTION_RIGHT)) {
 #else
 		if(!down && !Keyboard::isKeyDown(options.keyUse.key)) {
@@ -1321,6 +1323,8 @@ void Minecraft::_reloadInput() {
 
 	#if defined(__VITA__)
 		inputHolder = new VitaInputHolder(this, &options);
+	#elif __SWITCH__
+		inputHolder = new NxInputHolder(this, &options);
 	#else
 	if (useTouchscreen()) {
 		inputHolder = new TouchInputHolder(this, &options);
@@ -1450,7 +1454,7 @@ void Minecraft::_levelGenerated()
 		netCallback->levelGenerated(level);
 	}
 
-#if defined(WIN32) || defined(RPI) || defined(__VITA__)
+#if defined(WIN32) || defined(RPI) || defined(__VITA__) || defined(__SWITCH__)
 	if (_commandServer) {
 		delete _commandServer;
 	}

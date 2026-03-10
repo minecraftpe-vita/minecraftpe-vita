@@ -3,8 +3,13 @@
 
 #include "SoundSystem.h"
 
+#ifdef __SWITCH__
+#import <AL/al.h>
+#import <AL/alc.h>
+#else
 #import <OpenAL/al.h>
 #import <OpenAL/alc.h>
+#endif
 
 #include <vector>
 #include <list>

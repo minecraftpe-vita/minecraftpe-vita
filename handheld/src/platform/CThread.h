@@ -10,7 +10,16 @@
 #ifdef WIN32
 	#include <windows.h>
 #endif
-
+#ifdef __SWITCH__
+#include <switch.h>
+#include <inttypes.h>
+#include <pthread.h>
+#endif
+#ifdef __3DS__
+#include <3ds.h>
+#include <inttypes.h>
+#include <pthread.h>
+#endif
 #ifdef __VITA__
 #include <psp2/kernel/threadmgr.h>
 #include <psp2/kernel/clib.h>
@@ -18,7 +27,7 @@
 
 typedef void *( * pthread_fn )( void * );
 
-#if defined(LINUX) || defined(ANDROID) || defined(__APPLE__) || defined(POSIX) || defined(__VITA__)
+#if defined(LINUX) || defined(ANDROID) || defined(__APPLE__) || defined(POSIX) || defined(__VITA__) || defined(__SWITCH__) || defined(__3DS__)
 	#include <pthread.h>
 	#include <unistd.h>
 
@@ -43,7 +52,7 @@ typedef void *( * pthread_fn )( void * );
 		DWORD						m_threadID;
 		HANDLE						m_threadHandle;
 	#endif
-	#if defined(LINUX) || defined(ANDROID) || defined(__APPLE__) || defined(POSIX)
+	#if defined(LINUX) || defined(ANDROID) || defined(__APPLE__) || defined(POSIX) || defined(__SWITCH__) || defined(__3DS__)
 		pthread_fn					mp_threadFunc;
 		pthread_t					m_thread;
 		pthread_attr_t				m_attributes;

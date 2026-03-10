@@ -218,8 +218,9 @@ void ItemInHandRenderer::renderItem(Mob* mob,  ItemInstance* item )
 			glTranslatef2(-15 / 16.0f, -1 / 16.0f, 0);
 		}
 		mc->textures->loadAndBindTexture(renderObject.texture);
-
+#if defined(OPENGL_ES) && !defined(__3DS__)
 		drawArrayVT_NoState(renderObject.chunk.vboId, renderObject.chunk.vertexCount);
+#endif
 		if (renderObject.isFlat)
 			glPopMatrix2();
 	}

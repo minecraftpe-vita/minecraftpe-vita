@@ -20,7 +20,7 @@
 // winsock.h must be linked against WSock32.lib.  If these two are mixed up the flag won't work correctly
 #include <winsock2.h>
 
-#elif defined(__VITA__)
+#elif defined(__VITA__) || defined(__SWITCH__)
 #include <strings.h>
 
 #else

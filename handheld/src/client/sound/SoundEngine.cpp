@@ -30,7 +30,11 @@ void SoundEngine::init( Minecraft* mc, Options* options )
 		loadLibrary();
 	}
 
-#if !defined(PRE_ANDROID23) && !defined(__APPLE__) && !defined(RPI)
+//#if defined(__SWITCH__)
+//	soundSystem.init(); // Вот теперь безопасно! Мы уже внутри main()!
+//#endif
+
+#if !defined(PRE_ANDROID23) && !defined(__APPLE__) && !defined(RPI) && !defined(__SWITCH__)
 	sounds.add("step.cloth", SA_cloth1);
 	sounds.add("step.cloth", SA_cloth2);
 	sounds.add("step.cloth", SA_cloth3);
@@ -148,7 +152,7 @@ void SoundEngine::init( Minecraft* mc, Options* options )
 
 void SoundEngine::enable( bool status )
 {
-#if defined(__APPLE__)
+#if defined(__APPLE__) || defined(__SWITCH__)
 	soundSystem.enable(status);
 #endif
 }
@@ -201,7 +205,7 @@ void SoundEngine::playUI(const std::string& name, float volume, float pitch) {
 	//volume *= 2.0f;
 	mc->platform()->playSound(name, volume, pitch);
 }
-#elif defined(__APPLE__)
+#elif defined(__APPLE__) || defined(__SWITCH__)
 void SoundEngine::play(const std::string& name, float x, float y, float z, float volume, float pitch) {
 	if ((volume *= options->sound) <= 0) return;
 

@@ -40,3 +40,10 @@
 #ifdef __VITA__
     #include "main_vita.h"
 #endif
+
+#ifdef __3DS__
+    #include "main_ctr.h"
+#endif
+#ifdef __SWITCH__
+    #include "main_nx.h"
+#endif

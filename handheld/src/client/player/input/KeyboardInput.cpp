@@ -52,7 +52,7 @@ void KeyboardInput::tick( Player* player )
 		ya *= 0.3f;
 	}
 
-	#if defined(RPI) || defined(_WIN32) || defined(__VITA__)
+	#if defined(RPI) || defined(_WIN32) || defined(__VITA__) || defined(__SWITCH__)
 		wantUp = jumping;
 		wantDown = sneaking;
 	#endif

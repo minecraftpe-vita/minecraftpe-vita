@@ -88,7 +88,7 @@ LevelRenderer::~LevelRenderer()
 
 	deleteChunks();
 
-#ifdef OPENGL_ES
+#if defined(OPENGL_ES) && !defined(__3DS__)
 	glDeleteBuffers(numListsOrBuffers, chunkBuffers);
 	glDeleteBuffers(1, &skyBuffer);
 	delete[] chunkBuffers;
@@ -819,7 +819,9 @@ void LevelRenderer::renderHitOutline( Player* player, const HitResult& h, int mo
 		glEnable2(GL_BLEND);
 		glBlendFunc2(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glColor4f2(0, 0, 0, 0.4f);
+#ifndef __3DS__
 		glLineWidth(1.0f);
+#endif
 		glDisable2(GL_TEXTURE_2D);
 		glDepthMask(false);
 		float ss = 0.002f;
@@ -1012,7 +1014,7 @@ void LevelRenderer::renderSky(float alpha) {
     glEnable2(GL_FOG);
     glColor4f2(sr, sg, sb, 1.0f);
 
-#ifdef OPENGL_ES
+#if defined(OPENGL_ES) && !defined(__3DS__)
 	drawArrayVT(skyBuffer, skyVertexCount);
 #endif
     glEnable2(GL_TEXTURE_2D);

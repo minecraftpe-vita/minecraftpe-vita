@@ -9,7 +9,7 @@
 #elif defined(_WIN32) || defined(__CYGWIN__)
 #include <io.h>
 
-#elif defined(__VITA__)
+#elif defined(__VITA__) || defined(__SWITCH__)
 #include <stdio.h>
 
 #elif !defined ( __APPLE__ ) && !defined ( __APPLE_CC__ ) && !defined ( __PPC__ ) && !defined ( __FreeBSD__ ) && !defined ( __S3E__ )

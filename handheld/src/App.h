@@ -1,7 +1,7 @@
 #ifndef APP_H__
 #define APP_H__
 
-#ifdef __APPLE__
+#if defined(__APPLE__) || defined(__3DS__)
 #define NO_EGL
 #endif
 #ifdef STANDALONE_SERVER
@@ -9,7 +9,7 @@
 #endif
 
 #include "AppPlatform.h"
-#ifndef NO_EGL 
+#ifndef NO_EGL
     #include <EGL/egl.h>
 #endif
 #include "platform/log.h"

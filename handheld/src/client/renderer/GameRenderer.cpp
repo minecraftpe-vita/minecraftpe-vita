@@ -545,8 +545,12 @@ void GameRenderer::setupFog(int i) {
     glColor4f2(1, 1, 1, 1);
 
     if (player->isUnderLiquid(Material::water)) {
-        glFogx(GL_FOG_MODE, GL_EXP);
-        glFogf(GL_FOG_DENSITY, 0.1f); // was 0.06
+#ifndef __3DS__
+    	glFogx(GL_FOG_MODE, GL_EXP);
+#else
+    	glFogi(GL_FOG_MODE, GL_EXP);
+#endif
+    	glFogf(GL_FOG_DENSITY, 0.1f); // was 0.06
 
 //        float rr = 0.4f;
 //        float gg = 0.4f;
@@ -562,7 +566,11 @@ void GameRenderer::setupFog(int i) {
 //            bb = bbb;
 //        }
     } else if (player->isUnderLiquid(Material::lava)) {
-        glFogx(GL_FOG_MODE, GL_EXP);
+#ifndef __3DS__
+    	glFogx(GL_FOG_MODE, GL_EXP);
+#else
+    	glFogi(GL_FOG_MODE, GL_EXP);
+#endif
         glFogf(GL_FOG_DENSITY, 2.f); // was 0.06
 //        float rr = 0.4f;
 //        float gg = 0.3f;
@@ -578,7 +586,11 @@ void GameRenderer::setupFog(int i) {
 //            bb = bbb;
 //        }
     } else {
-        glFogx(GL_FOG_MODE, GL_LINEAR);
+#ifndef __3DS__
+    	glFogx(GL_FOG_MODE, GL_LINEAR);
+#else
+    	glFogi(GL_FOG_MODE, GL_LINEAR);
+#endif
         glFogf(GL_FOG_START, renderDistance * 0.6f);
         glFogf(GL_FOG_END, renderDistance);
         if (i < 0) {
@@ -865,7 +877,11 @@ void GameRenderer::setupGuiScreen( bool clearColorBuffer )
 	glClear(clearBits);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity2();
+#ifndef __3DS__
 	glOrthof(0, (GLfloat)screenWidth, (GLfloat)screenHeight, 0, 2000, 3000);
+#else
+	glOrtho(0, (GLfloat)screenWidth, (GLfloat)screenHeight, 0, 2000, 3000);
+#endif
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity2();
 	glTranslatef2(0, 0, -2000);

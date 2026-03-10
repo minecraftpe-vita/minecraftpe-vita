@@ -76,12 +76,12 @@ void Font::init( Options* options )
 		fcharWidths[i] = (float) charWidths[i];
 	}
 
-#ifdef USE_VBO
+#if defined(USE_VBO) || defined(__3DS__)
 	return; // this <1
 #endif
 
 #ifndef USE_VBO
-	listPos = glGenLists(256 + 32);
+ 	listPos = glGenLists(256 + 32);
 
 	Tesselator& t = Tesselator::instance;
 	for (int i = 0; i < 256; i++) {

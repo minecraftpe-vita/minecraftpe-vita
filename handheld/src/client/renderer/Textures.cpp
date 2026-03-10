@@ -115,7 +115,7 @@ TextureId Textures::assignTexture( const std::string& resourceName, const Textur
         case TEXF_COMPRESSED_PVRTC_565:
         case TEXF_COMPRESSED_PVRTC_5551:
         {
-#if defined(__APPLE__) || defined(__VITA__)
+#if defined(__APPLE__) || defined(__VITA__) || defined(__SWITCH__)
             int fmt = img.transparent? GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG : GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
             glCompressedTexImage2D(GL_TEXTURE_2D, 0, fmt, img.w, img.h, 0, img.numBytes, img.data);
 #endif
@@ -129,7 +129,11 @@ TextureId Textures::assignTexture( const std::string& resourceName, const Textur
                 glTexImage2D2(GL_TEXTURE_2D, 0, mode, img.w, img.h, 0, mode, GL_UNSIGNED_SHORT_5_6_5, img.data);
             }
             else if (img.format == TEXF_UNCOMPRESSED_4444) {
+#ifdef __3DS__
+                glTexImage2D2(GL_TEXTURE_2D, 0, mode, img.w, img.h, 0, mode, GL_UNSIGNED_SHORT_4_4_4_4_REV, img.data);
+#else
                 glTexImage2D2(GL_TEXTURE_2D, 0, mode, img.w, img.h, 0, mode, GL_UNSIGNED_SHORT_4_4_4_4, img.data);
+#endif
             }
             else if (img.format == TEXF_UNCOMPRESSED_5551) {
                 glTexImage2D2(GL_TEXTURE_2D, 0, mode, img.w, img.h, 0, mode, GL_UNSIGNED_SHORT_5_5_5_1, img.data);

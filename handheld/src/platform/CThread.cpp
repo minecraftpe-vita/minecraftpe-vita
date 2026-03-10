@@ -9,7 +9,7 @@
 
 #include "CThread.h"
 
-#if defined(__VITA__)
+#ifdef __VITA__
 #include <psp2/kernel/threadmgr.h>
 #endif
 
@@ -34,7 +34,7 @@ static int vita_thread_entry(size_t argc, void* argv) {
 			&m_threadID        // pointer to receive thread ID
 		);
 	#endif
-	#if defined(LINUX) || defined(ANDROID) || defined(__APPLE__) || defined(POSIX)
+	#if defined(LINUX) || defined(ANDROID) || defined(__APPLE__) || defined(POSIX) || defined(__SWITCH__) || defined(__3DS__)
 		mp_threadFunc = (pthread_fn)threadFunc;
 
 		pthread_attr_init(&m_attributes);
@@ -70,7 +70,7 @@ static int vita_thread_entry(size_t argc, void* argv) {
 		#ifdef WIN32
 			Sleep( millis );
 		#endif
-		#if defined(LINUX) || defined(ANDROID) || defined(__APPLE__) || defined(POSIX)
+		#if defined(LINUX) || defined(ANDROID) || defined(__APPLE__) || defined(POSIX) || defined(__SWITCH__) || defined(__3DS__)
 			usleep(millis * 1000);
 		#endif
 		#if defined(__VITA__)
@@ -83,7 +83,7 @@ static int vita_thread_entry(size_t argc, void* argv) {
 	#ifdef WIN32
 		TerminateThread(m_threadHandle, 0);
 	#endif
-	#if defined(LINUX) || defined(ANDROID) || defined(__APPLE__) || defined(POSIX)
+	#if defined(LINUX) || defined(ANDROID) || defined(__APPLE__) || defined(POSIX) || defined (__SWITCH__) || defined(__3DS__)
 		pthread_join(m_thread, NULL);
 		pthread_attr_destroy(&m_attributes);
 	#endif
