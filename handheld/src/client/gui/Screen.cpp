@@ -197,7 +197,7 @@ void Screen::mouseClicked( int x, int y, int buttonNum )
 			Button* button = buttons[i];
             //LOGI("Hit-testing button: %p\n", button);
 			if (button->clicked(minecraft, x, y)) {
-                button->setPressed();
+                button->setPressed(minecraft);
 
                 //LOGI("Hit-test successful: %p\n", button);
 				clickedButton = button;

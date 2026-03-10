@@ -57,7 +57,7 @@ bool Button::clicked( Minecraft* minecraft, int mx, int my )
 	return active && mx >= x && my >= y && mx < x + width && my < y + height;
 }
 
-void Button::setPressed() {
+void Button::setPressed(Minecraft* minecraft) {
     _currentlyDown = true;
 }
 

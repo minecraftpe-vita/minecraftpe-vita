@@ -4,30 +4,28 @@
 //package net.minecraft.client.gui;
 
 #include <string>
-#include "../GuiComponent.h"
+#include "Button.h"
 #include "../../Options.h"
 
 class Font;
 class Minecraft;
 
-class TextBox: public GuiComponent
+class TextBox: public Button
 {
 public:
 	TextBox(int id, const std::string& msg);
     TextBox(int id, int x, int y, const std::string& msg);
     TextBox(int id, int x, int y, int w, int h, const std::string& msg);
+	virtual ~TextBox();
 
 	virtual void setFocus(Minecraft* minecraft);
 	virtual bool loseFocus(Minecraft* minecraft);
 
-    virtual void render(Minecraft* minecraft, int xm, int ym);
+    void render(Minecraft* minecraft, int xm, int ym) override;
+	void setPressed(Minecraft* minecraft) override;
 	
 public:
-	int w, h;
-	int x, y;
-
 	std::string text;
-	int id;
 	bool focused;
 };
 

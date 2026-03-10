@@ -21,7 +21,7 @@ public:
 
 	virtual bool clicked(Minecraft* minecraft, int mx, int my);
     virtual void released(int mx, int my);
-    virtual void setPressed();
+    virtual void setPressed(Minecraft* minecraft);
 
 	bool isInside(int xm, int ym);
 protected:

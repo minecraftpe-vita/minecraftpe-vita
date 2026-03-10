@@ -407,6 +407,7 @@ add_executable(minecraftcpp
   ${HANDHELD}/client/gui/screens/touch/TouchJoinGameScreen.cpp
   ${HANDHELD}/client/gui/screens/touch/TouchSelectWorldScreen.cpp
   ${HANDHELD}/client/gui/screens/touch/TouchStartMenuScreen.cpp
+  ${HANDHELD}/client/gui/screens/touch/TouchCreateWorldScreen.cpp
   ${HANDHELD}/client/gui/screens/touch/TouchIngameBlockSelectionScreen.cpp
   ${HANDHELD}/client/gui/screens/UploadPhotoScreen.cpp
   ${HANDHELD}/client/gui/screens/ArmorScreen.cpp

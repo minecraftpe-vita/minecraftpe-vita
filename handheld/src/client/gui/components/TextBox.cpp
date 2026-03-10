@@ -2,19 +2,19 @@
 #include "../../Minecraft.h"
 #include "../../../AppPlatform.h"
 TextBox::TextBox( int id, const std::string& msg )
- : id(0), w(0), h(0), x(0), y(0), text(msg), focused(false) {
+ : Button(id, 0, 0, 0, 0, msg), focused(false) {
 
 }
 
 TextBox::TextBox( int id, int x, int y, const std::string& msg ) 
- : id(id), w(0), h(0), x(x), y(y), text(msg), focused(false) {
-
+ : Button(id, x, y, 0, 0, msg) {
 }
 
 TextBox::TextBox( int id, int x, int y, int w, int h, const std::string& msg )
- : id(id), w(w), h(h), x(x), y(y), text(msg) {
-
+ : Button(id, x, y, w, h, msg), focused(false) {
 }
+
+TextBox::~TextBox() {}
 
 void TextBox::setFocus(Minecraft* minecraft) {
 	if(!focused) {
@@ -32,6 +32,20 @@ bool TextBox::loseFocus(Minecraft* minecraft) {
 	return false;
 }
 
+void TextBox::setPressed(Minecraft* minecraft) {
+	this->setFocus(minecraft);
+}
+
 void TextBox::render( Minecraft* minecraft, int xm, int ym ) {
-	
+	if(focused) {
+		std::string input = minecraft->platform()->getKeyboardInput();
+		if(!minecraft->platform()->isKeyboardVisible()) {
+			focused = false;
+		}
+		this->msg = input;
+	}
+
+	if(visible) {
+		Button::render(minecraft, xm, ym);
+	}
 }
