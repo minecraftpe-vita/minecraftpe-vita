@@ -64,7 +64,9 @@ public:
 
 	RakNetInstance();
 	virtual ~RakNetInstance();
-
+#ifdef __SWITCH__
+	static RakNet::RakString GetBroadcastAddress();
+#endif
 	bool host(const std::string& localName, int port, int maxConnections = 4);
 	bool connect(const char* host, int port);
 	void setIsLoggedIn(bool status);

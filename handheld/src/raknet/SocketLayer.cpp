@@ -145,7 +145,25 @@ bool SocketLayer::IsPortInUse_Old(unsigned short port, const char *hostAddress)
 	int ret = bind__( listenSocket, ( struct sockaddr * ) & listenerSocketAddress, sizeof( listenerSocketAddress ) );
 	closesocket__(listenSocket);
 
-
+	if (ret >= 0)
+	{
+		// === NIFM SOCKET REGISTRATION ДЛЯ SWITCH (движение теперь полетит) ===
+#ifdef __SWITCH__
+		NifmRequest request;
+		Result rc = nifmCreateRequest(&request, false);
+		if (R_SUCCEEDED(rc))
+		{
+			if (socketNifmRequestRegisterSocketDescriptor(&request, listenSocket) == 0)
+				printf("[DEBUG] NIFM SOCKET REGISTERED SUCCESS for fd %d\n", listenSocket);
+			else
+				printf("[DEBUG] NIFM SOCKET REGISTER FAILED\n");
+			nifmRequestClose(&request);
+		}
+		else
+			printf("[DEBUG] nifmCreateRequest FAILED 0x%x\n", rc);
+#endif
+		return listenSocket;
+	}
 
 
 	// 	#if defined(_DEBUG)
@@ -441,6 +459,25 @@ SOCKET SocketLayer::CreateBoundSocket_Old( unsigned short port, bool blockingSoc
 	// bind our name to the socket
 	ret = bind__( listenSocket, ( struct sockaddr * ) & listenerSocketAddress, sizeof( listenerSocketAddress ) );
 
+	if (ret >= 0)
+	{
+		// === NIFM SOCKET REGISTRATION ДЛЯ SWITCH (движение теперь полетит) ===
+#ifdef __SWITCH__
+		NifmRequest request;
+		Result rc = nifmCreateRequest(&request, false);
+		if (R_SUCCEEDED(rc))
+		{
+			if (socketNifmRequestRegisterSocketDescriptor(&request, listenSocket) == 0)
+				printf("[DEBUG] NIFM SOCKET REGISTERED SUCCESS for fd %d\n", listenSocket);
+			else
+				printf("[DEBUG] NIFM SOCKET REGISTER FAILED\n");
+			nifmRequestClose(&request);
+		}
+		else
+			printf("[DEBUG] nifmCreateRequest FAILED 0x%x\n", rc);
+#endif
+		return listenSocket;
+	}
 	if ( ret <= -1 )
 	{
 
@@ -1260,17 +1297,25 @@ RakNet::RakString SocketLayer::GetSubNetForSocketAndIp(SOCKET inSock, RakNet::Ra
 
 
 #if defined(__SWITCH__)
-	NifmIpV4Address ip, subnet, gw, dns1, dns2;
+	(void)inSock;
+	(void)inIpString;
 
-	if (R_SUCCEEDED(nifmGetCurrentIpConfigInfo((u32*)&ip, (u32*)&subnet, (u32*)&gw, (u32*)&dns1, (u32*)&dns2))) {
-		struct in_addr mask_addr;
+	u32 ip = 0, subnet = 0, gw = 0, dns1 = 0, dns2 = 0;
+	if (R_SUCCEEDED(nifmGetCurrentIpConfigInfo(&ip, &subnet, &gw, &dns1, &dns2)))
+	{
+		u32 subnetHost = __builtin_bswap32(subnet);
 
-		memcpy(&mask_addr.s_addr, subnet.addr, 4);
-		netMaskString = inet_ntoa(mask_addr);
+		char subnetStr[32];
+		sprintf(subnetStr, "%u.%u.%u.%u",
+			(subnetHost >> 24) & 0xFF,
+			(subnetHost >> 16) & 0xFF,
+			(subnetHost >> 8)  & 0xFF,
+			subnetHost         & 0xFF);
+		printf("[DEBUG] FINAL SUBNET: %s\n", subnetStr);
 
-		return netMaskString;
+		return subnetStr;
 	}
-
+	printf("[DEBUG] nifmGetCurrentIpConfigInfo FAILED in GetSubNet!\n");
 	return "255.255.255.0";
 #elif defined(__3DS__)
 	return "255.255.255.0";
@@ -1447,7 +1492,39 @@ RakNet::RakString SocketLayer::GetSubNetForSocketAndIp(SOCKET inSock, RakNet::Ra
 
 
 
+#ifdef __SWITCH__
+void GetMyIP_Switch(SystemAddress addresses[MAXIMUM_NUMBER_OF_INTERNAL_IDS])
+{
+	u32 ip = 0, subnet = 0, gw = 0, dns1 = 0, dns2 = 0;
+	if (R_SUCCEEDED(nifmGetCurrentIpConfigInfo(&ip, &subnet, &gw, &dns1, &dns2)))
+	{
+		u32 ipHost   = __builtin_bswap32(ip);
+		u32 subnetHost = __builtin_bswap32(subnet);
 
+		printf("[DEBUG] nifm raw ip: 0x%08x → host: 0x%08x | subnet raw: 0x%08x → host: 0x%08x\n",
+			   ip, ipHost, subnet, subnetHost);
+
+		char ipStr[32];
+		sprintf(ipStr, "%u.%u.%u.%u",
+			(ipHost >> 24) & 0xFF,
+			(ipHost >> 16) & 0xFF,
+			(ipHost >> 8)  & 0xFF,
+			ipHost         & 0xFF);
+		printf("[DEBUG] FINAL IP: %s\n", ipStr);
+
+		addresses[0].address.addr4.sin_family = AF_INET;
+		addresses[0].address.addr4.sin_addr.s_addr = inet_addr(ipStr);
+	}
+	else
+	{
+		printf("[DEBUG] nifmGetCurrentIpConfigInfo FAILED!\n");
+		addresses[0] = UNASSIGNED_SYSTEM_ADDRESS;
+	}
+
+	for (int i = 1; i < MAXIMUM_NUMBER_OF_INTERNAL_IDS; i++)
+		addresses[i] = UNASSIGNED_SYSTEM_ADDRESS;
+}
+#endif
 #ifdef __VITA__
 void GetMyIP_Vita( SystemAddress addresses[MAXIMUM_NUMBER_OF_INTERNAL_IDS] )
 {
@@ -1608,6 +1685,8 @@ void SocketLayer::GetMyIP( SystemAddress addresses[MAXIMUM_NUMBER_OF_INTERNAL_ID
 	GetMyIP_Win32(addresses);
 #elif defined(__VITA__)
 	GetMyIP_Vita(addresses);
+#elif defined(__SWITCH__)
+	GetMyIP_Switch(addresses);
 #else
 //	GetMyIP_Linux(addresses);
 	GetMyIP_Win32(addresses);

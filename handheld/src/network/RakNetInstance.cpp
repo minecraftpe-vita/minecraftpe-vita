@@ -1,4 +1,7 @@
 #include "RakNetInstance.h"
+#ifdef __SWITCH__
+#include <switch.h>
+#endif
 #include "Packet.h"
 #include "NetEventCallback.h"
 #include "../raknet/RakPeerInterface.h"
@@ -34,6 +37,15 @@ RakNetInstance::~RakNetInstance()
 
 bool RakNetInstance::host(const std::string& localName, int port, int maxConnections /* = 4 */)
 {
+	Result rc = socketInitializeDefault();
+	if (R_FAILED(rc))
+	{
+		printf("[DEBUG] socketInitializeDefault FAILED! result 0x%x\n", rc);
+	}
+	else
+	{
+		printf("[DEBUG] socketInitializeDefault SUCCESS!\n");
+	}
 	if (rakPeer->IsActive())
 	{
 		rakPeer->Shutdown(500);
@@ -108,7 +120,31 @@ void RakNetInstance::disconnect()
 	_isServer = false;
 	isPingingForServers = false;
 }
+#ifdef __SWITCH__
+RakNet::RakString RakNetInstance::GetBroadcastAddress()
+{
+	u32 ip = 0, subnet = 0, gw = 0, dns1 = 0, dns2 = 0;
+	if (R_SUCCEEDED(nifmGetCurrentIpConfigInfo(&ip, &subnet, &gw, &dns1, &dns2)))
+	{
+		u32 ipHost     = __builtin_bswap32(ip);
+		u32 subnetHost = __builtin_bswap32(subnet);
+		u32 broadcastHost = (ipHost & subnetHost) | (~subnetHost);  // правильный broadcast
 
+		char bcStr[32];
+		sprintf(bcStr, "%u.%u.%u.%u",
+			(broadcastHost >> 24) & 0xFF,
+			(broadcastHost >> 16) & 0xFF,
+			(broadcastHost >> 8)  & 0xFF,
+			broadcastHost         & 0xFF);
+
+		printf("[DEBUG] CALCULATED BROADCAST: %s (для пинга вместо 255.255.255.255)\n", bcStr);
+		return bcStr;
+	}
+	printf("[DEBUG] BROADCAST CALC FAILED, fallback 255.255.255.255\n");
+	return "255.255.255.255";
+}
+
+#endif
 void RakNetInstance::pingForHosts(int basePort)
 {
 	if (!rakPeer->IsActive())
@@ -121,8 +157,13 @@ void RakNetInstance::pingForHosts(int basePort)
 	pingPort = basePort;
 	lastPingTime = RakNet::GetTimeMS();
 
-	for (int i = 0; i < 4; ++i)
+	for (int i = 0; i < 4; ++i) {
+#ifdef __SWITCH__
+		rakPeer->Ping(GetBroadcastAddress().C_String(), basePort + i, false);
+#else
 		rakPeer->Ping("255.255.255.255", basePort + i, true);
+#endif
+	}
 }
 
 void RakNetInstance::stopPingForHosts()
