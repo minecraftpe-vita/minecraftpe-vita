@@ -11,16 +11,13 @@
 
 // Other systems might run it, if they #define OPENGL_ES
 #if defined(OPENGL_ES) // || defined(ANDROID)
-#ifndef __3DS__
 	#define USE_VBO
-#endif
 	#define GL_QUADS 0x0007
     #if defined(__APPLE__)
         #import <OpenGLES/ES1/gl.height>
         #import <OpenGLES/ES1/glext.height>
 	#elif defined(__3DS__)
-		#include <GL/picaGL.h>
-		#include <GL/glext.h>
+        #include <GLES/gl.h>
     #else
         #include <GLES/gl.h>
         #if defined(ANDROID) || defined(__VITA__) || defined(__SWITCH__)
@@ -69,7 +66,14 @@ void gluPerspective(GLfloat fovy, GLfloat aspect, GLfloat zNear, GLfloat zFar);
 int glhUnProjectf(	float winx, float winy, float winz,
 					float *modelview, float *projection,
 					int *viewport, float *objectCoordinate);
-
+//#ifdef __3DS__
+//void glBindBuffer(GLenum target, GLuint buffer);
+//void glBufferData(GLenum target, size_t size, const GLvoid* data, GLenum usage);
+//void glDeleteBuffers(GLsizei n, const GLuint* buffers);
+//void glVertexPointer3(GLint size, GLenum type, GLsizei stride, const GLvoid* pointer);
+//void glTexCoordPointer3(GLint size, GLenum type, GLsizei stride, const GLvoid* pointer);
+//void glColorPointer3(GLint size, GLenum type, GLsizei stride, const GLvoid* pointer);
+//#endif
 // Used for "debugging" (...). Obviously stupid dependency on Options (and ugly gl*2 calls).
 #ifdef GLDEBUG
 	#define glTranslatef2(x, y, z) do{ if (Options::debugGl) LOGI("glTrans @ %s:%d: %f,%f,%f\n", __FILE__, __LINE__, x, y, z); glTranslatef(x, y, z); GLERR(0); } while(0)
@@ -110,9 +114,15 @@ int glhUnProjectf(	float winx, float winy, float winz,
 	#define glPopMatrix2	glPopMatrix
 	#define glLoadIdentity2 glLoadIdentity
 
+//#ifdef __3DS__
+//	#define glVertexPointer2	glVertexPointer3
+//	#define glColorPointer2		glColorPointer3
+//	#define glTexCoordPointer2  glTexCoordPointer3
+//#else
 	#define glVertexPointer2	glVertexPointer
 	#define glColorPointer2		glColorPointer
 	#define glTexCoordPointer2  glTexCoordPointer
+//#endif
 	#define glEnableClientState2  glEnableClientState
 	#define glDisableClientState2 glDisableClientState
 	#define glDrawArrays2		glDrawArrays
@@ -143,5 +153,116 @@ int glhUnProjectf(	float winx, float winy, float winz,
 #endif
 
 
+#if defined(__3DS__)
+
+#ifndef GL_LINES
+#define GL_LINES 0x0001
+#endif
+
+#ifndef GL_COLOR_MATERIAL
+#define GL_COLOR_MATERIAL 0x0B57
+#endif
+
+#ifndef GL_PERSPECTIVE_CORRECTION_HINT
+#define GL_PERSPECTIVE_CORRECTION_HINT 0x0C50
+#endif
+
+#ifndef GL_FASTEST
+#define GL_FASTEST 0x1101
+#endif
+#ifndef GL_VERTEX_ARRAY
+#define GL_VERTEX_ARRAY 0x8074
+
+#ifndef GL_MODELVIEW_MATRIX
+#define GL_MODELVIEW_MATRIX 0x0BA6
+#endif
+
+#ifndef GL_PROJECTION_MATRIX
+#define GL_PROJECTION_MATRIX 0x0BA7
+#endif
+
+#ifndef GL_TEXTURE_MATRIX
+#define GL_TEXTURE_MATRIX 0x0BA8
+#endif
+
+#ifndef GL_FOG
+#define GL_FOG 0x0B60
+#endif
+
+#ifndef GL_FLAT
+#define GL_FLAT 0x1D00
+#endif
+
+#ifndef GL_SMOOTH
+#define GL_SMOOTH 0x1D01
+#endif
+
+#ifndef GL_FOG_DENSITY
+#define GL_FOG_DENSITY 0x0B62
+#endif
+
+#ifndef GL_FOG_START
+#define GL_FOG_START 0x0B63
+#endif
+
+#ifndef GL_FOG_END
+#define GL_FOG_END 0x0B64
+#endif
+
+#ifndef GL_FOG_MODE
+#define GL_FOG_MODE 0x0B65
+#endif
+
+#ifndef GL_FOG_COLOR
+#define GL_FOG_COLOR 0x0B66
+#endif
+
+#ifndef GL_LINEAR
+#define GL_LINEAR 0x2601
+#endif
+
+#ifndef GL_EXP
+#define GL_EXP 0x0800
+#endif
+
+#ifndef GL_EXP2
+#define GL_EXP2 0x0801
+#endif
+#endif
+
+#ifndef GL_NORMAL_ARRAY
+#define GL_NORMAL_ARRAY 0x8075
+#endif
+
+#ifndef GL_COLOR_ARRAY
+#define GL_COLOR_ARRAY 0x8076
+#endif
+
+#ifndef GL_TEXTURE_COORD_ARRAY
+#define GL_TEXTURE_COORD_ARRAY 0x8078
+#endif
+
+#ifndef GL_LIGHTING
+#define GL_LIGHTING 0x0B50
+#endif
+
+#ifndef GL_LINE_STRIP
+#define GL_LINE_STRIP 0x0003
+void glColor4f(float r, float g, float b, float a);
+void glFogf(int pname, float param);
+void glFogfv(int pname, const float* params);
+void glNormal3f(float nx, float ny, float nz);
+void glShadeModel(int mode);
+void glEnableClientState(int array);
+void glDisableClientState(int array);
+
+void glHint(int target, int mode);
+void glVertexPointer(int size, int type, int stride, const void *pointer);
+void glTexCoordPointer(int size, int type, int stride, const void *pointer);
+void glColorPointer(int size, int type, int stride, const void *pointer);
+void glGetFloatv(int pname, float* params);
+#endif
+
+#endif
 
 #endif /*NET_MINECRAFT_CLIENT_RENDERER__gles_H__ */

@@ -88,7 +88,7 @@ LevelRenderer::~LevelRenderer()
 
 	deleteChunks();
 
-#if defined(OPENGL_ES) && !defined(__3DS__)
+#if defined(OPENGL_ES)
 	glDeleteBuffers(numListsOrBuffers, chunkBuffers);
 	glDeleteBuffers(1, &skyBuffer);
 	delete[] chunkBuffers;

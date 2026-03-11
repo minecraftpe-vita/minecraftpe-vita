@@ -14,7 +14,7 @@ class SoundRepository
 
 public:
     ~SoundRepository() {
-#if defined(__APPLE__) || defined(__SWITCH__)
+#if defined(__APPLE__)
         SoundMap::iterator it = map.begin();
         for (; it != map.end(); ++it) {
             SoundList& list = it->second;

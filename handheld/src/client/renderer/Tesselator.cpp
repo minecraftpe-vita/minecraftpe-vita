@@ -97,6 +97,12 @@ RenderChunk Tesselator::end( bool useMine, int bufferId )
 		glBindBuffer2(GL_ARRAY_BUFFER, bufferId);
 		glBufferData2(GL_ARRAY_BUFFER, bytes, _varray, access); // GL_STREAM_DRAW
 		totalSize += bytes;
+#else
+		int access = 0;//(accessMode==ACCESS_DYNAMIC) ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW;
+		int bytes = p * sizeof(VERTEX);
+		glBindBuffer2(0, bufferId);
+		glBufferData2(0, bytes, _varray, access); // GL_STREAM_DRAW
+		totalSize += bytes;
 #endif
 #ifndef USE_VBO
 		// 0 1 2 3 4 5 6 7
@@ -387,6 +393,11 @@ void Tesselator::draw()
 		int bytes = p * sizeof(VERTEX);
 		glBindBuffer2(GL_ARRAY_BUFFER, bufferId);
 		glBufferData2(GL_ARRAY_BUFFER, bytes, _varray, access); // GL_STREAM_DRAW
+#else
+		int access = 0;//(accessMode==ACCESS_DYNAMIC) ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW;
+		int bytes = p * sizeof(VERTEX);
+		glBindBuffer2(0, bufferId);
+		glBufferData2(0, bytes, _varray, access); // GL_STREAM_DRAW
 #endif
 		if (hasTexture) {
 			glTexCoordPointer2(2, GL_FLOAT, VertexSizeBytes, (GLvoid*) (3 * 4));

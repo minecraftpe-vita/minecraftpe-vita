@@ -548,7 +548,7 @@ void GameRenderer::setupFog(int i) {
 #ifndef __3DS__
     	glFogx(GL_FOG_MODE, GL_EXP);
 #else
-    	glFogi(GL_FOG_MODE, GL_EXP);
+    	glFogf(GL_FOG_MODE, GL_EXP);
 #endif
     	glFogf(GL_FOG_DENSITY, 0.1f); // was 0.06
 
@@ -569,7 +569,7 @@ void GameRenderer::setupFog(int i) {
 #ifndef __3DS__
     	glFogx(GL_FOG_MODE, GL_EXP);
 #else
-    	glFogi(GL_FOG_MODE, GL_EXP);
+    	glFogf(GL_FOG_MODE, GL_EXP);
 #endif
         glFogf(GL_FOG_DENSITY, 2.f); // was 0.06
 //        float rr = 0.4f;
@@ -589,7 +589,7 @@ void GameRenderer::setupFog(int i) {
 #ifndef __3DS__
     	glFogx(GL_FOG_MODE, GL_LINEAR);
 #else
-    	glFogi(GL_FOG_MODE, GL_LINEAR);
+    	glFogf(GL_FOG_MODE, GL_LINEAR);
 #endif
         glFogf(GL_FOG_START, renderDistance * 0.6f);
         glFogf(GL_FOG_END, renderDistance);
@@ -877,11 +877,11 @@ void GameRenderer::setupGuiScreen( bool clearColorBuffer )
 	glClear(clearBits);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity2();
-#ifndef __3DS__
+//#ifndef __3DS__
 	glOrthof(0, (GLfloat)screenWidth, (GLfloat)screenHeight, 0, 2000, 3000);
-#else
-	glOrtho(0, (GLfloat)screenWidth, (GLfloat)screenHeight, 0, 2000, 3000);
-#endif
+//#else
+//	glOrtho(0, (GLfloat)screenWidth, (GLfloat)screenHeight, 0, 2000, 3000);
+//#endif
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity2();
 	glTranslatef2(0, 0, -2000);

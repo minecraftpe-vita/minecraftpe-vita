@@ -67,11 +67,11 @@ void PerfRenderer::renderFpsMeter( float tickTime )
 	glEnable2(GL_COLOR_MATERIAL);
 	glLoadIdentity2();
 
-#ifdef __3DS__
-	glOrtho(0, (GLfloat)_mc->width, (GLfloat)_mc->height, 0, 1000, 3000);
-#else
+//#ifdef __3DS__
+//	glOrtho(0, (GLfloat)_mc->width, (GLfloat)_mc->height, 0, 1000, 3000);
+//#else
 	glOrthof(0, (GLfloat)_mc->width, (GLfloat)_mc->height, 0, 1000, 3000);
-#endif
+//#endif
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity2();
 	glTranslatef2(0, 0, -2000);

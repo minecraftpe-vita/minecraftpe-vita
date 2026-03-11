@@ -5,12 +5,12 @@
 
 #if defined(ANDROID) && !defined(PRE_ANDROID23)
 	#include "../../platform/audio/SoundSystemSL.h"
-#elif defined(__APPLE__) || defined(__SWITCH__)
+#elif defined(__APPLE__)
     #include "../../platform/audio/SoundSystemAL.h"
 #elif defined(__VITA__)
 	#include "../../platform/audio/SoundSystemVita.h"
-//#elif defined(__SWITCH__)
-	//#include"../../platform/audio/SoundSystemNx.h"
+#elif defined(__SWITCH__)
+	#include"../../platform/audio/SoundSystemSDL2.h"
 	//#include "../../platform/audio/SoundSystemAL.h"
 #else
 	#include "../../platform/audio/SoundSystem.h"
@@ -28,11 +28,12 @@ class SoundEngine
 
 	#if defined(ANDROID) && !defined(PRE_ANDROID23) && !defined(RPI)
 		SoundSystemSL soundSystem;
-    #elif defined(__APPLE__) || defined(__SWITCH__)
+    #elif defined(__APPLE__)
         SoundSystemAL soundSystem;
 	#elif defined(__VITA__)
 		SoundSystemVita soundSystem;
-	//#elif defined(__SWITCH__)
+	#elif defined(__SWITCH__)
+		SoundSystemSDL soundSystem;
 	//	SoundSystemNX soundSystem;
 		//SoundSystemAL soundSystem;
 	#else

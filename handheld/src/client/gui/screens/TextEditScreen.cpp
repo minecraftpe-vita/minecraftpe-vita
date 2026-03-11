@@ -59,11 +59,11 @@ void TextEditScreen::render( int xm, int ym, float a ) {
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
-#ifdef __3DS__
-	glOrtho(0.0f, (float)minecraft->width, (float)minecraft->height, 0,  -1, 1);
-#else
+//#ifdef __3DS__
+//	glOrtho(0.0f, (float)minecraft->width, (float)minecraft->height, 0,  -1, 1);
+//#else
 	glOrthof(0.0f, (float)minecraft->width, (float)minecraft->height, 0,  -1, 1);
-#endif
+//#endif
 	glMatrixMode(GL_MODELVIEW);
 	
 	minecraft->textures->loadAndBindTexture("item/sign.png");

@@ -1893,6 +1893,19 @@ bool RakPeer::Ping( const char* host, unsigned short remotePort, bool onlyReplyO
 	// No timestamp for 255.255.255.255
 	unsigned int realIndex = GetRakNetSocketFromUserConnectionSocketIndex(connectionSocketIndex);
 
+	if (realIndex >= socketList.Size()) {
+		printf("CRASH PREVENTED: realIndex (%u) is out of bounds (Size: %u)!\n", realIndex, socketList.Size());
+		return false;
+	}
+
+	printf("Ping debug: realIndex=%u, listSize=%u\n", realIndex, socketList.Size());
+
+	// 2. Правильно проверяем УМНЫЙ указатель на ноль через встроенный метод
+	if (socketList[realIndex].IsNull()) {
+		printf("CRASH PREVENTED: socketList[%u] IS NULL!\n", realIndex);
+		return false;
+	}
+
 	SystemAddress systemAddress;
 	systemAddress.FromStringExplicitPort(host,remotePort, socketList[realIndex]->boundAddress.GetIPVersion());
 	systemAddress.FixForIPVersion(socketList[realIndex]->boundAddress);
