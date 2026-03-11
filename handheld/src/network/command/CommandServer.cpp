@@ -600,7 +600,12 @@ std::string CommandServer::handleEventPollMessage( ConnectedClient& client, cons
 	}
 
 	if (cmd == "events.clear") {
-		long t = mc->level->getTime();
+#ifdef __SWITCH__
+		int32_t
+#else
+		long
+#endif
+		t = mc->level->getTime();
 		client.lastPoll_blockHit = t;
 		return NullString;
 	}

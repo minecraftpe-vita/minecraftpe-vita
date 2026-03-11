@@ -27,18 +27,18 @@ public:
 	Random() {
 		setSeed( getTimeMs() );
 	}
-	Random( long seed ) {
+	Random( int32_t seed ) {
 		setSeed( seed );
 	}
 
-	void setSeed( long seed ) {
+	void setSeed( int32_t seed ) {
 		_seed = seed;
 		_mti = N + 1;
 		haveNextNextGaussian = false;
 		nextNextGaussian = 0;
 		init_genrand(seed);
 	}
-	long getSeed() {
+	int32_t getSeed() {
 		return _seed;
 }
 	bool nextBoolean() {
@@ -82,7 +82,7 @@ public:
 		}
 	}
 private:
-	long _seed;
+	int32_t _seed;
 
 	/* Period parameters */  
 	static const int N = 624;
@@ -91,7 +91,7 @@ private:
 	static const unsigned int UPPER_MASK = 0x80000000UL; /* most significant w-r bits */
 	static const unsigned int LOWER_MASK = 0x7fffffffUL; /* least significant r bits */
 
-	unsigned long _mt[N]; /* the array for the state vector  */
+	uint32_t _mt[N]; /* the array for the state vector  */
 	int _mti; /* _mti==N+1 means _mt[N] is not initialized */
 
 	bool haveNextNextGaussian;

@@ -6,7 +6,11 @@
 class StartGamePacket : public Packet
 {
 public:
+#ifdef __SWITCH__
+	int32_t levelSeed;
+#else
 	long levelSeed;
+#endif
 	int levelGeneratorVersion;
 	int gameType;
 
@@ -17,7 +21,13 @@ public:
 	{
 	}
 
-	StartGamePacket(long seed, int levelGeneratorVersion, int gameType, int entityId, float x, float y, float z)
+	StartGamePacket(
+#ifdef __SWITCH__
+		int32_t seed
+#else
+		long seed
+#endif
+		, int levelGeneratorVersion, int gameType, int entityId, float x, float y, float z)
 	:	levelSeed(seed),
 		levelGeneratorVersion(levelGeneratorVersion),
 		gameType(gameType),

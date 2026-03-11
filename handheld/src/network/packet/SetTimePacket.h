@@ -10,7 +10,7 @@ public:
     SetTimePacket() {
     }
 
-    SetTimePacket(long time)
+    SetTimePacket(int32_t time)
 	:	time(time)
 	{}
 
@@ -30,7 +30,7 @@ public:
 		callback->handle(source, (SetTimePacket*)this);
 	}
 	
-	long time;
+	int32_t time;
 };
 
 #endif /*NET_MINECRAFT_NETWORK_PACKET__SetTimePacket_H__*/
