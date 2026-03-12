@@ -145,27 +145,6 @@ bool SocketLayer::IsPortInUse_Old(unsigned short port, const char *hostAddress)
 	int ret = bind__( listenSocket, ( struct sockaddr * ) & listenerSocketAddress, sizeof( listenerSocketAddress ) );
 	closesocket__(listenSocket);
 
-	if (ret >= 0)
-	{
-		// === NIFM SOCKET REGISTRATION ДЛЯ SWITCH (движение теперь полетит) ===
-#ifdef __SWITCH__
-		NifmRequest request;
-		Result rc = nifmCreateRequest(&request, false);
-		if (R_SUCCEEDED(rc))
-		{
-			if (socketNifmRequestRegisterSocketDescriptor(&request, listenSocket) == 0)
-				printf("[DEBUG] NIFM SOCKET REGISTERED SUCCESS for fd %d\n", listenSocket);
-			else
-				printf("[DEBUG] NIFM SOCKET REGISTER FAILED\n");
-			nifmRequestClose(&request);
-		}
-		else
-			printf("[DEBUG] nifmCreateRequest FAILED 0x%x\n", rc);
-#endif
-		return listenSocket;
-	}
-
-
 	// 	#if defined(_DEBUG)
 	// 	if (ret == -1)
 	// 		perror("Failed to bind to address:");
