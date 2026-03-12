@@ -62,10 +62,9 @@ void drawArrayVT(int bufferId, int vertices, int vertexSize /* = 24 */, unsigned
 //#ifdef __3DS__
 //	glBindBuffer2(0, bufferId);
 //#else
+	//glBindTexture)
 	glBindBuffer2(GL_ARRAY_BUFFER, bufferId);
 //#endif
-#include <GLES/gl.h>
-
 	glTexCoordPointer2(2, GL_FLOAT, vertexSize, (GLvoid*) (3 * 4));
 	glEnableClientState2(GL_TEXTURE_COORD_ARRAY);
 	glVertexPointer2(3, GL_FLOAT, vertexSize, 0);
@@ -393,8 +392,15 @@ int glhUnProjectf(	float winx, float winy, float winz,
 	objectCoordinate[2]=out[2]*out[3];
 	return 1;
 }
-
-#ifdef __3DS__
+#ifdef __NDS__
+static float g_currentColor[4];
+void glColor4f(float r, float g, float b, float a) {
+	g_currentColor[0] = r;
+	g_currentColor[1] = g;
+	g_currentColor[2] = b;
+	g_currentColor[3] = a;
+}
+#elif __3DS__
 static float g_currentColor[4];
 void glColor4f(float r, float g, float b, float a) {
 	g_currentColor[0] = r;

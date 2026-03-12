@@ -37,6 +37,7 @@ RakNetInstance::~RakNetInstance()
 
 bool RakNetInstance::host(const std::string& localName, int port, int maxConnections /* = 4 */)
 {
+#ifdef __SWITCH__
 	Result rc = socketInitializeDefault();
 	if (R_FAILED(rc))
 	{
@@ -46,6 +47,7 @@ bool RakNetInstance::host(const std::string& localName, int port, int maxConnect
 	{
 		printf("[DEBUG] socketInitializeDefault SUCCESS!\n");
 	}
+#endif
 	if (rakPeer->IsActive())
 	{
 		rakPeer->Shutdown(500);

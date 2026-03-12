@@ -5,25 +5,28 @@
 #include "../Options.h"
 
 // Android should always run OPENGL_ES
-#if defined(ANDROID) || defined(__APPLE__) || defined(RPI) || defined(__VITA__) || defined (__SWITCH__) || defined(__3DS__)
+#if defined(ANDROID) || defined(__APPLE__) || defined(RPI) || defined(__VITA__) || defined (__SWITCH__) || defined(__3DS__) || defined(__NDS__)
     #define OPENGL_ES
 #endif
-
 // Other systems might run it, if they #define OPENGL_ES
 #if defined(OPENGL_ES) // || defined(ANDROID)
-	#define USE_VBO
-	#define GL_QUADS 0x0007
     #if defined(__APPLE__)
         #import <OpenGLES/ES1/gl.height>
         #import <OpenGLES/ES1/glext.height>
 	#elif defined(__3DS__)
         #include <GLES/gl.h>
+	#elif defined(__NDS__)
+		#include <nds/arm9/videoGL.h>
     #else
         #include <GLES/gl.h>
         #if defined(ANDROID) || defined(__VITA__) || defined(__SWITCH__)
             #include<GLES/glext.h>
         #endif
     #endif
+	#define USE_VBO
+	#ifndef GL_QUADS
+		#define GL_QUADS 0x0007
+	#endif
 #else
     // Uglyness to fix redeclaration issues
     #ifdef WIN32
@@ -46,6 +49,20 @@
 #define GLERR(x) x
 #endif
 
+#ifdef __NDS__
+typedef int GLsizei;
+typedef int GLint;
+typedef float GLfloat;
+typedef float GLclampf;
+typedef unsigned int GLenum;
+typedef unsigned int GLuint;
+typedef void GLvoid;
+typedef signed char GLbyte;
+typedef short GLshort;
+typedef unsigned char GLubyte;
+
+void glColor4f(float r, float g, float b, float a);
+#endif
 void anGenBuffers(GLsizei n, GLuint* buffer);
 
 #ifdef USE_VBO

@@ -14,7 +14,7 @@ set(CMAKE_COLOR_DIAGNOSTICS ON)
 project(minecraftcpp)
 
 set(NX_APP_NAME "Minecraft PE")
-set(NX_APP_AUTHOR "Your Team")
+set(NX_APP_AUTHOR "efimandreev0")
 set(NX_APP_VERSION "00.61")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC -fPIE")
@@ -421,6 +421,12 @@ nx_generate_nacp(${PROJECT_NAME}.nacp
   AUTHOR ${NX_APP_AUTHOR}
   VERSION ${NX_APP_VERSION}
 )
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
- COMMAND ${CMAKE_COMMAND} -E echo "Building NRO with RomFS from: ${ROMFS_STAGING_DIR}"
- COMMAND $ENV{DEVKITPRO}/tools/bin/elf2nro ${PROJECT_NAME}.elf ${PROJECT_NAME}.nro --romfsdir=${ROMFS_STAGING_DIR})
+nx_create_nro(${PROJECT_NAME}
+        OUTPUT ${PROJECT_NAME}.nro
+        ICON "assets/${PROJECT_NAME}.jpg"
+        NACP ${PROJECT_NAME}.nacp
+        ROMFS "${ROMFS_STAGING_DIR}"
+)
+#add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+# COMMAND ${CMAKE_COMMAND} -E echo "Building NRO with RomFS from: ${ROMFS_STAGING_DIR}"
+# COMMAND $ENV{DEVKITPRO}/tools/bin/elf2nro ${PROJECT_NAME}.elf ${PROJECT_NAME}.nro --romfsdir=${ROMFS_STAGING_DIR})

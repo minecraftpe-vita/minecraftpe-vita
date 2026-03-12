@@ -24,7 +24,7 @@ using namespace RakNet;
 SocketLayerOverride *SocketLayer::slo=0;
 
 #ifdef _WIN32
-#elif defined(__VITA__) || defined(__SWITCH__) || defined(__3DS__)
+#elif defined(__VITA__) || defined(__SWITCH__) || defined(__3DS__) || defined(__NDS__)
 #include <string.h> // memcpy
 #include <unistd.h>
 #include <fcntl.h>
@@ -32,12 +32,17 @@ SocketLayerOverride *SocketLayer::slo=0;
 #include <errno.h>  // error numbers
 #include <stdio.h> // RAKNET_DEBUG_PRINTF
 #include <sys/socket.h>
-#if !defined(__SWITCH__) &&  !defined(__3DS__)
+#if !defined(__SWITCH__) &&  !defined(__3DS__) && !defined(__NDS__)
 #include <psp2/net/netctl.h>
 #define SCE_NET_CTL_INFO_IP_ADDRESS 15
 #define SCE_NET_CTL_INFO_NETMASK 16
 #elif defined(__SWITCH__)
 #include <switch.h>
+#elif defined(__NDS__)
+#include <dswifi9.h>
+#ifndef IP_TTL
+#define IP_TTL 2
+#endif
 #endif
 #include <arpa/inet.h>
 #else
@@ -1298,6 +1303,16 @@ RakNet::RakString SocketLayer::GetSubNetForSocketAndIp(SOCKET inSock, RakNet::Ra
 	return "255.255.255.0";
 #elif defined(__3DS__)
 	return "255.255.255.0";
+#elif defined(__NDS__)
+	struct in_addr ip, gateway, mask, dns1, dns2;
+	ip = Wifi_GetIPInfo(&gateway, &mask, &dns1, &dns2);
+
+	if (mask.s_addr == 0) {
+		return "255.255.255.0";
+	}
+
+	return inet_ntoa(mask);
+
 #elif   defined(_WIN32)
 	INTERFACE_INFO InterfaceList[20];
 	unsigned long nBytesReturned;

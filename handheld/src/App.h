@@ -1,7 +1,7 @@
 #ifndef APP_H__
 #define APP_H__
 
-#if defined(__APPLE__) || defined(__3DS__)
+#if defined(__APPLE__) || defined(__3DS__) || defined(__NDS__)
 #define NO_EGL
 #endif
 #ifdef STANDALONE_SERVER

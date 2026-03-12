@@ -205,7 +205,7 @@ void handleController() {
 	if(changed & (HidNpadButton_Left | HidNpadButton_L)) Keyboard::feed(Keyboard::KEY_LEFT, (kHeld & (HidNpadButton_Left  | HidNpadButton_L)) ? 1 : 0);
 
 	// Sneak
-	if(changed & HidNpadButton_Down) {
+	if(changed & (HidNpadButton_Down | HidNpadButton_StickR)) {
 		sneaking = !sneaking;
 		Keyboard::feed(Keyboard::KEY_LSHIFT, sneaking);
 	}
@@ -216,13 +216,13 @@ void handleController() {
 	if(changed & HidNpadButton_A) Keyboard::feed(Keyboard::KEY_SPACE, (kHeld & HidNpadButton_A) ? 1 : 0);
 
 	// Inventory
-	if(changed & HidNpadButton_X) Keyboard::feed(Keyboard::KEY_C, (kHeld & HidNpadButton_X) ? 1 : 0);
+	if(changed & HidNpadButton_Y) Keyboard::feed(Keyboard::KEY_C, (kHeld & HidNpadButton_Y) ? 1 : 0);
 
 	// Throw away
 	if(changed & HidNpadButton_B) Keyboard::feed(Keyboard::KEY_ESCAPE, (kHeld & HidNpadButton_B) ? 1 : 0);
 
 	// Crafting
-	if(changed & HidNpadButton_Y) Keyboard::feed(Keyboard::KEY_E, (kHeld & HidNpadButton_Y) ? 1 : 0);
+	if(changed & HidNpadButton_X) Keyboard::feed(Keyboard::KEY_E, (kHeld & HidNpadButton_X) ? 1 : 0);
 
 	// Pause
 	if(changed & HidNpadButton_Plus) Keyboard::feed(Keyboard::KEY_P, (kHeld & HidNpadButton_Plus) ? 1 : 0);
@@ -285,7 +285,7 @@ int main(int argc, char** argv) {
 	
 	while (appletMainLoop()) {
 		padUpdate(&pad);
-		if ((padGetButtons(&pad) & HidNpadButton_Plus) && (padGetButtons(&pad) & HidNpadButton_Minus)) break;
+		//if ((padGetButtons(&pad) & HidNpadButton_Plus) && (padGetButtons(&pad) & HidNpadButton_Minus)) break;
 
 		handleTouch();
 		handleController();

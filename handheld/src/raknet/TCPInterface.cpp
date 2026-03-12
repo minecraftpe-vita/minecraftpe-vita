@@ -714,9 +714,11 @@ SOCKET TCPInterface::SocketConnect(const char* host, unsigned short remotePort, 
 	int sock_opt=1024*256;
 	setsockopt__(sockfd, SOL_SOCKET, SO_RCVBUF, ( char * ) & sock_opt, sizeof ( sock_opt ) );
 
-
+#ifdef __NDS__
+	memcpy((char *)&serverAddress.sin_addr.s_addr, (char *)server->h_addr_list[0], server->h_length);
+#else
 	memcpy((char *)&serverAddress.sin_addr.s_addr, (char *)server->h_addr, server->h_length);
-
+#endif
 
 
 

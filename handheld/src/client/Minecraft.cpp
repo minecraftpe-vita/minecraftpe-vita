@@ -632,7 +632,11 @@ public:
 	~InputRAII() {
 #ifndef STANDALONE_SERVER
 		Mouse::reset();
+#ifdef __NDS__
+		Keyboard2::reset();
+#else
 		Keyboard::reset();
+#endif
 #endif
 	}
 };
@@ -709,9 +713,15 @@ void Minecraft::tickInput() {
 	}
 
 	TIMER_POP_PUSH("keyboard");
+#ifdef __NDS__
+	while (Keyboard2::next()) {
+		int key = Keyboard2::getEventKey();
+		bool isPressed = (Keyboard2::getEventKeyState() == KeyboardAction::KEYDOWN);
+#else
 	while (Keyboard::next()) {
 		int key = Keyboard::getEventKey();
 		bool isPressed = (Keyboard::getEventKeyState() == KeyboardAction::KEYDOWN);
+#endif
 		player->setKey(key, isPressed);
 
 		if (isPressed) {
@@ -902,8 +912,11 @@ void Minecraft::tickInput() {
 
 			#ifndef __VITA__ // this is handled earlier ..
 			#ifndef RPI
-				if (key == Keyboard::KEY_R) // R ???
-					pauseGame(false);
+#ifdef __NDS__
+#else
+			if (key == Keyboard::KEY_R) // R ???
+				pauseGame(false);
+#endif
 			#else
 				if (key == Keyboard::KEY_ESCAPE)
 					pauseGame(false);
@@ -958,7 +971,11 @@ void Minecraft::tickInput() {
 
 	bool isTryingToDestroyBlock = (options.useMouseForDigging
 			?	(Mouse::isButtonDown(MouseAction::ACTION_LEFT) && mouseDiggable)
+#ifdef __NDS__
+			:	Keyboard2::isKeyDown(options.keyDestroy.key))
+#else
 			:	Keyboard::isKeyDown(options.keyDestroy.key))
+#endif
 		||	(buildHandled && bai.isRemove());
 
 	TIMER_POP_PUSH("handlemouse");
@@ -996,7 +1013,11 @@ void Minecraft::handleMouseDown(int button, bool down) {
 #if defined(__VITA__) || defined(_WIN32) || defined(__SWITCH__) // honestly this seems like just a genuine bug in the game tbh
 		if(!down && !Keyboard::isKeyDown(options.keyUse.key) && !Mouse::isButtonDown(MouseAction::ACTION_RIGHT)) {
 #else
+#ifdef __NDS__
+		if(!down && !Keyboard2::isKeyDown(options.keyUse.key)) {
+#else
 		if(!down && !Keyboard::isKeyDown(options.keyUse.key)) {
+#endif
 #endif
 			gameMode->releaseUsingItem(player);
 		}

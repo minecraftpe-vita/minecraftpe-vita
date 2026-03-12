@@ -3,7 +3,6 @@
  *  Created by aegzorz on 2007-02-09.
  *  Copyright 2007 Oxeye. All rights reserved.
  */
-
 #ifndef _OX_CORE_CTHREAD_H_
 #define _OX_CORE_CTHREAD_H_
 
@@ -19,6 +18,10 @@
 #include <3ds.h>
 #include <inttypes.h>
 #include <pthread.h>
+#elif __NDS__
+#include <nds.h>
+#include <inttypes.h>
+#include <pthread.h>
 #endif
 #ifdef __VITA__
 #include <psp2/kernel/threadmgr.h>
@@ -27,7 +30,7 @@
 
 typedef void *( * pthread_fn )( void * );
 
-#if defined(LINUX) || defined(ANDROID) || defined(__APPLE__) || defined(POSIX) || defined(__VITA__) || defined(__SWITCH__) || defined(__3DS__)
+#if defined(LINUX) || defined(ANDROID) || defined(__APPLE__) || defined(POSIX) || defined(__VITA__) || defined(__SWITCH__) || defined(__3DS__) || defined(__NDS__)
 	#include <pthread.h>
 	#include <unistd.h>
 
@@ -52,7 +55,7 @@ typedef void *( * pthread_fn )( void * );
 		DWORD						m_threadID;
 		HANDLE						m_threadHandle;
 	#endif
-	#if defined(LINUX) || defined(ANDROID) || defined(__APPLE__) || defined(POSIX) || defined(__SWITCH__) || defined(__3DS__)
+	#if defined(LINUX) || defined(ANDROID) || defined(__APPLE__) || defined(POSIX) || defined(__SWITCH__) || defined(__3DS__) || defined(__NDS__)
 		pthread_fn					mp_threadFunc;
 		pthread_t					m_thread;
 		pthread_attr_t				m_attributes;

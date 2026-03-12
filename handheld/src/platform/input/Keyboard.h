@@ -25,10 +25,18 @@ typedef KeyboardActionVec::iterator KeyboardActionIt;
 typedef KeyboardActionVec::const_iterator KeyboardActionCIt;
 
 /** A static keyboard class, written to resemble the one in lwjgl somewhat */
+#ifdef __NDS__
+class Keyboard2
+#else
 class Keyboard
+#endif
 {
 public:
+#ifdef __NDS__
+	static const int KEY_A2 = 65;
+#else
 	static const int KEY_A = 65;
+#endif
 	static const int KEY_B = 66;
 	static const int KEY_C = 67;
 	static const int KEY_D = 68;

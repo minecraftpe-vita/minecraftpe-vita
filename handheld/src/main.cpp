@@ -44,6 +44,10 @@
 #ifdef __3DS__
     #include "main_ctr.h"
 #endif
+
+#ifdef __NDS__
+    #include "main_ntr.h"
+#endif
 #ifdef __SWITCH__
     #include "main_nx.h"
 #endif
