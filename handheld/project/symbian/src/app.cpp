@@ -11,7 +11,7 @@ CApaDocument *CMcpeApp::CreateDocumentL() {
 }
 
 TUid CMcpeApp::AppDllUid() const {
-	return { static_cast<TInt32>(0xE0000666) };
+	return { static_cast<TInt32>(0xE000C418) };
 }
 
 CApaApplication *NewApplication() {

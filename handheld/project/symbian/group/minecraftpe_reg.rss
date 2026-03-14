@@ -2,7 +2,7 @@
 #include <minecraftpe.rsg>
 
 UID2 KUidAppRegistrationResourceFile
-UID3 0xE0000666
+UID3 0xE000C418
 
 RESOURCE APP_REGISTRATION_INFO
 	{

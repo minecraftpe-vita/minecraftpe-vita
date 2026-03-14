@@ -47,14 +47,11 @@ struct AppPlatform_Symbian : AppPlatform {
 	BinaryBlob readAssetFile(const std::string &filename) override {
 		BinaryBlob blob;
 
-		const auto path = "/private/e0000666/data/" + filename;
-		fprintf(stdout, "Try read asset: %s\n", path.c_str());
+		const auto path = "/private/e000c418/data/" + filename;
 
 		auto fh = fopen(path.c_str(), "r");
-		fprintf(stdout, "fh = %p\n", fh);
 
 		if (!fh) {
-			fprintf(stdout, "Does not exist?: %s\n", path.c_str());
 			return blob;
 		}
 		fseek(fh, 0, SEEK_END);
@@ -63,7 +60,6 @@ struct AppPlatform_Symbian : AppPlatform {
 
 		auto buf = new uint8_t[sz];
 		if (1 != fread(buf, sz, 1, fh)) {
-			fprintf(stdout, "Read failed: %s\n", path.c_str());
 			fclose(fh);
 			delete[] buf;
 			return blob;
@@ -73,20 +69,16 @@ struct AppPlatform_Symbian : AppPlatform {
 
 		blob.size = sz;
 		blob.data = buf;
-
-		fprintf(stdout, "RdOK: %s (sz = %d)\n", path.c_str(), sz);
 		return blob;
 	}
 
 	TextureData loadTexture(const std::string &filename_, bool textureFolder) override {
-		const std::string filename = textureFolder ? "/private/e0000666/data/images/" + filename_ : filename_;
-		fprintf(stdout, "Try load texfile: %s\n", filename.c_str());
+		const std::string filename = textureFolder ? "/private/e000c418/data/images/" + filename_ : filename_;
 
 		TextureData out;
 		unsigned err;
 		std::vector<uint8_t> pmap;
 		if ((err = lodepng::decode(pmap, reinterpret_cast<unsigned int &>(out.w), reinterpret_cast<unsigned int &>(out.h), filename))) {
-			fprintf(stdout, "Error %d loading texfile %s\n", err, filename.c_str());
 			return out;
 		}
 
@@ -95,7 +87,6 @@ struct AppPlatform_Symbian : AppPlatform {
 		out.data = new uint8_t[pmap.size()];
 		std::copy(pmap.begin(), pmap.end(), out.data);
 
-		fprintf(stdout, "TRdOK: %s\n", filename.c_str());
 		return out;
 	}
 
