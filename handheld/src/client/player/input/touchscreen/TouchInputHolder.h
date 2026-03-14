@@ -7,7 +7,7 @@
 #include "../ITurnInput.h"
 #include "TouchAreaModel.h"
 #include "../../../../platform/input/Multitouch.h"
-#include "../../../../platform/time.h"
+#include "../../../../platform/Time.h"
 #include "../../../../util/SmoothFloat.h"
 
 #include "../../../../world/entity/player/Player.h"

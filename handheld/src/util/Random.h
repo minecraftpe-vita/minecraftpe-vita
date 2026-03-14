@@ -18,7 +18,7 @@
  
 */
 
-#include "../platform/time.h"
+#include "../platform/Time.h"
 #include <cmath>
 
 class Random

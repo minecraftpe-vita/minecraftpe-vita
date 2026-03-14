@@ -827,7 +827,7 @@
     <ClInclude Include="..\..\src\client\renderer\culling\FrustumData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\platform\time.h">
+    <ClInclude Include="..\..\src\platform\Time.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\util\Mth.h">

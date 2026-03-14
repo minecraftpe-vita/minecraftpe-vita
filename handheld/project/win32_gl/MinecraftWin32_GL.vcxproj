@@ -391,7 +391,7 @@
     <ClInclude Include="..\..\src\platform\input\Controller.h" />
     <ClInclude Include="..\..\src\platform\input\Keyboard.h" />
     <ClInclude Include="..\..\src\platform\input\Mouse.h" />
-    <ClInclude Include="..\..\src\platform\time.h" />
+    <ClInclude Include="..\..\src\platform\Time.h" />
     <ClInclude Include="..\..\src\util\IntHashMap.h" />
     <ClInclude Include="..\..\src\util\Mth.h" />
     <ClInclude Include="..\..\src\util\Random.h" />

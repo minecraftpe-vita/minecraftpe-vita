@@ -1,7 +1,7 @@
 #ifndef PERFORMANCE_H__
 #define PERFORMANCE_H__
 
-#include "platform/time.h"
+#include "platform/Time.h"
 
 class Performance
 {

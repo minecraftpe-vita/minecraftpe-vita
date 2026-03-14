@@ -42,7 +42,7 @@ SocketLayerOverride *SocketLayer::slo=0;
 #include <arpa/inet.h>
 #include <errno.h>  // error numbers
 #include <stdio.h> // RAKNET_DEBUG_PRINTF
-#if !defined(ANDROID)
+#if !defined(ANDROID) && !defined(__EPOC32__)
 #include <ifaddrs.h>
 #endif
 #include <netinet/in.h>
@@ -1446,6 +1446,10 @@ RakNet::RakString SocketLayer::GetSubNetForSocketAndIp(SOCKET inSock, RakNet::Ra
 			return netMaskString;
 		}
 	}
+	return "";
+
+#elif defined(__EPOC32__)
+
 	return "";
 
 #elif defined(__VITA__)

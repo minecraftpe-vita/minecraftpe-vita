@@ -3,7 +3,7 @@
 #include "../components/Button.h"
 #include "../../Minecraft.h"
 #include "../../player/LocalPlayer.h"
-#include "../../../platform/time.h"
+#include "../../../platform/Time.h"
 
 static const int WAIT_TICKS = 30;
 

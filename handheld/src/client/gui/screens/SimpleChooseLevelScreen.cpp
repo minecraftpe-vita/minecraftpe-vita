@@ -4,7 +4,7 @@
 #include "../components/Button.h"
 #include "../../Minecraft.h"
 #include "../../../world/level/LevelSettings.h"
-#include "../../../platform/time.h"
+#include "../../../platform/Time.h"
 
 SimpleChooseLevelScreen::SimpleChooseLevelScreen(const std::string& levelName)
 :	bCreative(0),

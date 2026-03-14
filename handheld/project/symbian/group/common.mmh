@@ -1,0 +1,14 @@
+MACRO UNICODE
+MACRO _UNICODE
+
+//MACRO DEBUG
+//MACRO _DEBUG
+
+SYSTEMINCLUDE /epoc32/include
+SYSTEMINCLUDE /epoc32/include/stdapis/stlportv5
+SYSTEMINCLUDE /epoc32/include/stdapis
+SYSTEMINCLUDE /epoc32/include/mw
+SYSTEMINCLUDE /epoc32/include/platform
+SYSTEMINCLUDE /epoc32/include/platform/mw
+
+/* vim: set ft=mmp : */

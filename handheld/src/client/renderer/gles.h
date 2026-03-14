@@ -5,7 +5,7 @@
 #include "../Options.h"
 
 // Android should always run OPENGL_ES
-#if defined(ANDROID) || defined(__APPLE__) || defined(RPI) || defined(__VITA__)
+#if defined(ANDROID) || defined(__APPLE__) || defined(RPI) || defined(__VITA__) || defined(__EPOC32__)
     #define OPENGL_ES
 #endif
 

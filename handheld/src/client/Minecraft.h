@@ -1,7 +1,7 @@
 #ifndef NET_MINECRAFT_CLIENT__Minecraft_H__
 #define NET_MINECRAFT_CLIENT__Minecraft_H__
 
-#include <atomic>
+#include "../Atomic.h"
 
 #include "Options.h"
 #ifndef STANDALONE_SERVER
@@ -195,7 +195,7 @@ public:
     PixelCalc pixelCalcUi;
 
 	HitResult hitResult;
-	std::atomic<int> progressStagePercentage;
+	Atomic<int> progressStagePercentage;
 
 	// This field is initialized in main()
 	// It sets the base path to where worlds can be written (sdcard on android)
@@ -204,7 +204,7 @@ public:
 	protected:
 	Timer timer;
     // @note @attn @warn: this is dangerous as fuck!
-	std::atomic<bool> isGeneratingLevel;
+	Atomic<bool> isGeneratingLevel;
 	bool _hasSignaledGeneratingLevelFinished;
 
 	LevelStorageSource* storageSource;

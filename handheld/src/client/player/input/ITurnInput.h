@@ -1,7 +1,7 @@
 #ifndef NET_MINECRAFT_CLIENT_PLAYER__ITurnInput_H__
 #define NET_MINECRAFT_CLIENT_PLAYER__ITurnInput_H__
 
-#include "../../../platform/time.h"
+#include "../../../platform/Time.h"
 #include "../../IConfigListener.h"
 #include <cmath>
 

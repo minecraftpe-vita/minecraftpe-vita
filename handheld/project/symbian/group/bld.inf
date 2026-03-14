@@ -1,0 +1,14 @@
+#include <platform_paths.hrh>
+
+PRJ_PLATFORMS
+DEFAULT armv5_urel
+
+PRJ_EXPORTS
+
+PRJ_MMPFILES
+./raknet.mmp
+./lodepng.mmp
+./cmixer.mmp
+./minecraftpe.mmp
+
+PRJ_EXTENSIONS

@@ -1,0 +1,53 @@
+TARGET raknet.lib
+TARGETTYPE lib
+
+UID 0x2001E628
+
+#include "common.mmh"
+
+MACRO MAX_ALLOCA_STACK_ALLOCATION=0x8000
+
+SOURCEPATH ../../../src/raknet
+source DS_Table.cpp
+source FormatString.cpp
+source EncodeClassName.cpp
+source SuperFastHash.cpp
+source RakPeer.cpp
+source DS_BytePool.cpp
+source DS_ByteQueue.cpp
+source ReliabilityLayer.cpp
+source RakNetTransport2.cpp
+source CheckSum.cpp
+source TCPInterface.cpp
+source rdlmalloc.cpp
+source LocklessTypes.cpp
+source Itoa.cpp
+source StringCompressor.cpp
+source BitStream.cpp
+source GetTime.cpp
+source WSAStartupSingleton.cpp
+source StringTable.cpp
+source RakString.cpp
+source RakSleep.cpp
+source DataCompressor.cpp
+source CCRakNetSlidingWindow.cpp
+source SignaledEvent.cpp
+source SHA1.cpp
+source PacketizedTCP.cpp
+source RakNetTypes.cpp
+source RakNetSocket.cpp
+source PluginInterface2.cpp
+source Rand.cpp
+source RakWString.cpp
+source SimpleMutex.cpp
+source SocketLayer.cpp
+source DS_HuffmanEncodingTree.cpp
+source RakThread.cpp
+source LinuxStrings.cpp
+source RakMemoryOverride.cpp
+source HTTPConnection.cpp
+
+CAPABILITY None
+
+ARMFPU softvfp
+SMPSAFE

@@ -1,0 +1,13 @@
+#include <appinfo.rh>
+#include <minecraftpe.rsg>
+
+UID2 KUidAppRegistrationResourceFile
+UID3 0xE0000666
+
+RESOURCE APP_REGISTRATION_INFO
+	{
+	app_file="minecraftpe";
+
+	localisable_resource_file = "\\resource\\apps\\minecraftpe";
+	localisable_resource_id		= R_MCPE_LOCALISABLE_APP_INFO; 
+	}
