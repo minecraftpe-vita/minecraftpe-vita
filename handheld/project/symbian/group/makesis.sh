@@ -19,8 +19,8 @@ test -f "${EPOCROOT}${_approot}/minecraftpe.exe" || \
 	sbs -c "armv5_${_mode}" -b "${_groupdir}/bld.inf"
 
 install -Dm755 -t "${EPOCROOT}/epoc32/data/z/sys/bin/" "${EPOCROOT}${_approot}/minecraftpe.exe"
-mkdir -p "${EPOCROOT}/epoc32/data/z/private/e0000666"
-cp -r "${_groupdir}/../../../data" "${EPOCROOT}/epoc32/data/z/private/e0000666/"
+mkdir -p "${EPOCROOT}/epoc32/data/z/private/e000c418"
+cp -r "${_groupdir}/../../../data" "${EPOCROOT}/epoc32/data/z/private/e000c418/"
 
 makesis -v -d"${EPOCROOT}/epoc32/data/z" "${_pkg}" "${_sis}"
 
