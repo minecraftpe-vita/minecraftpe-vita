@@ -128,15 +128,19 @@ public:
 	virtual std::string getPlatformStringVar(int stringId) {
 		return "<getPlatformStringVar NotImplemented>";
 	}
-
-	virtual void showKeyboard() {
+	virtual void showKeyboard(std::string defaultText = "", int maxLength = -1) {
 		keyboardVisible = true;
 	}
 	virtual void hideKeyboard() {
 		keyboardVisible = false;
 	}
-	virtual bool isKeyboardVisible() {return keyboardVisible;}
+	virtual bool isKeyboardVisible() { return keyboardVisible; }
+
 	virtual std::string getKeyboardInput() { return ""; };
+
+	virtual int getKeyboardX() { return 0; };
+
+	virtual int getKeyboardY() { return getScreenHeight(); };
 
 	virtual std::string defaultUsername() { return "Steve"; }
 protected:

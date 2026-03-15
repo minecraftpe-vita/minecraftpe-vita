@@ -18,7 +18,7 @@ TextEditScreen::~TextEditScreen() {
 }
 void TextEditScreen::init() {
 	super::init();
-	minecraft->platform()->showKeyboard();
+	minecraft->platform()->showKeyboard(sign->messages[line], 15);
 	isShowingKeyboard = true;
 	ImageDef def;
 	def.name = "gui/spritesheet.png";
@@ -112,6 +112,16 @@ void TextEditScreen::lostFocus() {
 
 void TextEditScreen::tick() {
 	frame++;
+
+#if !defined(__ANDROID__) && !defined(__APPLE__)
+	if(minecraft->platform()->isKeyboardVisible()) {
+		std::string fullstring = minecraft->platform()->getKeyboardInput();
+		if(fullstring.length() < 16) {
+			sign->messages[line] = fullstring;
+		}
+	}
+#endif
+
 }
 
 void TextEditScreen::keyPressed( int eventKey ) {
@@ -127,7 +137,29 @@ void TextEditScreen::keyPressed( int eventKey ) {
         }
 	} else if(eventKey == Keyboard::KEY_RETURN)  {
 		line = (line + 1) % 4;
-	} else {
+	}
+#ifdef __VITA__
+	// this is really cursed i dont like this lol -- but it does work
+
+	else if(eventKey == Keyboard::KEY_UP) { // mapped to dpad up
+		line--;
+		if(line < 0)
+			line = 3;
+		if(line >= 4)
+			line = 0;
+	}
+	else if(eventKey == Keyboard::KEY_DOWN) { // mapped to dpad down
+		line++;
+		if(line < 0)
+			line = 3;
+		if(line >= 4 )
+			line = 0;
+	}
+	else if(eventKey == Keyboard::KEY_SPACE) { // mapped to cross
+		minecraft->platform()->showKeyboard(sign->messages[line], 15);
+	}
+#endif
+	else {
 		super::keyPressed(eventKey);
 	}
 }

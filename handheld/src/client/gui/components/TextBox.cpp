@@ -39,20 +39,23 @@ TextBox::~TextBox() {
 
 void TextBox::setFocus(Minecraft* minecraft) {
 	if(!focused) {
-		minecraft->platform()->showKeyboard();
+		if(minecraft->platform()->isKeyboardVisible()) return;
+		this->minecraftRef = minecraft;
+
+		minecraft->platform()->showKeyboard(text);
 		focused = true;
 
-		this->minecraftRef = minecraft;
 	}
 }
 
 bool TextBox::loseFocus(Minecraft* minecraft) {
 	if(focused) {
-		minecraft->platform()->showKeyboard();
+		minecraft->platform()->hideKeyboard();
+		this->minecraftRef = minecraft;
+
 		focused = false;
 		return true;
 
-		this->minecraftRef = minecraft;
 	}
 	return false;
 }
@@ -60,6 +63,7 @@ bool TextBox::loseFocus(Minecraft* minecraft) {
 void TextBox::setPressed(Minecraft* minecraft) {
 	this->setFocus(minecraft);
 }
+
 
 void TextBox::render( Minecraft* minecraft, int xm, int ym ) {
 	if(focused) {
@@ -88,12 +92,10 @@ void TextBox::render( Minecraft* minecraft, int xm, int ym ) {
 		this->text = input;
 
 
-		#if defined(__VITA__) || 1
-
 		int prevY = this->y;
 
-		int keyboardX = 0;
-		int keyboardY = 297;
+		int keyboardX = minecraft->platform()->getKeyboardX();
+		int keyboardY = minecraft->platform()->getKeyboardY();
 
 		minecraft->screen->toGUICoordinate(keyboardX, keyboardY);
 
@@ -106,7 +108,6 @@ void TextBox::render( Minecraft* minecraft, int xm, int ym ) {
 		this->y = prevY;
 
 		return;
-		#endif
 	}
 
 	Button::render(minecraft, xm, ym);

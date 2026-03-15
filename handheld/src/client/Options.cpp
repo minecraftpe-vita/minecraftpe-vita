@@ -61,18 +61,20 @@ void Options::initDefaultValues() {
 	keyDrop  = KeyMapping("key.drop", Keyboard::KEY_Q);
 	keyChat  = KeyMapping("key.chat", Keyboard::KEY_T);
 	keyFog   = KeyMapping("key.fog", Keyboard::KEY_F);
-	keyDestroy=KeyMapping("key.destroy", 88);
+	keyDestroy=KeyMapping("key.destroy", Keyboard::KEY_X);
 	keyUse   = KeyMapping("key.use", Keyboard::KEY_U);
 	#endif
+	keyMenuNext     = KeyMapping("key.menu.next",     Keyboard::KEY_DOWN);
+	keyMenuPrevious = KeyMapping("key.menu.previous", Keyboard::KEY_UP);
+	keyMenuOk       = KeyMapping("key.menu.ok",       Keyboard::KEY_RETURN);
+	keyMenuCancel   = KeyMapping("key.menu.cancel",   Keyboard::KEY_BACKSPACE);
 	#ifdef __VITA__
+	keyMenuOk       = KeyMapping("key.menu.ok",       Keyboard::KEY_SPACE);
+	keyMenuCancel   = KeyMapping("key.menu.cancel",   Keyboard::KEY_ESCAPE);
 	keyCraft   = KeyMapping("key.crafting", Keyboard::KEY_C);
 	keyUse     = KeyMapping("key.use", Keyboard::KEY_X);
 	keyDestroy = KeyMapping("key.destroy", Keyboard::KEY_Z);
 	#endif
-	keyMenuNext     = KeyMapping("key.menu.next",     40);
-	keyMenuPrevious = KeyMapping("key.menu.previous", 38);
-	keyMenuOk       = KeyMapping("key.menu.ok",       13);
-	keyMenuCancel   = KeyMapping("key.menu.cancel",   8);
 
 	int k = 0;
 	keyMappings[k++] = &keyUp;

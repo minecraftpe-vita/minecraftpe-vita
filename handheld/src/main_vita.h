@@ -262,6 +262,18 @@ void handleController() {
 		LOGI("changedButtons = %08x\n", changedButtons);
 	}
 
+	// menu control
+
+	if(changedButtons & SCE_CTRL_UP) {
+		Keyboard::feed(Keyboard::KEY_UP, BTN_STATE(ctrl.buttons, SCE_CTRL_UP));
+	}
+
+	if(changedButtons & SCE_CTRL_DOWN) {
+		Keyboard::feed(Keyboard::KEY_DOWN, BTN_STATE(ctrl.buttons, SCE_CTRL_DOWN));
+	}
+
+	// gameplay
+
 	// sneak
 	if(changedButtons & SCE_CTRL_DOWN && BTN_STATE(ctrl.buttons, SCE_CTRL_DOWN)) {
 		sneaking = !sneaking;

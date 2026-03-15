@@ -26,8 +26,9 @@ static void png_funcReadFile(png_structp pngPtr, png_bytep data, png_size_t leng
 
 static SceWChar16 ime_out[SCE_IME_MAX_PREEDIT_LENGTH + SCE_IME_MAX_TEXT_LENGTH + 1] = {0};
 static SceUInt8 ime_out_utf8[sizeof(ime_out)] = {0};
-static char ime_inital[8] = { 0 };
+static SceWChar16 ime_inital[SCE_IME_MAX_TEXT_LENGTH] = { 0 };
 static bool ime_is_open = false;
+
 
 static void Utf16ToUtf8(const uint16_t *src, uint8_t *dst)
 {
@@ -54,10 +55,19 @@ static void Utf16ToUtf8(const uint16_t *src, uint8_t *dst)
 	*dst = '\0';
 }
 
+
+static void Utf8ToUtf16(const uint8_t *src, uint16_t* dst)
+{
+	int i;
+	for(i = 0; src[i] != 0; i++) {
+		dst[i] = src[i];
+	}
+
+	dst[++i] = 0;
+}
+
 static void ImeEventHandler(void *arg, const SceImeEventData *e)
 {
-
-
 	switch (e->id) {
 		case SCE_IME_EVENT_UPDATE_TEXT:
 			Utf16ToUtf8((SceWChar16 *)ime_out, (uint8_t*)ime_out_utf8);
@@ -99,8 +109,16 @@ public:
 		}
 	}
 
-	void showKeyboard() override {
-		int ret;
+	void showKeyboard(std::string defaultText, int maxLength) override {
+		if(maxLength < 0)
+			maxLength = SCE_IME_MAX_TEXT_LENGTH;
+
+		if(maxLength > SCE_IME_MAX_TEXT_LENGTH)
+			maxLength = SCE_IME_MAX_TEXT_LENGTH;
+
+		memset(ime_inital, 0x00, sizeof(ime_inital));
+		Utf8ToUtf16((const uint8_t*)defaultText.c_str(), ime_inital);
+
 		static SceUInt32 ime_workram[SCE_IME_WORK_BUFFER_SIZE / sizeof(SceInt32)] = {0};
 	
 		SceImeParam param;
@@ -112,15 +130,16 @@ public:
 		param.option = 0;
 
 		param.inputTextBuffer = ime_out;
-		param.maxTextLength = SCE_IME_MAX_TEXT_LENGTH;
+		param.maxTextLength = maxLength;
 		param.enterLabel = SCE_IME_ENTER_LABEL_DEFAULT;
 		param.handler = ImeEventHandler;
 		param.filter = NULL;
-		param.initialText = (SceWChar16 *)ime_inital;
+		param.initialText = ime_inital;
 		param.arg = NULL;
 		param.work = ime_workram;
 
 		sceImeOpen(&param);
+
 		ime_is_open = true;
 	}
 
@@ -139,6 +158,7 @@ public:
 		return imetxt;
 	}
 
+	int getKeyboardY() override { return 297; };
 
 	bool isPowerVR() override { return true; }
 
