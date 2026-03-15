@@ -53,11 +53,14 @@ void CMcpeContainer::ConstructL(const TRect &aRect, CAknAppUi *aAppUi) {
 	mkdir("/data/Others", 0777);
 	mkdir("/data/Others/minecraftpe", 0777);
 
+	// in release builds, do *not* redirect standard streams
+#ifndef PUBLISH
 	freopen("/data/Others/minecraftpe/stdout.txt", "w+", stdout);
 	freopen("/data/Others/minecraftpe/stderr.txt", "w+", stderr);
 
 	setbuf(stdout, NULL);
 	setbuf(stderr, NULL);
+#endif
 
 	const std::string storagePath{"/data/Others/minecraftpe"};
 

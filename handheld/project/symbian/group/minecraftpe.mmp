@@ -14,7 +14,7 @@ CAPABILITY LocalServices+ReadUserData+UserEnvironment+WriteUserData+NetworkServi
 #include "common.mmh"
 
 MACRO POSIX
-#ifndef _DEBUG
+#if !defined(UDEB)
 MACRO PUBLISH
 #endif
 

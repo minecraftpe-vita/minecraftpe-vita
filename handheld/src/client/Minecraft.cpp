@@ -1473,7 +1473,7 @@ void Minecraft::_levelGenerated()
 		netCallback->levelGenerated(level);
 	}
 
-#if defined(WIN32) || defined(RPI) || defined(__VITA__)
+#if defined(WIN32) || defined(RPI) || defined(__VITA__) || defined(__EPOC32__)
 	if (_commandServer) {
 		delete _commandServer;
 	}
