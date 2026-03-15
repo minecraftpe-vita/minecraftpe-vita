@@ -5,20 +5,18 @@ TARGET minecraftpe.exe
 TARGETTYPE exe
 UID 0x100039CE 0xE000C418
 SECUREID 0xE000C418
-SMPSAFE
 
 EPOCSTACKSIZE 0x20000
 EPOCHEAPSIZE 0x800000 0x3000000
 
-//CAPABILITY LocalServices+ReadUserData+UserEnvironment+WriteUserData+NetworkServices
-CAPABILITY All -TCB
+CAPABILITY LocalServices+ReadUserData+UserEnvironment+WriteUserData+NetworkServices
 
 #include "common.mmh"
 
 MACRO POSIX
-//MACRO GLDEBUG
-
-OPTION GCCXML -std=gnu++11 -Wno-reorder -fno-threadsafe-static
+#ifndef _DEBUG
+MACRO PUBLISH
+#endif
 
 USERINCLUDE ../inc
 
@@ -299,8 +297,7 @@ END
 
 START BITMAP minecraftpe.mbm
 TARGETPATH /resource/apps
-//SOURCE c8,1 iconx.bmp iconm.bmp
-SOURCE c24 iconx.bmp
+SOURCE c24,1 iconx192.bmp iconm192.bmp iconx96.bmp iconm96.bmp iconx48.bmp iconm48.bmp
 END
 
 LIBRARY stdnew.lib
@@ -350,4 +347,5 @@ STATICLIBRARY raknet.lib
 STATICLIBRARY lodepng.lib
 STATICLIBRARY cmixer.lib
 
-ARMFPU softvfp
+ARMFPU SoftVFP+VFPv2
+SMPSAFE

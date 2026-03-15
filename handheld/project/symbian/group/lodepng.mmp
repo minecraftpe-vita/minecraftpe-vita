@@ -10,5 +10,5 @@ source lodepng.cpp
 
 CAPABILITY None
 
-ARMFPU softvfp
+ARMFPU SoftVFP+VFPv2
 SMPSAFE

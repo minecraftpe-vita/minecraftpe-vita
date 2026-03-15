@@ -17,7 +17,7 @@
 #include <cstdint>
 
 struct AppPlatform_Symbian : AppPlatform {
-	AppPlatform_Symbian() : iImeIsOpen(false) {
+	AppPlatform_Symbian() {
 		TRAPD(err, (iVibra = CHWRMVibra::NewL()));
 		if (err != KErrNone) {
 			fprintf(stderr, "Vibra open failed: %d\n", err);
@@ -30,19 +30,16 @@ struct AppPlatform_Symbian : AppPlatform {
 	int getScreenWidth() override;
 	int getScreenHeight() override;
 
-	void showKeyboard() override { iImeIsOpen = true; }
-	void hideKeyboard() override { iImeIsOpen = false; }
+	void showKeyboard() override;
+	void hideKeyboard() override {}
 
-	bool isKeyboardVisible() override { return iImeIsOpen; }
+	bool isKeyboardVisible() override;
 
-	std::string getKeyboardInput() override {
-		// TODO:XXX:
-		return "";
-	}
+	std::string getKeyboardInput() override { return iBuffer; }
 
 	bool isPowerVR() override { return false; }
 
-	std::string defaultUsername() override { return "Symbian"; }
+	std::string defaultUsername() override { return "Carla"; /* Symbian^4 would've been Carla */ }
 
 	BinaryBlob readAssetFile(const std::string &filename) override {
 		BinaryBlob blob;
@@ -98,8 +95,8 @@ struct AppPlatform_Symbian : AppPlatform {
 	}
 
 private:
-	bool iImeIsOpen;
 	CHWRMVibra *iVibra;
+	std::string iBuffer;
 };
 
 #endif

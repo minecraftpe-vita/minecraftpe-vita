@@ -2,11 +2,15 @@
 
 #include "AppPlatform_Symbian.h"
 
-int AppPlatform_Symbian::getScreenWidth() {
-	fprintf(stdout, "get screen size of %p\n", CMcpeContainer::instance());
-	return CMcpeContainer::instance()->Size().iWidth;
+static inline CMcpeContainer *container() { return CMcpeContainer::instance(); }
+
+
+int AppPlatform_Symbian::getScreenWidth() { return container()->Size().iWidth; }
+
+int AppPlatform_Symbian::getScreenHeight() { return container()->Size().iHeight; }
+
+void AppPlatform_Symbian::showKeyboard() {
+	if (!container()->PromptTextL(iBuffer)) { iBuffer = ""; }
 }
-int AppPlatform_Symbian::getScreenHeight() {
-	fprintf(stdout, "get screen size of %p\n", CMcpeContainer::instance());
-	return CMcpeContainer::instance()->Size().iHeight;
-}
+
+bool AppPlatform_Symbian::isKeyboardVisible() { return container()->IsImeShown(); }

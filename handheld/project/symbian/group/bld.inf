@@ -1,9 +1,10 @@
 #include <platform_paths.hrh>
 
 PRJ_PLATFORMS
-DEFAULT armv5_urel
+DEFAULT armv6
 
 PRJ_EXPORTS
+// TODO: maybe export files needed for makesis here..?
 
 PRJ_MMPFILES
 ./raknet.mmp

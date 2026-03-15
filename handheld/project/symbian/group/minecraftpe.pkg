@@ -1,14 +1,26 @@
+;
+; Caution: Please use `makesis.sh` to build the SIS file!
+;
+&EN
+
+; SIS header: Name, UID3, Version
 #{"minecraftpe"},(0xE000C418),1,0,0
 
-%{"minecraftpe"}
-:"minecraftpe"
+; Vendor name (localized)
+%{"Mojang, minecraftpe-vita devs"}
 
+; Vendor name (unique)
+:"Mojang, minecraftpe-vita devs"
+
+; EXEs, DLLs, ..
 "sys\bin\minecraftpe.exe"-"!:\sys\bin\minecraftpe.exe"
 
+; Resource definitions & other metadata
 "private\10003a3f\import\apps\minecraftpe_reg.rsc"-"!:\private\10003a3f\import\apps\minecraftpe_reg.rsc"
 "resource\apps\minecraftpe.rsc"-"!:\resource\apps\minecraftpe.rsc"
 "resource\apps\minecraftpe.mbm"-"!:\resource\apps\minecraftpe.mbm"
 
+; Game assets
 "private\e000c418\data\images\art\kz.png"-"!:\private\e000c418\data\images\art\kz.png"
 "private\e000c418\data\images\environment\clouds.png"-"!:\private\e000c418\data\images\environment\clouds.png"
 "private\e000c418\data\images\particles.png"-"!:\private\e000c418\data\images\particles.png"

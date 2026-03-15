@@ -38,6 +38,10 @@ struct CMcpeContainer : CCoeControl {
 
 	~CMcpeContainer() override;
 
+	bool PromptTextL(std::string &out);
+
+	bool IsImeShown() const { return iImeShown; }
+
 	static TInt DrawCallBack(TAny *aInstance);
 
 	bool HandleWsEvent(TWsEvent &aEvent);
@@ -49,11 +53,11 @@ private:
 
 	void HandleResourceChange(TInt aType) override;
 
-	TInt CountComponentControls() const override;
+	inline TInt CountComponentControls() const override { return 0; }
 
-	CCoeControl *ComponentControl(TInt aIndex) const override;
+	inline CCoeControl *ComponentControl(TInt aIndex) const override { return NULL; }
 
-	void Draw(const TRect &aRect) const override;
+	inline void Draw(const TRect &aRect) const override {}
 
 	static bool IsScanCodeNonModifier(TInt iScanCode);
 
@@ -80,6 +84,8 @@ private:
 	std::list<TInt> iPressedKeys;
 	std::set<TInt> iDepressedModifiers;
 	bool iModifierUsed;
+
+	bool iImeShown;
 
 	NinecraftApp *iApp;
 	AppContext iAppCxt;

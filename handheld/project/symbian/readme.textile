@@ -1,0 +1,30 @@
+h1. Minecraft PE (Minecraft PSION EPOC32)
+
+A port of minecraftpe-vita to Symbian^3 and later. Tested on Nokia E7-00 (Running defused Symbian^3 Belle). Requires a phone with at least ARM11 and an OpenGL ES 1.x accelerator (i.e. a "mobile GPU") to run.
+
+h2. Features
+
+Should be on par with the upstream Vita port, except touchscreen only for now. Physical keyboard should still be usable for text input.
+
+h2. Building
+
+This requires Symbian^3 or later SDK and working GCCE 12. If compiling on Linux, you can use the "SymbianRevive SDK":https://github.com/SymbianRevive/ which can also automatically build GCCE 12 ("Modern GCC").
+
+Once you confirm the environment is able to build and package working sample apps, you may proceed to build the MCPE installation packages, for example:
+
+bc. $ git clone -b symbian https://git.silica.codes/minecraftpe-vita/minecraftpe-vita.git
+$ cd minecraftpe-vita/handheld
+$ sbs -c armv6_urel -b project/symbian/group/bld.inf
+$ project/symbian/group/makesis.sh
+
+This yields @.sis@ and @.sisx@ packages in the current working dir.
+
+You can provide a custom certificate to @makesis.sh@, please refer to its source.
+
+Also don't forget to run the @reallyclean@ SBSv2 target if you modify any code, like this:
+
+bc. $ sbs -c armv6_urel -b project/symbian/group/bld.inf reallyclean
+
+h2. Colophon
+
+Please consider any and all Symbian related code free to use (public domain, 0BSD or equivalent) unless specified otherwise.

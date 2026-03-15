@@ -1,8 +1,6 @@
-MACRO UNICODE
-MACRO _UNICODE
+OPTION GCCE -std=gnu++11 -fpermissive -Wno-reorder -fno-threadsafe-static
 
-//MACRO DEBUG
-//MACRO _DEBUG
+MACRO UNICODE _UNICODE
 
 SYSTEMINCLUDE /epoc32/include
 SYSTEMINCLUDE /epoc32/include/stdapis/stlportv5

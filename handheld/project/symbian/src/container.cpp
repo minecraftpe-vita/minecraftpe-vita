@@ -6,13 +6,18 @@
 #include <aknappui.h>
 #include <coecntrl.h>
 #include <coemain.h>
+#include <escapeutils.h>
 #include <w32std.h>
 #include <e32event.h>
+#include <aknquerydialog.h>
+#include <aknnotewrappers.h>
 #include <stdio.h>
 #include <string.h>
 #include <limits.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#include <minecraftpe.rsg>
 
 #include <algorithm>
 
@@ -22,19 +27,15 @@
 	!defined(EKeyRightUpArrow) && \
 	!defined(EKeyRightDownArrow) && \
 	!defined(EKeyLeftDownArrow)
-#define EKeyLeftUpArrow    EKeyDevice10	 // Diagonal arrow event
-#define EKeyRightUpArrow   EKeyDevice11	 // Diagonal arrow event
-#define EKeyRightDownArrow EKeyDevice12	 // Diagonal arrow event
-#define EKeyLeftDownArrow  EKeyDevice13	 // Diagonal arrow event
+#define EKeyLeftUpArrow    EKeyDevice10  // Diagonal arrow event
+#define EKeyRightUpArrow   EKeyDevice11  // Diagonal arrow event
+#define EKeyRightDownArrow EKeyDevice12  // Diagonal arrow event
+#define EKeyLeftDownArrow  EKeyDevice13  // Diagonal arrow event
 #endif
-
-#pragma mark - CMcpeContainer constants
-
-// TODO: get mcpe mappings here!
 
 #pragma mark - CMcpeContainer impl
 
-CMcpeContainer::CMcpeContainer() : iApp(NULL), iAppCxt(), iAppPlat() {}
+CMcpeContainer::CMcpeContainer() : iImeShown(false), iApp(NULL), iAppCxt(), iAppPlat() {}
 
 CMcpeContainer *CMcpeContainer::gInstance = NULL;
 
@@ -45,7 +46,6 @@ void CMcpeContainer::ConstructL(const TRect &aRect, CAknAppUi *aAppUi) {
 
 	CreateWindowL();
 	Window().EnableAdvancedPointers();
-
 	SetExtentToWholeScreen();
 	ActivateL();
 
@@ -152,6 +152,25 @@ void CMcpeContainer::ConstructL(const TRect &aRect, CAknAppUi *aAppUi) {
 	iWsEventReceiver = CWsEventReceiver::NewL(*this, &CCoeEnv::Static()->WsSession());
 }
 
+bool CMcpeContainer::PromptTextL(std::string &out) {
+	if (iImeShown) { return false; }
+
+	TBuf<128> data;
+	data.FillZ();
+
+	auto dlg = CAknTextQueryDialog::NewL(data);
+	dlg->SetPromptL(_L("Enter text"));
+
+	iImeShown = true;
+	bool ok = dlg->ExecuteLD(R_MCPE_TEXT_QUERY);
+	if (ok) {
+		auto mbcsTxt = EscapeUtils::ConvertFromUnicodeToUtf8L(data);
+		out = std::string(reinterpret_cast<const char *>(mbcsTxt->Ptr()), mbcsTxt->Length());
+	}
+	iImeShown = false;
+	return ok;
+}
+
 TInt CMcpeContainer::DrawCallBack(TAny *aInstance) {
 	CMcpeContainer *instance = static_cast<CMcpeContainer *>(aInstance);
 
@@ -256,29 +275,21 @@ bool CMcpeContainer::HandleWsEvent(TWsEvent &aEvent) {
 	return false;
 }
 
-void CMcpeContainer::Draw(const TRect &aRect) const {}
-
 void CMcpeContainer::SizeChanged() {
-	eglSwapBuffers(iEglDisplay, iEglSurface);
+	if (iApp) { iApp->setSize(Size().iWidth, Size().iHeight); }
 }
 
 void CMcpeContainer::HandleResourceChange(TInt aType) {
 	switch (aType) {
 	case KEikDynamicLayoutVariantSwitch:
 		SetExtentToWholeScreen();
-		eglSwapBuffers(iEglDisplay, iEglSurface);
 		break;
 	}
 }
 
-TInt CMcpeContainer::CountComponentControls() const { return 0; }
-
-CCoeControl *CMcpeContainer::ComponentControl(TInt aIndex) const { return NULL; }
-
 CMcpeContainer::~CMcpeContainer() {
 	delete iPeriodic;
 
-	// TODO: check if this works?
 	delete iApp;
 
 	eglMakeCurrent(iEglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
@@ -321,7 +332,7 @@ void CWsEventReceiver::RunL() {
 	TWsEvent wsEvent;
 	iWsSession->GetEvent(wsEvent);
 
-	if (!iParent->HandleWsEvent(wsEvent)) {
+	if (iParent->iImeShown || !iParent->HandleWsEvent(wsEvent)) {
 		static_cast<CMcpeAppUi *>(iParent->iAppUi)->HandleEventL(wsEvent);
 	}
 
