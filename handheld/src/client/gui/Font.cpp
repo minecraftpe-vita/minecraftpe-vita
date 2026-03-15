@@ -362,7 +362,7 @@ void Font::buildChar( unsigned char i, float x /*= 0*/, float y /*=0*/ )
 
 	float s = 8.00f; // char size
 	float texSize = 128.0f;
-	float smallBit = i == 'o' ? 0.1f / texSize : 0.0f;
+	float smallBit = (i == 'o' || i == 'w') ? 0.1f / texSize : 0.0f;
 	// *seems* to fix the small o having a line over it from the character over it in the font sheet
 	// the issue only appears if text is on specific y positions so i think its floating point inaccuracy bleh
 
