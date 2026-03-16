@@ -3,8 +3,12 @@
 ;
 &EN
 
-; SIS header: Name, UID3, Version
-#{"minecraftpe"},(0xE000C418),1,0,0
+; SIS header: Name, UID3, Version, Type
+#{"Minecraft PE"},(0xE000C418),1,0,0,TYPE=SA
+; (the version fields shall be updated to match the general release tag)
+
+; Depends on S60 5.2
+[0x20022E6D],0,0,0,{"S60ProductID"}
 
 ; Vendor name (localized)
 %{"Mojang, minecraftpe-vita devs"}

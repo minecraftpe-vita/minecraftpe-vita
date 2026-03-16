@@ -1,8 +1,7 @@
-// public domain or 0BSD
-
 #include "app.h"
 #include "document.h"
 
+#include <e32std.h>
 #include <eikstart.h>
 #include <apparc.h>
 
@@ -19,5 +18,7 @@ CApaApplication *NewApplication() {
 }
 
 GLDEF_C TInt E32Main() {
+	User::SetFloatingPointMode(EFpModeRunFast);
+
 	return EikStart::RunApplication(NewApplication);
 }
