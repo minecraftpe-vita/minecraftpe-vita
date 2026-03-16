@@ -14,9 +14,7 @@ CAPABILITY LocalServices+ReadUserData+UserEnvironment+WriteUserData+NetworkServi
 #include "common.mmh"
 
 MACRO POSIX
-#if !defined(UDEB)
 MACRO PUBLISH
-#endif
 
 USERINCLUDE ../inc
 
@@ -321,6 +319,9 @@ LIBRARY inetprotutil.lib
 LIBRARY imageconversion.lib
 LIBRARY tagma.lib
 LIBRARY apparc.lib
+LIBRARY extendedconnpref.lib
+LIBRARY netmeta.lib
+LIBRARY esock.lib
 LIBRARY libGLESv1_CM.lib
 LIBRARY libegl.lib
 LIBRARY ws32.lib

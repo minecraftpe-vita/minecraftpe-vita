@@ -9,6 +9,10 @@
 #include <aknwseventobserver.h>
 #include <coecntrl.h>
 #include <w32std.h>
+#include <ES_SOCK.H>
+#include <commdb.h>
+#include <commdbconnpref.h>
+#include <extendedconnpref.h>
 
 #include <list>
 #include <set>
@@ -25,6 +29,7 @@
 struct SoundHandlerSymbian;
 
 struct CMcpeAppUi;
+struct CNetKeepAlive;
 
 struct CMcpeContainer : CCoeControl, MAknWsEventObserver {
 	friend struct CMcpeAppUi;
@@ -86,9 +91,43 @@ private:
 	AppContext iAppCxt;
 	AppPlatform_Symbian iAppPlat;
 
+	CNetKeepAlive *iNetKeepAlive;
+
 	TInt iVolume;
 	TUint iVolumeStep;
 	TStatus iOutputStatus;
+};
+
+struct CNetKeepAlive : CActive {
+	static CNetKeepAlive *NewL();
+
+	virtual ~CNetKeepAlive();
+
+	void ConnectL();
+
+	void Disconnect();
+
+	enum TStatus {
+		ENetIdle,
+		ENetConnecting,
+		ENetMonitoring,
+	};
+
+private:
+	CNetKeepAlive();
+
+	void ConstructL();
+
+	void RunL() override;
+
+	void DoCancel() override;
+
+private:
+	RSocketServ iSockServ;
+	RConnection iConn;
+
+	TStatus iStatusCode;
+	TNifProgressBuf iProgress;
 };
 
 #endif

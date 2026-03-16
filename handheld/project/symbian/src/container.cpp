@@ -35,7 +35,7 @@
 
 #pragma mark - CMcpeContainer impl
 
-CMcpeContainer::CMcpeContainer() : iApp(NULL), iAppCxt(), iAppPlat() {}
+CMcpeContainer::CMcpeContainer() : iApp(NULL), iAppCxt(), iAppPlat(), iNetKeepAlive(NULL) {}
 
 CMcpeContainer *CMcpeContainer::gInstance = NULL;
 
@@ -69,6 +69,15 @@ void CMcpeContainer::ConstructL(const TRect &aRect, CAknAppUi *aAppUi) {
 	setbuf(stdout, NULL);
 	setbuf(stderr, NULL);
 #endif
+
+	{
+		TRAPD(err, iNetKeepAlive = CNetKeepAlive::NewL());
+		if (err != KErrNone) {
+			_LIT(KNetKeepAlive, "NetKeepAlive");
+			User::Panic(KNetKeepAlive, err);
+		}
+		iNetKeepAlive->ConnectL();
+	}
 
 	const std::string storagePath{"/data/Others/minecraftpe"};
 
@@ -218,7 +227,6 @@ TInt CMcpeContainer::DrawCallBack(TAny *aInstance) {
 	return 0;
 }
 
-
 bool CMcpeContainer::IsScanCodeNonModifier(TInt aScanCode) {
 	return !(
 		aScanCode == EStdKeyLeftFunc ||
@@ -288,6 +296,8 @@ void CMcpeContainer::HandleResourceChange(TInt aType) {
 CMcpeContainer::~CMcpeContainer() {
 	delete iPeriodic;
 
+	delete iNetKeepAlive;
+
 	delete iApp;
 
 	eglMakeCurrent(iEglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
@@ -295,4 +305,77 @@ CMcpeContainer::~CMcpeContainer() {
 	eglDestroySurface(iEglDisplay, iEglSurface);
 	eglDestroyContext(iEglDisplay, iEglContext);
 	eglTerminate(iEglDisplay);
+}
+
+CNetKeepAlive *CNetKeepAlive::NewL() {
+	CNetKeepAlive *self = new (ELeave) CNetKeepAlive;
+
+	CleanupStack::PushL(self);
+	self->ConstructL();
+	CleanupStack::Pop(self);
+
+	return self;
+}
+
+void CNetKeepAlive::RunL() {
+	switch (iStatusCode) {
+	case ENetMonitoring:
+		switch (iProgress().iStage) {
+		case KConnectionClosed:
+		case KLinkLayerClosed:
+			iConn.CancelProgressNotification();
+			iStatusCode = ENetIdle;
+			ConnectL();
+			break;
+		}
+		// fall-through
+	case ENetConnecting:
+		iStatusCode = ENetMonitoring;
+
+		iConn.ProgressNotification(iProgress, iStatus);
+		SetActive();
+		break;
+	}
+}
+
+void CNetKeepAlive::DoCancel() {
+	Disconnect();
+}
+
+void CNetKeepAlive::ConnectL() {
+	if (iStatusCode != ENetIdle) { return; }
+
+	User::LeaveIfError(iConn.Open(iSockServ));
+
+	iStatusCode = ENetConnecting;
+
+	TConnPrefList pref;
+	TExtendedConnPref prefs;
+
+	prefs.SetSnapPurpose(CMManager::ESnapPurposeInternet);
+	prefs.SetNoteBehaviour(TExtendedConnPref::ENoteBehaviourConnDisableNotes);
+	pref.AppendL(&prefs);
+
+	iConn.Start(pref, iStatus);
+	SetActive();
+}
+
+void CNetKeepAlive::Disconnect() {
+	if (iStatusCode == ENetMonitoring) {
+		iConn.CancelProgressNotification();
+	}
+	iStatusCode = ENetIdle;
+	iConn.Close();
+}
+
+CNetKeepAlive::CNetKeepAlive() : CActive(EPriorityStandard), iStatusCode(ENetIdle) {}
+
+CNetKeepAlive::~CNetKeepAlive() {
+	Cancel();
+	iSockServ.Close();
+}
+
+void CNetKeepAlive::ConstructL() {
+	CActiveScheduler::Add(this);
+	User::LeaveIfError(iSockServ.Connect());
 }
