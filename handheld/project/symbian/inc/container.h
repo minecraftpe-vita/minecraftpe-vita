@@ -6,6 +6,7 @@
 #include <GLES/egl.h>
 
 #include <aknappui.h>
+#include <aknwseventobserver.h>
 #include <coecntrl.h>
 #include <w32std.h>
 
@@ -24,11 +25,9 @@
 struct SoundHandlerSymbian;
 
 struct CMcpeAppUi;
-struct CWsEventReceiver;
 
-struct CMcpeContainer : CCoeControl {
+struct CMcpeContainer : CCoeControl, MAknWsEventObserver {
 	friend struct CMcpeAppUi;
-	friend struct CWsEventReceiver;
 
 	friend struct SoundHandlerSymbian;
 
@@ -40,11 +39,11 @@ struct CMcpeContainer : CCoeControl {
 
 	bool PromptTextL(std::string &out, TInt maxLength = 0);
 
-	bool IsImeShown() const { return iImeShown; }
+	bool IsImeShown() const;
+
+	void HandleWsEventL(const TWsEvent &aEvent, CCoeControl *aDestination) override;
 
 	static TInt DrawCallBack(TAny *aInstance);
-
-	bool HandleWsEvent(TWsEvent &aEvent);
 
 	inline static CMcpeContainer *instance() { return gInstance; }
 
@@ -72,8 +71,6 @@ private:
 
 	static CMcpeContainer *gInstance;
 
-	CWsEventReceiver *iWsEventReceiver;
-
 	EGLDisplay iEglDisplay;
 	EGLSurface iEglSurface;
 	EGLContext iEglContext;
@@ -85,8 +82,6 @@ private:
 	std::set<TInt> iDepressedModifiers;
 	bool iModifierUsed;
 
-	bool iImeShown;
-
 	NinecraftApp *iApp;
 	AppContext iAppCxt;
 	AppPlatform_Symbian iAppPlat;
@@ -96,25 +91,4 @@ private:
 	TStatus iOutputStatus;
 };
 
-struct CWsEventReceiver : CActive {
-	void RunL() override;
-
-	void DoCancel() override;
-
-	static CWsEventReceiver *NewL(CMcpeContainer &aParent, RWsSession *aWsSession);
-
-	~CWsEventReceiver();
-
-private:
-	CWsEventReceiver();
-
-	void ConstructL(CMcpeContainer &aParent, RWsSession *aWsSession);
-
-private:
-	RWsSession *iWsSession;
-
-	CMcpeContainer *iParent;
-};
-
 #endif
-

@@ -35,7 +35,7 @@
 
 #pragma mark - CMcpeContainer impl
 
-CMcpeContainer::CMcpeContainer() : iImeShown(false), iApp(NULL), iAppCxt(), iAppPlat() {}
+CMcpeContainer::CMcpeContainer() : iApp(NULL), iAppCxt(), iAppPlat() {}
 
 CMcpeContainer *CMcpeContainer::gInstance = NULL;
 
@@ -44,10 +44,18 @@ void CMcpeContainer::ConstructL(const TRect &aRect, CAknAppUi *aAppUi) {
 
 	iAppUi = aAppUi;
 
+	{
+		auto mon = iAppUi->EventMonitor();
+		mon->AddObserverL(this);
+		mon->Enable();
+	}
+
 	CreateWindowL();
 	Window().EnableAdvancedPointers();
 	SetExtentToWholeScreen();
 	ActivateL();
+
+	SetFocus(ETrue);
 
 	mkdir("/data", 0777);
 	mkdir("/data/Others", 0777);
@@ -151,14 +159,12 @@ void CMcpeContainer::ConstructL(const TRect &aRect, CAknAppUi *aAppUi) {
 	iPeriodic->Start(100, 100, TCallBack(CMcpeContainer::DrawCallBack, this));
 
 	Window().PointerFilter(EPointerFilterDrag, 0);
-
-	iWsEventReceiver = CWsEventReceiver::NewL(*this, &CCoeEnv::Static()->WsSession());
 }
 
 bool CMcpeContainer::PromptTextL(std::string &out, TInt maxLength) {
-	if (iImeShown) { return false; }
+	if (IsImeShown()) { return false; }
 
-	TBuf<128> data;
+	TBuf<256> data;
 
 	TPtrC8 strPtr(reinterpret_cast<const TUint8 *>(out.c_str()));
 	auto bufIn = EscapeUtils::ConvertToUnicodeFromUtf8L(strPtr);
@@ -169,10 +175,15 @@ bool CMcpeContainer::PromptTextL(std::string &out, TInt maxLength) {
 	CleanupStack::PopAndDestroy();
 
 	auto dlg = CAknTextQueryDialog::NewL(data);
+	CleanupStack::PushL(dlg);
+
 	dlg->SetPromptL(_L("Enter text"));
 	if (maxLength > 0) { dlg->SetMaxLength(maxLength); }
 
-	iImeShown = true;
+	iAppUi->EventMonitor()->Enable(EFalse);
+
+	CCoeEnv::Static()->AppUi()->AddToStackL(dlg, ECoeStackPriorityDialog);
+
 	bool ok = dlg->ExecuteLD(R_MCPE_TEXT_QUERY);
 	if (ok) {
 		auto mbcsTxt = EscapeUtils::ConvertFromUnicodeToUtf8L(data);
@@ -182,9 +193,17 @@ bool CMcpeContainer::PromptTextL(std::string &out, TInt maxLength) {
 
 		CleanupStack::PopAndDestroy();
 	}
-	iImeShown = false;
+	CCoeEnv::Static()->AppUi()->RemoveFromStack(dlg);
+
+	CleanupStack::Pop(dlg);
+
+	iAppUi->EventMonitor()->Enable(ETrue);
 
 	return ok;
+}
+
+bool CMcpeContainer::IsImeShown() const {
+	return CCoeEnv::Static()->AppUi()->IsDisplayingDialog();
 }
 
 TInt CMcpeContainer::DrawCallBack(TAny *aInstance) {
@@ -211,7 +230,7 @@ bool CMcpeContainer::IsScanCodeNonModifier(TInt aScanCode) {
 	);
 }
 
-bool CMcpeContainer::HandleWsEvent(TWsEvent &aEvent) {
+void CMcpeContainer::HandleWsEventL(const TWsEvent &aEvent, CCoeControl *aDestination) {
 	TInt scanCode;
 	switch (aEvent.Type()) {
 	case EEventKeyDown:
@@ -221,50 +240,15 @@ bool CMcpeContainer::HandleWsEvent(TWsEvent &aEvent) {
 			// TODO: Volume control broken?
 			iVolume += iVolumeStep;
 			iOutputStatus = ESetVolume;
-			return true;
+			break;
 		case EStdKeyDecVolume:
 			iVolume -= iVolumeStep;
 			iOutputStatus = ESetVolume;
-			return true;
-		default:
-			if (!std::count(iPressedKeys.begin(), iPressedKeys.end(), scanCode)) {
-				iPressedKeys.push_back(scanCode);
-				if (CMcpeContainer::IsScanCodeNonModifier(scanCode)) {
-					iModifierUsed = true;
-				}
-			}
-			return true;
+			break;
 		}
 		break;
 	case EEventKeyUp:
-		scanCode = aEvent.Key()->iScanCode;
-		if (CMcpeContainer::IsScanCodeNonModifier(scanCode)) {
-			iPressedKeys.remove(scanCode);
-			if (!std::count_if(iPressedKeys.begin(), iPressedKeys.end(), CMcpeContainer::IsScanCodeNonModifier)) {
-				for (auto modifier : iDepressedModifiers) {
-					iPressedKeys.remove(modifier);
-				}
-				iDepressedModifiers.clear();
-			}
-		} else if (iModifierUsed) {
-			if (!std::count_if(iPressedKeys.begin(), iPressedKeys.end(), CMcpeContainer::IsScanCodeNonModifier)) {
-				iPressedKeys.remove(scanCode);
-				iDepressedModifiers.erase(scanCode);
-			} else {
-				iPressedKeys.clear();
-			}
-		} else {
-			iDepressedModifiers.insert(scanCode);
-		}
-		if (!std::count_if(iPressedKeys.begin(), iPressedKeys.end(), [](TInt scanCode) {
-				return !CMcpeContainer::IsScanCodeNonModifier(scanCode);
-			})) {
-			iModifierUsed = false;
-		}
-		if (iPressedKeys.empty()) {
-			iDepressedModifiers.clear();
-		}
-		return true;
+		break;
 	case EEventPointer: {
 		const auto pos = aEvent.Pointer()->iPosition;
 		const auto ident = aEvent.Pointer()->PointerNumber();
@@ -278,17 +262,15 @@ bool CMcpeContainer::HandleWsEvent(TWsEvent &aEvent) {
 			if (0 == ident) { Mouse::feed(MouseAction::ACTION_LEFT, MouseAction::DATA_UP, pos.iX, pos.iY); }
 			Multitouch::feed(1, MouseAction::DATA_UP, pos.iX, pos.iY, ident);
 			break;
-		//case TPointerEvent::EMove:
 		case TPointerEvent::EDrag:
 			if (0 == ident) { Mouse::feed(MouseAction::ACTION_MOVE, MouseAction::DATA_DOWN, pos.iX, pos.iY); }
 			Multitouch::feed(1, MouseAction::DATA_DOWN, pos.iX, pos.iY, ident);
 			break;
 		}
-	} return true;
+	} break;
 	default:
 		break;
 	}
-	return false;
 }
 
 void CMcpeContainer::SizeChanged() {
@@ -313,50 +295,4 @@ CMcpeContainer::~CMcpeContainer() {
 	eglDestroySurface(iEglDisplay, iEglSurface);
 	eglDestroyContext(iEglDisplay, iEglContext);
 	eglTerminate(iEglDisplay);
-}
-
-#pragma mark - CWsEventReceiver impl
-
-CWsEventReceiver::CWsEventReceiver()
-	: CActive(CActive::EPriorityHigh), iParent(NULL) {}
-
-CWsEventReceiver::~CWsEventReceiver() { Cancel(); }
-
-CWsEventReceiver *CWsEventReceiver::NewL(CMcpeContainer &aParent, RWsSession *aWsSession) {
-	CWsEventReceiver *self = new (ELeave) CWsEventReceiver;
-
-	CleanupStack::PushL(self);
-
-	self->ConstructL(aParent, aWsSession);
-
-	CleanupStack::Pop(self);
-
-	return self;
-}
-
-void CWsEventReceiver::ConstructL(CMcpeContainer &aParent, RWsSession *aWsSession) {
-	iParent = &aParent;
-	iWsSession = aWsSession;
-	iWsSession->EventReady(&iStatus);
-
-	CActiveScheduler::Add(this);
-
-	SetActive();
-}
-
-void CWsEventReceiver::RunL() {
-	TWsEvent wsEvent;
-	iWsSession->GetEvent(wsEvent);
-
-	if (iParent->iImeShown || !iParent->HandleWsEvent(wsEvent)) {
-		static_cast<CMcpeAppUi *>(iParent->iAppUi)->HandleEventL(wsEvent);
-	}
-
-	iWsSession->EventReady(&iStatus);
-
-	SetActive();
-}
-
-void CWsEventReceiver::DoCancel() {
-	iWsSession->EventReadyCancel();
 }
