@@ -18,10 +18,6 @@ struct CMcpeAppUi : CAknAppUi {
 
 	void ConstructL() override;
 
-	void HandleEventL(TWsEvent &aWsEvent);
-
-	TKeyResponse HandleKeyEventL(const TKeyEvent &aKeyEvent, TEventCode aType);
-
 private:
 	void HandleCommandL(TInt aCommand) override;
 

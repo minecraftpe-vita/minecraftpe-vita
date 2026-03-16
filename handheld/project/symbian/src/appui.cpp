@@ -12,10 +12,6 @@ CMcpeAppUi::~CMcpeAppUi() {
 	}
 }
 
-void CMcpeAppUi::HandleEventL(TWsEvent &aWsEvent) {
-	HandleWsEventL(aWsEvent, iAppContainer);
-}
-
 void CMcpeAppUi::ConstructL() {
 	BaseConstructL();
 
@@ -35,8 +31,4 @@ void CMcpeAppUi::HandleCommandL(TInt aCommand) {
 		Exit();
 		break;
 	}
-}
-
-TKeyResponse CMcpeAppUi::HandleKeyEventL(const TKeyEvent &aKeyEvent, TEventCode aType) {
-	return EKeyWasConsumed;
 }
