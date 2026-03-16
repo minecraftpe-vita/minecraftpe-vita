@@ -4,10 +4,10 @@
 &EN
 
 ; SIS header: Name, UID3, Version, Type
-#{"Minecraft PE"},(0xE000C418),1,0,0,TYPE=SA
+#{"Minecraft PE"},(0xE000C418),1,0,4,TYPE=SA
 ; (the version fields shall be updated to match the general release tag)
 
-; Depends on S60 5.2
+; Depends on S60 5.2 (Avkon UI on Symbian^3 and later)
 [0x20022E6D],0,0,0,{"S60ProductID"}
 
 ; Vendor name (localized)
