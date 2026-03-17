@@ -91,13 +91,16 @@ private:
 	AppContext iAppCxt;
 	AppPlatform_Symbian iAppPlat;
 
+#ifndef NO_NETWORK
 	CNetKeepAlive *iNetKeepAlive;
+#endif
 
 	TInt iVolume;
 	TUint iVolumeStep;
 	TStatus iOutputStatus;
 };
 
+#ifndef NO_NETWORK
 struct CNetKeepAlive : CActive {
 	static CNetKeepAlive *NewL();
 
@@ -129,5 +132,6 @@ private:
 	TStatus iStatusCode;
 	TNifProgressBuf iProgress;
 };
+#endif
 
 #endif
