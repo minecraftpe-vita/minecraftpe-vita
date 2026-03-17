@@ -747,6 +747,9 @@
     <ClCompile Include="..\..\src\client\gui\screens\AdvancedChooseLevelScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\client\gui\screens\EnterIpAddressScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\App.h">
@@ -1326,6 +1329,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\util\StringUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\client\gui\screens\EnterIpAddressScreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
