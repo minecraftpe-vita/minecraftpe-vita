@@ -21,8 +21,6 @@
 
 #include <algorithm>
 
-#define LPRINTF(FMT, ...) printf("mcpe: in file %s: in function %s: at line %d: " FMT "\n", __FILE__, __func__, __LINE__, ##__VA_ARGS__)
-
 #if !defined(EKeyLeftUpArrow) && \
 	!defined(EKeyRightUpArrow) && \
 	!defined(EKeyRightDownArrow) && \
@@ -325,8 +323,9 @@ void CNetKeepAlive::RunL() {
 		case KLinkLayerClosed:
 			iConn.CancelProgressNotification();
 			iStatusCode = ENetIdle;
+			LOGI("NetIf down! Reconnecting..\n");
 			ConnectL();
-			break;
+			return;
 		}
 		// fall-through
 	case ENetConnecting:
