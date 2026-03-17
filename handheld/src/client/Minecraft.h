@@ -127,6 +127,11 @@ public:
     bool isSuperFast() { return _isSuperFast; }
 #endif
 
+#if defined(__EPOC32__) && !defined(NO_NETWORK)
+public:
+	bool needsClaimNetIf();
+#endif
+
 protected:
 	void _levelGenerated();
 

@@ -1137,6 +1137,17 @@ bool Minecraft::isOnline()
 	return netCallback != NULL;
 }
 
+bool Minecraft::needsClaimNetIf() {
+	if (isLookingForMultiplayer
+			|| isOnlineClient()
+			|| (level && level->players.size() > 1)) {
+		return true;
+	}
+	auto serv = dynamic_cast<ServerSideNetworkHandler *>(netCallback);
+	if (serv) { return serv->allowsIncomingConnections(); }
+	return false;
+}
+
 void Minecraft::pauseGame(bool isBackPaused) {
 #ifndef STANDALONE_SERVER
 	if (screen != NULL) return;

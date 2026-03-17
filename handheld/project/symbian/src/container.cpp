@@ -68,14 +68,15 @@ void CMcpeContainer::ConstructL(const TRect &aRect, CAknAppUi *aAppUi) {
 	setbuf(stderr, NULL);
 #endif
 
+#ifndef NO_NETWORK
 	{
 		TRAPD(err, iNetKeepAlive = CNetKeepAlive::NewL());
 		if (err != KErrNone) {
 			_LIT(KNetKeepAlive, "NetKeepAlive");
 			User::Panic(KNetKeepAlive, err);
 		}
-		iNetKeepAlive->ConnectL();
 	}
+#endif
 
 	const std::string storagePath{"/data/Others/minecraftpe"};
 
@@ -218,6 +219,16 @@ TInt CMcpeContainer::DrawCallBack(TAny *aInstance) {
 
 	instance->iApp->update();
 
+#ifndef NO_NETWORK
+	TBool isActive = instance->iNetKeepAlive->IsActive();
+	TBool needsNet = instance->iApp->needsClaimNetIf();
+	if (isActive && !needsNet) {
+		instance->iNetKeepAlive->Cancel();
+	} else if (!isActive && needsNet) {
+		instance->iNetKeepAlive->ConnectL();
+	}
+#endif
+
 	User::ResetInactivityTime();
 
 	User::After(100);
@@ -305,6 +316,7 @@ CMcpeContainer::~CMcpeContainer() {
 	eglTerminate(iEglDisplay);
 }
 
+#ifndef NO_NETWORK
 CNetKeepAlive *CNetKeepAlive::NewL() {
 	CNetKeepAlive *self = new (ELeave) CNetKeepAlive;
 
@@ -360,6 +372,7 @@ void CNetKeepAlive::ConnectL() {
 }
 
 void CNetKeepAlive::Disconnect() {
+	if (iStatusCode == ENetIdle) { return; }
 	if (iStatusCode == ENetMonitoring) {
 		iConn.CancelProgressNotification();
 	}
@@ -378,3 +391,4 @@ void CNetKeepAlive::ConstructL() {
 	CActiveScheduler::Add(this);
 	User::LeaveIfError(iSockServ.Connect());
 }
+#endif // !(defined NO_NETWORK)
