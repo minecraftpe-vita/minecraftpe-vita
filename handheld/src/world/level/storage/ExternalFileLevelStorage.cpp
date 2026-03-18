@@ -289,7 +289,11 @@ bool ExternalFileLevelStorage::readPlayerData(const std::string& filename, Level
 void ExternalFileLevelStorage::tick()
 {
 	tickCount++;
+#ifndef __VITA__
 	if ((tickCount % 50) == 0 && level)
+#else
+	if (tickCount % (25 * SharedConstants::TicksPerSecond) == 0 && level)
+#endif
 	{
 		// look for chunks that needs to be saved
 		for (int z = 0; z < CHUNK_CACHE_WIDTH; z++)
@@ -322,7 +326,6 @@ void ExternalFileLevelStorage::tick()
 				}
 			}
 		}
-
         savePendingUnsavedChunks(2);
 	}
 	if (tickCount - lastSavedEntitiesTick > (60 * SharedConstants::TicksPerSecond)) {

@@ -128,7 +128,7 @@ void OptionsScreen::removed()
 
 void OptionsScreen::buttonClicked( Button* button ) {
 	if(button == btnClose) {
-		// only save when closing the menu
+		// we should really .. only save when closing the menu?
 		minecraft->options.save();
 
 		minecraft->reloadOptions();

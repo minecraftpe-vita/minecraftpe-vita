@@ -195,7 +195,7 @@ public:
 
 	void setKey(int i, int key) {
 		keyMappings[i]->key = key;
-		save();
+		//save();
 	}
 
 	void set(const Option* item, float value);
@@ -232,7 +232,7 @@ public:
 			//minecraft->levelRenderer.allChanged();
 		}
 		notifyOptionUpdate(option, getBooleanValue(option));
-		save();
+		//save();
 	}
 
 	int getIntValue(const Option* item) {
