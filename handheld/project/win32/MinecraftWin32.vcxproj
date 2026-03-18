@@ -42,6 +42,7 @@
     <ClCompile Include="..\..\src\client\gui\Gui.cpp" />
     <ClCompile Include="..\..\src\client\gui\GuiComponent.cpp" />
     <ClCompile Include="..\..\src\client\gui\Screen.cpp" />
+    <ClCompile Include="..\..\src\client\gui\screens\AdvancedChooseLevelScreen.cpp" />
     <ClCompile Include="..\..\src\client\gui\screens\ArmorScreen.cpp" />
     <ClCompile Include="..\..\src\client\gui\screens\ChatScreen.cpp" />
     <ClCompile Include="..\..\src\client\gui\screens\ChestScreen.cpp" />
@@ -52,6 +53,7 @@
     <ClCompile Include="..\..\src\client\gui\screens\crafting\StonecutterScreen.cpp" />
     <ClCompile Include="..\..\src\client\gui\screens\crafting\WorkbenchScreen.cpp" />
     <ClCompile Include="..\..\src\client\gui\screens\DeathScreen.cpp" />
+    <ClCompile Include="..\..\src\client\gui\screens\EnterIpAddressScreen.cpp" />
     <ClCompile Include="..\..\src\client\gui\screens\SimpleChooseLevelScreen.cpp" />
     <ClCompile Include="..\..\src\client\gui\screens\FurnaceScreen.cpp" />
     <ClCompile Include="..\..\src\client\gui\screens\InBedScreen.cpp" />
@@ -397,6 +399,7 @@
     <ClInclude Include="..\..\src\client\gui\screens\crafting\StonecutterScreen.h" />
     <ClInclude Include="..\..\src\client\gui\screens\crafting\WorkbenchScreen.h" />
     <ClInclude Include="..\..\src\client\gui\screens\DeathScreen.h" />
+    <ClInclude Include="..\..\src\client\gui\screens\EnterIpAddressScreen.h" />
     <ClInclude Include="..\..\src\client\gui\screens\SimpleChooseLevelScreen.h" />
     <ClInclude Include="..\..\src\client\gui\screens\DialogDefinitions.h" />
     <ClInclude Include="..\..\src\client\gui\screens\DisconnectionScreen.h" />

@@ -19,11 +19,13 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -97,9 +99,11 @@
     <ClCompile Include="..\..\src\client\gui\Gui.cpp" />
     <ClCompile Include="..\..\src\client\gui\GuiComponent.cpp" />
     <ClCompile Include="..\..\src\client\gui\Screen.cpp" />
+    <ClCompile Include="..\..\src\client\gui\screens\AdvancedChooseLevelScreen.cpp" />
     <ClCompile Include="..\..\src\client\gui\screens\ChatScreen.cpp" />
     <ClCompile Include="..\..\src\client\gui\screens\ConfirmScreen.cpp" />
     <ClCompile Include="..\..\src\client\gui\screens\DeathScreen.cpp" />
+    <ClCompile Include="..\..\src\client\gui\screens\EnterIpAddressScreen.cpp" />
     <ClCompile Include="..\..\src\client\gui\screens\IngameBlockSelectionScreen.cpp" />
     <ClCompile Include="..\..\src\client\gui\screens\JoinGameScreen.cpp" />
     <ClCompile Include="..\..\src\client\gui\screens\OptionsScreen.cpp" />
@@ -332,6 +336,7 @@
     <ClInclude Include="..\..\src\client\gui\Font.h" />
     <ClInclude Include="..\..\src\client\gui\screens\ChatScreen.h" />
     <ClInclude Include="..\..\src\client\gui\screens\ConfirmScreen.h" />
+    <ClInclude Include="..\..\src\client\gui\screens\EnterIpAddressScreen.h" />
     <ClInclude Include="..\..\src\client\gui\screens\IngameBlockSelectionScreen.h" />
     <ClInclude Include="..\..\src\client\gui\screens\JoinGameScreen.h" />
     <ClInclude Include="..\..\src\client\gui\screens\OptionsScreen.h" />

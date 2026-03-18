@@ -10,6 +10,7 @@ TextBox::TextBox( int id, const std::string& msg )
  : Button(id, 0, 0, 0, 0, msg),
  focused(false),
  defaultText(msg),
+ minecraftRef(nullptr),
  text(msg){
 
 }
@@ -18,6 +19,7 @@ TextBox::TextBox( int id, int x, int y, const std::string& msg )
  : Button(id, x, y, 0, 0, msg),
 	focused(false),
 	defaultText(msg),
+	minecraftRef(nullptr),
 	text(msg){
 }
 
@@ -25,6 +27,7 @@ TextBox::TextBox( int id, int x, int y, int w, int h, const std::string& msg )
  : Button(id, x, y, w, h, msg),
    focused(false),
    defaultText(msg),
+   minecraftRef(nullptr),
    text(msg) {
 }
 

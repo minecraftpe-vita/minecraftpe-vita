@@ -1,4 +1,6 @@
 FILE(GLOB raknetCPPSources ./RaknetSources/*.cpp)
-set(CMAKE_C_FLAGS -m32)
-set(CMAKE_CXX_FLAGS -m32)
+#set(CMAKE_C_FLAGS -m32)
+#set(CMAKE_CXX_FLAGS -m32)
+set(CMAKE_C_FLAGS -O3)
+set(CMAKE_CXX_FLAGS -O3)
 add_library(raknet ${raknetCPPSources})

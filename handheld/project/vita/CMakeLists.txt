@@ -432,6 +432,7 @@ add_executable(${PROJECT_NAME}
   ${HANDHELD}/client/gui/screens/SelectWorldScreen.cpp
   ${HANDHELD}/client/gui/screens/JoinGameScreen.cpp
   ${HANDHELD}/client/gui/screens/PauseScreen.cpp
+  ${HANDHELD}/client/gui/screens/EnterIpAddressScreen.cpp
   ${HANDHELD}/client/IConfigListener.cpp
   ${HANDHELD}/locale/I18n.cpp
 )

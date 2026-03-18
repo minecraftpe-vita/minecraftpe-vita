@@ -27,7 +27,7 @@ public:
 
 private:
 	std::string defaultText;
-	Minecraft* minecraftRef = nullptr;
+	Minecraft* minecraftRef;
 public:
 	std::string text;
 	bool focused;

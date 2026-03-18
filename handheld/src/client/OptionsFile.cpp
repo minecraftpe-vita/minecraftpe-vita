@@ -8,6 +8,9 @@
 #include <direct.h>
 #else
 #include <fcntl.h>
+#ifdef __linux__
+#include <sys/stat.h>
+#endif
 #endif
 #include <string>
 

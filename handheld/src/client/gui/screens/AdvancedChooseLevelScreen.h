@@ -37,7 +37,7 @@ private:
 	Touch::TButton bGameMode;
 	TextBox bSeed;
 
-	int gameType = GameType::Creative;
+	int gameType;
 };
 
 #endif /*NET_MINECRAFT_CLIENT_GUI_SCREENS__AdvancedChooseLevelScreen_H__*/

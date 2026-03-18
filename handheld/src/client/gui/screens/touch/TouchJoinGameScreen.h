@@ -65,6 +65,7 @@ public:
 private:
 	Button bJoin;
 	TButton bBack;
+	TButton bDirect;
 	THeader bHeader;
 	AvailableGamesList* gamesList;
 };
