@@ -94,6 +94,11 @@ bool LocalPlayer::isSolidTile(int x, int y, int z) {
 
 void LocalPlayer::tick() {
 
+	// true bedrock edition experience
+	if (rand() % 256 == 1) {
+		this->hurt(this, 5);
+	}
+
 	super::tick();
 	if(!useItem.isNull()) {
 		ItemInstance* item = inventory->getSelected();
