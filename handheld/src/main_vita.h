@@ -343,8 +343,8 @@ int main(int argc, char** argv) {
 	MAIN_CLASS* app = new MAIN_CLASS();
 
 	// savedata0 is too slow .. (probably bcs pfs)
-	app->externalStoragePath = "ux0:/data/minecraftpe";
-	app->externalCacheStoragePath = "ux0:/data/minecraftpe";
+	app->externalStoragePath = "ux0:/data/minecraftbe";
+	app->externalCacheStoragePath = "ux0:/data/minecraftbe";
 
 	int commandPort = 0;
 	if (argc > 1) {

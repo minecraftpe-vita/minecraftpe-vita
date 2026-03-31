@@ -18,9 +18,9 @@ project(minecraftcpp)
 
 include("${VITASDK}/share/vita.cmake" REQUIRED)
 
-set(VITA_APP_NAME "Minecraft PE")
-set(VITA_TITLEID  "MCPE00000")
-set(VITA_VERSION  "00.61")
+set(VITA_APP_NAME "Minecraft Bedrock Edition")
+set(VITA_TITLEID  "MCBE00000")
+set(VITA_VERSION  "26.04")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
@@ -37,8 +37,8 @@ set(VITA_GATE ${CMAKE_CURRENT_LIST_DIR}/sce_sys/livearea/contents/gate.png)
 add_definitions(-D__VITA__)
 
 if(DEMO)
-set(VITA_APP_NAME "Minecraft PE Demo")
-set(VITA_TITLEID  "MCPEDEMO0")
+set(VITA_APP_NAME "Minecraft Bedrock Edition Demo")
+set(VITA_TITLEID  "MCBEDEMO0")
 set(VITA_ICON0 ${CMAKE_CURRENT_LIST_DIR}/sce_sys/icon0_demo.png)
 set(VITA_BG ${CMAKE_CURRENT_LIST_DIR}/sce_sys/livearea/contents/bg_demo.png)
 set(VITA_GATE ${CMAKE_CURRENT_LIST_DIR}/sce_sys/livearea/contents/gate_demo.png)

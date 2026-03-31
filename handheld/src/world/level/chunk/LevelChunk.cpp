@@ -367,12 +367,18 @@ void LevelChunk::lightGaps( int x, int z )
 
 int LevelChunk::getTile( int x, int y, int z )
 {
-	return blocks[x << 11 | z << 7 | y] & 0xff;
+	int tile =  blocks[x << 11 | z << 7 | y] & 0xff;
+	if(tile != 0) {
+		tile = Tile::unbreakable->id;
+	}
+	return tile;
 }
 
 void LevelChunk::setData( int x, int y, int z, int val )
 {
 	//this->unsaved = true;
+	val = Tile::unbreakable->id;
+
 	data.set(x, y, z, val);
 }
 
