@@ -14,7 +14,7 @@
         #import <OpenGLES/ES1/gl.height>
         #import <OpenGLES/ES1/glext.height>
 	#elif defined(__3DS__)
-        #include <GLES/gl.h>
+        #include "../../3ds/gl2citro3d.h"
 	#elif defined(__NDS__)
 		#include <nds/arm9/videoGL.h>
     #else
@@ -170,82 +170,8 @@ int glhUnProjectf(	float winx, float winy, float winz,
 #endif
 
 
-#if defined(__3DS__)
-
-#ifndef GL_LINES
-#define GL_LINES 0x0001
-#endif
-
-#ifndef GL_COLOR_MATERIAL
-#define GL_COLOR_MATERIAL 0x0B57
-#endif
-
-#ifndef GL_PERSPECTIVE_CORRECTION_HINT
-#define GL_PERSPECTIVE_CORRECTION_HINT 0x0C50
-#endif
-
-#ifndef GL_FASTEST
-#define GL_FASTEST 0x1101
-#endif
-#ifndef GL_VERTEX_ARRAY
-#define GL_VERTEX_ARRAY 0x8074
-
-#ifndef GL_MODELVIEW_MATRIX
-#define GL_MODELVIEW_MATRIX 0x0BA6
-#endif
-
-#ifndef GL_PROJECTION_MATRIX
-#define GL_PROJECTION_MATRIX 0x0BA7
-#endif
-
-#ifndef GL_TEXTURE_MATRIX
-#define GL_TEXTURE_MATRIX 0x0BA8
-#endif
-
-#ifndef GL_FOG
-#define GL_FOG 0x0B60
-#endif
-
-#ifndef GL_FLAT
-#define GL_FLAT 0x1D00
-#endif
-
-#ifndef GL_SMOOTH
-#define GL_SMOOTH 0x1D01
-#endif
-
-#ifndef GL_FOG_DENSITY
-#define GL_FOG_DENSITY 0x0B62
-#endif
-
-#ifndef GL_FOG_START
-#define GL_FOG_START 0x0B63
-#endif
-
-#ifndef GL_FOG_END
-#define GL_FOG_END 0x0B64
-#endif
-
-#ifndef GL_FOG_MODE
-#define GL_FOG_MODE 0x0B65
-#endif
-
-#ifndef GL_FOG_COLOR
-#define GL_FOG_COLOR 0x0B66
-#endif
-
-#ifndef GL_LINEAR
-#define GL_LINEAR 0x2601
-#endif
-
-#ifndef GL_EXP
-#define GL_EXP 0x0800
-#endif
-
-#ifndef GL_EXP2
-#define GL_EXP2 0x0801
-#endif
-#endif
+/* On 3DS, all GL constants and functions are provided by gl2citro3d.h */
+#if !defined(__3DS__)
 
 #ifndef GL_NORMAL_ARRAY
 #define GL_NORMAL_ARRAY 0x8075
@@ -280,6 +206,6 @@ void glColorPointer(int size, int type, int stride, const void *pointer);
 void glGetFloatv(int pname, float* params);
 #endif
 
-#endif
+#endif /* !__3DS__ */
 
 #endif /*NET_MINECRAFT_CLIENT_RENDERER__gles_H__ */

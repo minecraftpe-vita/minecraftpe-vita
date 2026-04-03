@@ -1,0 +1,73 @@
+; =============================================================================
+; OpenGL ES 1.1 Fixed-Function Emulation Vertex Shader for PICA200
+; =============================================================================
+; This shader emulates the GL ES 1.1 fixed-function pipeline:
+;   - MVP matrix transform
+;   - Per-vertex color passthrough
+;   - Texture coordinate passthrough
+;   - Fog depth computation (linear)
+;
+; Attribute layout:
+;   v0 = position (xyz)
+;   v1 = texcoord (uv)
+;   v2 = color (rgba)
+;
+; Uniforms:
+;   c0-c3   = projection matrix (4x4)
+;   c4-c7   = modelview matrix (4x4)
+;   c8      = fog params (start, end, 1/(end-start), enabled)
+;
+; Output:
+;   o0 = position
+;   o1 = color
+;   o2 = texcoord0
+;   o3 = fog depth (view-space z for TEV fog LUT)
+; =============================================================================
+
+.fvec projection[4]
+.fvec modelview[4]
+.fvec fogparams
+
+.alias inPosition  v0
+.alias inTexcoord  v1
+.alias inColor     v2
+
+.out outPosition   position
+.out outColor      color
+.out outTexcoord0  texcoord0
+.out outView       view
+
+.constf CONST1 (1.0, 0.0, 0.0, 0.0)
+.constf CONST2 (0.0, 0.0, 0.0, 1.0)
+
+.proc main
+    ; Transform position by modelview matrix
+    ; r0 = modelview * vec4(inPosition.xyz, 1.0)
+    mov r15, CONST2
+    mov r15.xyz, inPosition.xyz
+
+    dp4 r0.x, modelview[0], r15
+    dp4 r0.y, modelview[1], r15
+    dp4 r0.z, modelview[2], r15
+    dp4 r0.w, modelview[3], r15
+
+    ; Transform by projection matrix
+    ; outPosition = projection * r0
+    dp4 outPosition.x, projection[0], r0
+    dp4 outPosition.y, projection[1], r0
+    dp4 outPosition.z, projection[2], r0
+    dp4 outPosition.w, projection[3], r0
+
+    ; Pass through vertex color
+    mov outColor, inColor
+
+    ; Pass through texture coordinates (with w=0, z=0)
+    mov outTexcoord0.xy, inTexcoord.xy
+    mov outTexcoord0.zw, CONST1.yy
+
+    ; Output view-space position for fog computation
+    ; The hardware fog uses the view-space depth
+    mov outView, r0
+
+    end
+.end

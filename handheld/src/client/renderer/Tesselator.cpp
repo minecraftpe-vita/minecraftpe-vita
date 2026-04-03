@@ -91,19 +91,11 @@ RenderChunk Tesselator::end( bool useMine, int bufferId )
 		// Not using VBO - always use the next buffer object
 		bufferId = vboIds[vboId];
 #endif
-#ifndef __3DS__
-		int access = GL_STATIC_DRAW;//(accessMode==ACCESS_DYNAMIC) ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW;
+		int access = GL_STATIC_DRAW;
 		int bytes = p * sizeof(VERTEX);
 		glBindBuffer2(GL_ARRAY_BUFFER, bufferId);
-		glBufferData2(GL_ARRAY_BUFFER, bytes, _varray, access); // GL_STREAM_DRAW
+		glBufferData2(GL_ARRAY_BUFFER, bytes, _varray, access);
 		totalSize += bytes;
-#else
-		int access = 0;//(accessMode==ACCESS_DYNAMIC) ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW;
-		int bytes = p * sizeof(VERTEX);
-		glBindBuffer2(0, bufferId);
-		glBufferData2(0, bytes, _varray, access); // GL_STREAM_DRAW
-		totalSize += bytes;
-#endif
 #ifndef USE_VBO
 		// 0 1 2 3 4 5 6 7
 		// x y z u v c
@@ -388,17 +380,10 @@ void Tesselator::draw()
 			vboId = 0;
 
 		int bufferId = vboIds[vboId];
-#ifndef __3DS__
-		int access = GL_DYNAMIC_DRAW;//(accessMode==ACCESS_DYNAMIC) ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW;
+		int access = GL_DYNAMIC_DRAW;
 		int bytes = p * sizeof(VERTEX);
 		glBindBuffer2(GL_ARRAY_BUFFER, bufferId);
-		glBufferData2(GL_ARRAY_BUFFER, bytes, _varray, access); // GL_STREAM_DRAW
-#else
-		int access = 0;//(accessMode==ACCESS_DYNAMIC) ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW;
-		int bytes = p * sizeof(VERTEX);
-		glBindBuffer2(0, bufferId);
-		glBufferData2(0, bytes, _varray, access); // GL_STREAM_DRAW
-#endif
+		glBufferData2(GL_ARRAY_BUFFER, bytes, _varray, access);
 		if (hasTexture) {
 			glTexCoordPointer2(2, GL_FLOAT, VertexSizeBytes, (GLvoid*) (3 * 4));
 			//glTexCoordPointer2(2, GL_FLOAT, VertexSizeBytes, (GLvoid*) &_varray->u);

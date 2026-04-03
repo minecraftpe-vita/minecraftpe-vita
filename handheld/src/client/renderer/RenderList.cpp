@@ -74,12 +74,7 @@ void RenderList::renderChunks() {
 
 		glPushMatrix2();
 		glTranslatef2(rc.pos.x, rc.pos.y, rc.pos.z);
-#ifndef __3DS__
 		glBindBuffer2(GL_ARRAY_BUFFER, rc.vboId);
-#else
-		glBindBuffer2(0, rc.vboId);
-
-#endif
 		glVertexPointer2	(3, GL_FLOAT, Stride,  0);
 		glTexCoordPointer2	(2, GL_FLOAT, Stride, (GLvoid*) (3 * 4));
 		glColorPointer2		(4, GL_UNSIGNED_BYTE, Stride, (GLvoid*) (5 * 4));

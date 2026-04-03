@@ -4,6 +4,7 @@
 
 #ifdef __3DS__
 #include <3ds.h>
+#include <citro3d.h>
 #include <cstring>
 #include <map>
 #endif
@@ -51,9 +52,14 @@ void glInit()
 }
 
 void anGenBuffers(GLsizei n, GLuint* buffers) {
+#ifdef __3DS__
+	/* On 3DS, use the real gl2citro3d buffer management */
+	glGenBuffers(n, buffers);
+#else
 	static GLuint k = 1;
 	for (int i = 0; i < n; ++i)
 		buffers[i] = ++k;
+#endif
 }
 
 #ifdef USE_VBO
@@ -401,100 +407,5 @@ void glColor4f(float r, float g, float b, float a) {
 	g_currentColor[3] = a;
 }
 #elif __3DS__
-static float g_currentColor[4];
-void glColor4f(float r, float g, float b, float a) {
-	g_currentColor[0] = r;
-	g_currentColor[1] = g;
-	g_currentColor[2] = b;
-	g_currentColor[3] = a;
-}
-void glHint(int target, int mode) {
-}
-void glGetFloatv(int pname, float* params) {
-	// 0x0BA6 = GL_MODELVIEW_MATRIX, 0x0BA7 = GL_PROJECTION_MATRIX
-	if (pname == 0x0BA6 || pname == 0x0BA7) {
-		params[0]  = 1.0f; params[1]  = 0.0f; params[2]  = 0.0f; params[3]  = 0.0f;
-		params[4]  = 0.0f; params[5]  = 1.0f; params[6]  = 0.0f; params[7]  = 0.0f;
-		params[8]  = 0.0f; params[9]  = 0.0f; params[10] = 1.0f; params[11] = 0.0f;
-		params[12] = 0.0f; params[13] = 0.0f; params[14] = 0.0f; params[15] = 1.0f;
-	} else {
-		for(int i = 0; i < 16; i++) {
-			params[i] = 0.0f;
-		}
-	}
-}
-void glFogf(int pname, float param) {}
-void glFogfv(int pname, const float* params) {}
-void glNormal3f(float nx, float ny, float nz) {}
-void glShadeModel(int mode) {}
-void glEnableClientState(int array) {}
-void glDisableClientState(int array) {}
-
-void glVertexPointer(int size, int type, int stride, const void *pointer) {}
-void glTexCoordPointer(int size, int type, int stride, const void *pointer) {}
-void glColorPointer(int size, int type, int stride, const void *pointer) {}
-
-//std::map<GLuint, void*> g_vboMap;
-//GLuint g_currentVbo = 0;
-//
-//void glBindBuffer(GLenum target, GLuint buffer) {
-//	g_currentVbo = buffer;
-//}
-//
-//void glBufferData(GLenum target, size_t size, const GLvoid* data, GLenum usage) {
-//	if (g_currentVbo == 0) return;
-//
-//	if (g_vboMap.count(g_currentVbo) && g_vboMap[g_currentVbo] != nullptr) {
-//		linearFree(g_vboMap[g_currentVbo]);
-//	}
-//
-//	void* linearMem = linearAlloc(size);
-//
-//	if (data != nullptr) {
-//		memcpy(linearMem, data, size);
-//	}
-//
-//	g_vboMap[g_currentVbo] = linearMem;
-//}
-//
-//void glDeleteBuffers(GLsizei n, const GLuint* buffers) {
-//	for(int i = 0; i < n; ++i) {
-//		GLuint vbo = buffers[i];
-//		if (g_vboMap.count(vbo) && g_vboMap[vbo] != nullptr) {
-//			linearFree(g_vboMap[vbo]);
-//			g_vboMap.erase(vbo);
-//		}
-//	}
-//}
-//void glVertexPointer3(GLint size, GLenum type, GLsizei stride, const GLvoid* pointer) {
-//	if (g_currentVbo != 0 && g_vboMap.count(g_currentVbo)) {
-//		uint8_t* baseAddress = (uint8_t*)g_vboMap[g_currentVbo];
-//
-//		uintptr_t offset = (uintptr_t)pointer;
-//
-//		glVertexPointer(size, type, stride, baseAddress + offset);
-//	} else {
-//		glVertexPointer(size, type, stride, pointer);
-//	}
-//}
-//
-//void glTexCoordPointer3(GLint size, GLenum type, GLsizei stride, const GLvoid* pointer) {
-//	if (g_currentVbo != 0 && g_vboMap.count(g_currentVbo)) {
-//		uint8_t* baseAddress = (uint8_t*)g_vboMap[g_currentVbo];
-//		uintptr_t offset = (uintptr_t)pointer;
-//		glTexCoordPointer(size, type, stride, baseAddress + offset);
-//	} else {
-//		glTexCoordPointer(size, type, stride, pointer);
-//	}
-//}
-//
-//void glColorPointer3(GLint size, GLenum type, GLsizei stride, const GLvoid* pointer) {
-//	if (g_currentVbo != 0 && g_vboMap.count(g_currentVbo)) {
-//		uint8_t* baseAddress = (uint8_t*)g_vboMap[g_currentVbo];
-//		uintptr_t offset = (uintptr_t)pointer;
-//		glColorPointer(size, type, stride, baseAddress + offset);
-//	} else {
-//		glColorPointer(size, type, stride, pointer);
-//	}
-//}
+/* All GL functions are now provided by gl2citro3d.c - no stubs needed */
 #endif
