@@ -8,6 +8,9 @@
 #include <direct.h>
 #else
 #include <fcntl.h>
+#ifdef __linux__
+#include <sys/stat.h>
+#endif
 #endif
 #include <string>
 
@@ -20,7 +23,9 @@ OptionsFile::OptionsFile() {
 #elif defined(__SWITCH__)
 	settingsPath = "sdmc:/switch/minecraftpe/games/com.mojang/minecraftpe/options.txt";
 #elif defined(__VITA__)
-	settingsPath = "ux0:data/minecraftpe/games/com.mojang/minecraftpe/options.txt";
+	settingsPath = "ux0:/data/minecraftpe/games/com.mojang/minecraftpe/options.txt";
+#elif defined(__EPOC32__)
+	settingsPath = "/data/Others/minecraftpe/games/com.mojang/minecraftpe/options.txt";
 #else
 	settingsPath = "options.txt";
 #endif

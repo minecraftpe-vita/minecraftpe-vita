@@ -744,6 +744,9 @@
     <ClCompile Include="..\..\src\world\item\DyePowderItem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\client\gui\screens\AdvancedChooseLevelScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\App.h">
@@ -827,7 +830,7 @@
     <ClInclude Include="..\..\src\client\renderer\culling\FrustumData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\platform\time.h">
+    <ClInclude Include="..\..\src\platform\Time.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\util\Mth.h">

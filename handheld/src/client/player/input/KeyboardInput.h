@@ -23,9 +23,9 @@ public:
 
     KeyboardInput(Options* options);
 
-	void tick(Player* player);
+	virtual void tick(Player* player);
 
-	void setKey(int key, bool state);
+	virtual void setKey(int key, bool state);
     void releaseAllKeys();
 
 protected:

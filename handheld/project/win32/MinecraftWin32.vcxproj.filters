@@ -1214,6 +1214,9 @@
     <ClCompile Include="..\..\src\client\gui\components\Slider.cpp">
       <Filter>Source Files\client\gui\components</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\client\gui\screens\AdvancedChooseLevelScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\App.h">
@@ -1252,7 +1255,7 @@
     <ClInclude Include="..\..\src\client\player\LocalPlayer.h">
       <Filter>Source Files\client\player</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\platform\time.h">
+    <ClInclude Include="..\..\src\platform\Time.h">
       <Filter>Platform</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\util\Random.h">

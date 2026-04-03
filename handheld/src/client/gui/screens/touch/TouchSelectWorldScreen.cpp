@@ -405,7 +405,8 @@ void SelectWorldScreen::tick()
 			minecraft->hostMultiplayer();
 			minecraft->setScreen(new ProgressScreen());
 			_hasStartedLevel = true;
-		#elif defined(_WIN32) && 0 // honestly our custom choose level scren is probably better than whatever win32 does
+		#elif defined(_WIN32) && 0
+			// honestly our custom choose level scren is probably better than whatever win32 does
 			std::string name = getUniqueLevelName("perf");
 			minecraft->setScreen(new SimpleChooseLevelScreen(name));
 		#elif !defined(__ANDROID__) || !defined(__APPLE__)

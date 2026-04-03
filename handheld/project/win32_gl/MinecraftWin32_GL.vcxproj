@@ -19,11 +19,13 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -97,6 +99,7 @@
     <ClCompile Include="..\..\src\client\gui\Gui.cpp" />
     <ClCompile Include="..\..\src\client\gui\GuiComponent.cpp" />
     <ClCompile Include="..\..\src\client\gui\Screen.cpp" />
+    <ClCompile Include="..\..\src\client\gui\screens\AdvancedChooseLevelScreen.cpp" />
     <ClCompile Include="..\..\src\client\gui\screens\ChatScreen.cpp" />
     <ClCompile Include="..\..\src\client\gui\screens\ConfirmScreen.cpp" />
     <ClCompile Include="..\..\src\client\gui\screens\DeathScreen.cpp" />
@@ -391,7 +394,7 @@
     <ClInclude Include="..\..\src\platform\input\Controller.h" />
     <ClInclude Include="..\..\src\platform\input\Keyboard.h" />
     <ClInclude Include="..\..\src\platform\input\Mouse.h" />
-    <ClInclude Include="..\..\src\platform\time.h" />
+    <ClInclude Include="..\..\src\platform\Time.h" />
     <ClInclude Include="..\..\src\util\IntHashMap.h" />
     <ClInclude Include="..\..\src\util\Mth.h" />
     <ClInclude Include="..\..\src\util\Random.h" />

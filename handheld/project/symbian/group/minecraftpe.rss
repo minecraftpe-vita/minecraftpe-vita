@@ -1,0 +1,54 @@
+NAME MCPE
+
+#include <eikon.rh>
+#include "minecraftpe.hrh"
+#include "minecraftpe.rls"
+#include <avkon.rsg>
+#include <avkon.rh>
+#include <avkon.mbg>
+#include <appinfo.rh>
+
+RESOURCE RSS_SIGNATURE { }
+RESOURCE TBUF { buf="minecraftpe"; }
+RESOURCE EIK_APP_INFO
+	{
+	cba=R_AVKON_SOFTKEYS_OPTIONS_BACK;
+	}
+
+RESOURCE LOCALISABLE_APP_INFO r_mcpe_localisable_app_info
+	{
+	short_caption = STRING_r_app_short_caption_string;
+	caption_and_icon = CAPTION_AND_ICON_INFO
+		{
+		caption = STRING_r_app_caption_string;
+		number_of_icons = 3;
+		icon_file = "\\resource\\apps\\minecraftpe.mbm";
+		};
+	}
+
+RESOURCE DIALOG r_mcpe_text_query
+	{
+	flags = EGeneralQueryFlags;
+	buttons = R_AVKON_SOFTKEYS_OK_CANCEL;
+	items =
+		{
+			DLG_LINE
+			{
+			type = EAknCtQuery;
+			id = EGeneralQuery;
+			control = AVKON_DATA_QUERY
+				{
+				layout = EDataLayout;
+				control = EDWIN
+					{
+					width = 128;
+					lines = 1;
+					maxlength = 128;
+					default_case = EAknEditorLowerCase;
+					allowed_case_modes = EAknEditorAllCaseModes;
+					//avkon_flags = EAknEditorFlagNoT9|EAknEditorFlagLatinInputModesOnly;
+					};
+				};
+			}
+		};
+	}

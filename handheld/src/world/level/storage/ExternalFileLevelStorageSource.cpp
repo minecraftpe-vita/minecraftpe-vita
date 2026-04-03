@@ -8,6 +8,9 @@
 #include "../../../util/StringUtils.h"
 #include <cstdio>
 #include <sys/types.h>
+#if defined(__EPOC32__)
+#include <sys/stat.h>
+#endif
 
 #ifdef __VITA__
 #include <psp2/io/dirent.h>
@@ -113,12 +116,20 @@ void ExternalFileLevelStorageSource::getLevelList(LevelSummaryList& dest)
 #else
 	DIR *dp;
 	struct dirent *dirp;
+	struct stat st;
 	if((dp  = opendir(basePath.c_str())) == NULL) {
 		LOGI("Error listing base folder %s: %d", basePath.c_str(), _errno());
 		return;
 	}
 
 	while ((dirp = readdir(dp)) != NULL) {
+#if defined(__EPOC32__)
+		// lstat to fill missing d_type on some platforms
+		const auto fullPath = basePath + "/" + dirp->d_name;
+		if (!lstat(fullPath.c_str(), &st)) {
+			dirp->d_type = IFTODT(st.st_mode);
+		}
+#endif
 		if (dirp->d_type == DT_DIR)
 		{
 			addLevelSummaryIfExists(dest, dirp->d_name);

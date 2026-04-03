@@ -1,0 +1,14 @@
+TARGET miniaudio.lib
+TARGETTYPE lib
+
+UID 0x2001E628
+
+#include "common.mmh"
+
+SOURCEPATH ../../../src/miniaudio
+source miniaudio.cpp
+
+CAPABILITY None
+
+ARMFPU softvfp
+SMPSAFE

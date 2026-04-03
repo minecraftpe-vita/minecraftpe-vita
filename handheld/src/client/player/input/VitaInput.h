@@ -9,6 +9,8 @@
 #include "MouseBuildInput.h"
 #include "../../../platform/input/Controller.h"
 
+#include <psp2/kernel/clib.h>
+
 static const int moveStick = 1;
 static const int lookStick = 2;
 
@@ -84,15 +86,54 @@ private:
 
 class VitaMoveInput : public KeyboardInput {
 	typedef KeyboardInput super;
+private:
+	bool isSneaking = false;
 public:
 	VitaMoveInput(Options* options)
 	:	super(options)
 	{}
 
+	void setKey( int key, bool state ) override
+	{
+		KeyboardInput::setKey(key, state);
+
+		if(key == options->keySneak.key && state == false) {
+			isSneaking = !isSneaking;
+		}
+
+	}
+
+
 	void tick(Player* player) override {
-		super::tick(player);
-		xa += -Controller::getTransformedX(moveStick, 0.1f, 1.25f, true);
-		ya += -Controller::getTransformedY(moveStick, 0.1f, 1.25f, true);
+		xa = -Controller::getTransformedX(moveStick, 0.15f, 1.25f, true);
+		ya = -Controller::getTransformedY(moveStick, 0.15f, 1.25f, true);
+
+		jumping = keys[KEY_JUMP];
+
+		if(player->abilities.flying) {
+			isSneaking = false;
+
+			wantDown = keys[KEY_SNEAK];
+			sneaking = false;
+
+		}
+		else {
+			sneaking = isSneaking;
+
+			if (sneaking) {
+				xa *= 0.3f;
+				ya *= 0.3f;
+			}
+
+			//wantDown = sneaking;
+		}
+
+		wantUp = jumping;
+
+		if (keys[KEY_CRAFT])
+			player->startCrafting((int)player->x, (int)player->y, (int)player->z, Recipe::SIZE_2X2);
+
+
 	}
 };
 

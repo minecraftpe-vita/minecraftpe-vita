@@ -1,0 +1,15 @@
+#include <platform_paths.hrh>
+
+PRJ_PLATFORMS
+DEFAULT armv6
+
+PRJ_EXPORTS
+// TODO: maybe export files needed for makesis here..?
+
+PRJ_MMPFILES
+./raknet.mmp
+./lodepng.mmp
+./cmixer.mmp
+./minecraftpe.mmp
+
+PRJ_EXTENSIONS

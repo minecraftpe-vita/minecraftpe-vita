@@ -289,7 +289,18 @@ bool ExternalFileLevelStorage::readPlayerData(const std::string& filename, Level
 void ExternalFileLevelStorage::tick()
 {
 	tickCount++;
+
+	// what the actual heck ?
+	// this is terrible, we're writing to a SD card / Vita memory card, or worst case, the internal storage
+	// EVERY 2 SECONDS???! WTF??? that poor flash storage!
+	// im changing this to 25 because that way it wont kill your SD Card ..
+	// ...
+	// maybe this works better on linux/android where they have functioning IO cache though ..
+#ifndef __VITA__
 	if ((tickCount % 50) == 0 && level)
+#else
+	if ((tickCount % (25 * SharedConstants::TicksPerSecond)) == 0 && level)
+#endif
 	{
 		// look for chunks that needs to be saved
 		for (int z = 0; z < CHUNK_CACHE_WIDTH; z++)
@@ -322,7 +333,6 @@ void ExternalFileLevelStorage::tick()
 				}
 			}
 		}
-
         savePendingUnsavedChunks(2);
 	}
 	if (tickCount - lastSavedEntitiesTick > (60 * SharedConstants::TicksPerSecond)) {

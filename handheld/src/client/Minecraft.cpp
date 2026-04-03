@@ -758,41 +758,64 @@ void Minecraft::tickInput() {
 			#if defined(__VITA__) || defined(_WIN32) || defined(__SWITCH__)
 				if(true) { //TODO: only do this if the world is loaded ..
 
+			#if defined(__VITA__) || defined(WIN32)
 					if (key == Keyboard::KEY_E) {
 						// open inventory
 						screenChooser.setScreen(SCREEN_BLOCKSELECTION);
 					}
-					if (key == Keyboard::KEY_P) {
-						// pause the game
-						pauseGame(false);
+			#endif
+
+			#if defined(__VITA__)
+
+				// select hotbar slots (mapped to dpad left, and dpad right)
+				if(key == Keyboard::KEY_RIGHT || key == Keyboard::KEY_LEFT) {
+					int totalSlots = gui.getNumSlots()-2;
+					int selectedSlot = (key == Keyboard::KEY_RIGHT) ? (player->inventory->selected + 1) : (player->inventory->selected - 1);
+
+					if(selectedSlot > totalSlots) {
+						selectedSlot = 0;
+					} else if(selectedSlot < 0){
+						selectedSlot = totalSlots;
 					}
 
-					// drop currently selected inventory slot.
-					if(key == Keyboard::KEY_ESCAPE) {
-						if (!isCreativeMode() && player->inventory->getItem(player->inventory->selected) != nullptr) {
-							player->inventory->dropSlot(player->inventory->selected, false);
-						}
-					}
+					player->inventory->selectSlot(selectedSlot);
+				}
 
-					if(key == Keyboard::KEY_RIGHT || key == Keyboard::KEY_LEFT) {
-						int totalSlots = gui.getNumSlots()-2;
-						int selectedSlot = (key == Keyboard::KEY_RIGHT) ? (player->inventory->selected + 1) : (player->inventory->selected - 1);
+				// change perspective key (mapped to dpad up)
+				if (key == Keyboard::KEY_UP) {
+					options.thirdPersonView = !options.thirdPersonView;
+				}
 
-						if(selectedSlot > totalSlots) {
-							selectedSlot = 0;
-						} else if(selectedSlot < 0){
-							selectedSlot = totalSlots;
-						}
-
-						player->inventory->selectSlot(selectedSlot);
-					}
-
-					if (key == Keyboard::KEY_F5) {
-						options.thirdPersonView = !options.thirdPersonView;
+				// drop currently selected inventory slot. (mapped to circle)
+				if(key == Keyboard::KEY_ESCAPE) {
+					if (!isCreativeMode() && player->inventory->getItem(player->inventory->selected) != nullptr) {
+						player->inventory->dropSlot(player->inventory->selected, false);
 					}
 				}
 
+				// pause the game (mapped to start)
+				if (key == Keyboard::KEY_P) {
+					pauseGame(false);
+				}
+
+			#elif defined(WIN32)
+				if (key == Keyboard::KEY_F5) {
+					options.thirdPersonView = !options.thirdPersonView;
+				}
+
+				// drop currently selected inventory slot.
+				if(key == Keyboard::KEY_Q) {
+					if (!isCreativeMode() && player->inventory->getItem(player->inventory->selected) != nullptr) {
+						player->inventory->dropSlot(player->inventory->selected, false);
+					}
+				}
+
+				if (key == Keyboard::KEY_ESCAPE) {
+					// pause the game
+					pauseGame(false);
+				}
 			#endif
+
 
 			#if defined(RPI)
 				if (key == Keyboard::KEY_E) {
@@ -1139,6 +1162,19 @@ bool Minecraft::isOnline()
 {
 	return netCallback != NULL;
 }
+
+#if defined(__EPOC32__) && !defined(NO_NETWORK)
+bool Minecraft::needsClaimNetIf() {
+	if (isLookingForMultiplayer
+			|| isOnlineClient()
+			|| (level && level->players.size() > 1)) {
+		return true;
+	}
+	auto serv = dynamic_cast<ServerSideNetworkHandler *>(netCallback);
+	if (serv) { return serv->allowsIncomingConnections(); }
+	return false;
+}
+#endif
 
 void Minecraft::pauseGame(bool isBackPaused) {
 #ifndef STANDALONE_SERVER

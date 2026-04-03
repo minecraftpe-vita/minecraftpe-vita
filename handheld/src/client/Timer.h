@@ -2,7 +2,7 @@
 #define NET_MINECRAFT_CLIENT__Timer_H__
 
 //package net.minecraft.client;
-#include "../platform/time.h"
+#include "../platform/Time.h"
 
 class Timer
 {

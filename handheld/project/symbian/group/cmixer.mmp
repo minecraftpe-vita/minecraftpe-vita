@@ -1,0 +1,14 @@
+TARGET cmixer.lib
+TARGETTYPE lib
+
+UID 0x2001E628
+
+#include "common.mmh"
+
+SOURCEPATH ../../../src/cmixer
+source cmixer.cpp
+
+CAPABILITY None
+
+ARMFPU SoftVFP+VFPv2
+SMPSAFE

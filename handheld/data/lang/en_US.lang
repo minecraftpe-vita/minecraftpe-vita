@@ -186,8 +186,8 @@ options.hidegui=Hide GUI
 options.servervisible=Server Visible
 options.lefthanded=Left Handed
 options.usetouchscreen=Use Touchscreen
-options.usetouchpad=Use Touchpad
-options.destroyvibration=Vibration Feedback
+options.usetouchpad=Split Touch Controls
+options.destroyvibration=Vibrate on Destroy
 options.renderDebug=Debug Rendering
 
 options.group.video=Video Settings

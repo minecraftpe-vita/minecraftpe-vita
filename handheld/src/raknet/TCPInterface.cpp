@@ -17,6 +17,9 @@ typedef int socklen_t;
 #else
 #include <sys/time.h>
 #include <unistd.h>
+#if defined(__EPOC32__)
+#include <sys/select.h>
+#endif
 #include <pthread.h>
 #endif
 #include <string.h>

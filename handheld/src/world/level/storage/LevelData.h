@@ -10,7 +10,7 @@
 
 // sorry for RakNet dependency, but I really like using BitStream
 #include "../../../raknet/BitStream.h"
-#include "../../../platform/time.h"
+#include "../../../platform/Time.h"
 #include "../../../nbt/CompoundTag.h"
 
 class LevelData

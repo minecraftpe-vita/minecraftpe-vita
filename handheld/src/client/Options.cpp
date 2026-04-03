@@ -61,7 +61,7 @@ void Options::initDefaultValues() {
 	keyDrop  = KeyMapping("key.drop", Keyboard::KEY_Q);
 	keyChat  = KeyMapping("key.chat", Keyboard::KEY_T);
 	keyFog   = KeyMapping("key.fog", Keyboard::KEY_F);
-	keyDestroy=KeyMapping("key.destroy", 88);
+	keyDestroy=KeyMapping("key.destroy", Keyboard::KEY_X);
 	keyUse   = KeyMapping("key.use", Keyboard::KEY_U);
 	#endif
 	#if defined(__VITA__) || defined(__SWITCH__)
@@ -69,10 +69,6 @@ void Options::initDefaultValues() {
 	keyUse     = KeyMapping("key.use", Keyboard::KEY_X);
 	keyDestroy = KeyMapping("key.destroy", Keyboard::KEY_Z);
 	#endif
-	keyMenuNext     = KeyMapping("key.menu.next",     40);
-	keyMenuPrevious = KeyMapping("key.menu.previous", 38);
-	keyMenuOk       = KeyMapping("key.menu.ok",       13);
-	keyMenuCancel   = KeyMapping("key.menu.cancel",   8);
 
 	int k = 0;
 	keyMappings[k++] = &keyUp;
@@ -200,7 +196,7 @@ void Options::set(const Options::Option* item, float value) {
 		pixelsPerMillimeter = value;
 	}
 	notifyOptionUpdate(item, value);
-	save();
+	// save();
 }
 
 void Options::set(const Options::Option* item, int value) {
@@ -210,7 +206,7 @@ void Options::set(const Options::Option* item, int value) {
 		guiScale = value;
 	}
 	notifyOptionUpdate(item, value);
-	save();
+	// save();
 }
 
 

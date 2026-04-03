@@ -12,7 +12,8 @@ AdvancedChooseLevelScreen::AdvancedChooseLevelScreen()
     bStart(2, "Start!"),
     bLevelName(3, "Unnamed world"),
     bGameMode(4, "Gamemode"),
-    bSeed(5, "")
+    bSeed(5, ""),
+	gameType(GameType::Creative)
 {
 }
 

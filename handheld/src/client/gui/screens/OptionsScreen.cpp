@@ -128,6 +128,9 @@ void OptionsScreen::removed()
 
 void OptionsScreen::buttonClicked( Button* button ) {
 	if(button == btnClose) {
+		// we should really .. only save when closing the menu?
+		minecraft->options.save();
+
 		minecraft->reloadOptions();
 		minecraft->screenChooser.setScreen(SCREEN_STARTMENU);
 	} else if (button == btnPrevPage) {
@@ -219,6 +222,10 @@ void OptionsScreen::tick() {
 }
 
 void OptionsScreen::keyPressed(int key) {
+	if(key == Keyboard::KEY_ESCAPE) {
+		buttonClicked(btnClose);
+	}
+
 	super::keyPressed(key);
 }
 

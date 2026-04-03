@@ -42,6 +42,7 @@
     <ClCompile Include="..\..\src\client\gui\Gui.cpp" />
     <ClCompile Include="..\..\src\client\gui\GuiComponent.cpp" />
     <ClCompile Include="..\..\src\client\gui\Screen.cpp" />
+    <ClCompile Include="..\..\src\client\gui\screens\AdvancedChooseLevelScreen.cpp" />
     <ClCompile Include="..\..\src\client\gui\screens\ArmorScreen.cpp" />
     <ClCompile Include="..\..\src\client\gui\screens\ChatScreen.cpp" />
     <ClCompile Include="..\..\src\client\gui\screens\ChestScreen.cpp" />
@@ -608,7 +609,7 @@
     <ClInclude Include="..\..\src\platform\input\Mouse.h" />
     <ClInclude Include="..\..\src\platform\input\Multitouch.h" />
     <ClInclude Include="..\..\src\platform\log.h" />
-    <ClInclude Include="..\..\src\platform\time.h" />
+    <ClInclude Include="..\..\src\platform\Time.h" />
     <ClInclude Include="..\..\src\raknet\AutopatcherPatchContext.h" />
     <ClInclude Include="..\..\src\raknet\AutopatcherRepositoryInterface.h" />
     <ClInclude Include="..\..\src\raknet\BitStream.h" />
