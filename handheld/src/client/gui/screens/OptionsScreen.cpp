@@ -182,7 +182,8 @@ void OptionsScreen::generateOptionScreens() {
 			.addOptionItem(&Options::Option::LEFT_HANDED, minecraft)
 			.addOptionItem(&Options::Option::USE_TOUCHSCREEN, minecraft)
 			.addOptionItem(&Options::Option::USE_TOUCH_JOYPAD, minecraft)
-			.addOptionItem(&Options::Option::DESTROY_VIBRATION, minecraft);
+			.addOptionItem(&Options::Option::DESTROY_VIBRATION, minecraft)
+			.addOptionItem(&Options::Option::AUTO_JUMP, minecraft);
 
 		optionPane->createOptionsGroup("options.group.audio")
 			.addOptionItem(&Options::Option::SOUND, minecraft);

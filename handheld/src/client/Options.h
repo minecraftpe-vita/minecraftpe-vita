@@ -51,6 +51,7 @@ public:
 		static const Option PIXELS_PER_MILLIMETER;
 		static const Option RENDER_DEBUG;
 
+		static const Option AUTO_JUMP;
 		/*
 		 s tatic Option* getItem(int id) {    *
 		 for (Option item : Option.values()) {
@@ -121,6 +122,7 @@ public:
 	bool useMouseForDigging;
 	bool isLeftHanded;
 	bool destroyVibration;
+	bool autoJump;
 	//std::string skin;
 
 	KeyMapping keyUp;
@@ -231,6 +233,7 @@ public:
 			ambientOcclusion = !ambientOcclusion;
 			//minecraft->levelRenderer.allChanged();
 		}
+		if (option == &Option::AUTO_JUMP) autoJump = !autoJump;
 		notifyOptionUpdate(option, getBooleanValue(option));
 		//save();
 	}
@@ -278,6 +281,8 @@ public:
 			return destroyVibration;
 		if (item == &Option::RENDER_DEBUG)
 			return renderDebug;
+		if (item == &Option::AUTO_JUMP)
+			return autoJump;
 		return false;
 	}
 

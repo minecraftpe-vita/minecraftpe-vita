@@ -188,6 +188,7 @@ options.lefthanded=Left Handed
 options.usetouchscreen=Use Touchscreen
 options.usetouchpad=Split Touch Controls
 options.destroyvibration=Vibrate on Destroy
+options.autojump=Auto Jump
 options.renderDebug=Debug Rendering
 
 options.group.video=Video Settings

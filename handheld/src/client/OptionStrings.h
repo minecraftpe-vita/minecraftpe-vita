@@ -20,6 +20,7 @@ public:
 	static const char* Controls_UseTouchJoypad;
     static const char* Controls_IsLefthanded;
     static const char* Controls_FeedbackVibration;
+    static const char* Controls_AutoJump;
 
 	static const char* Game_DifficultyLevel;
     static const char* Game_HideGui;

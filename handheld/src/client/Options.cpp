@@ -24,6 +24,7 @@ void Options::initDefaultValues() {
 
 	useMouseForDigging = false;
 	destroyVibration = true;
+	autoJump = true;
 	isLeftHanded = false;
 
 	isJoyTouchArea = false;
@@ -165,7 +166,8 @@ Options::Option::USE_TOUCHSCREEN	 (16, "options.usetouchscreen", false, true),
 Options::Option::USE_TOUCH_JOYPAD	 (17, "options.usetouchpad", false, true),
 Options::Option::DESTROY_VIBRATION   (18, "options.destroyvibration", false, true),
 Options::Option::PIXELS_PER_MILLIMETER(19, "options.pixelspermilimeter", true, false),
-Options::Option::RENDER_DEBUG		  (20, "options.renderDebug", false, true);
+Options::Option::RENDER_DEBUG		  (20, "options.renderDebug", false, true),
+Options::Option::AUTO_JUMP			  (21, "options.autojump", false, true);
 
 const float Options::SOUND_MIN_VALUE = 0.0f;
 const float Options::SOUND_MAX_VALUE = 1.0f;
@@ -267,6 +269,9 @@ void Options::update() {
 			if (!minecraft->useTouchscreen())
 				isJoyTouchArea = false;
 		}
+		if (key == OptionStrings::Controls_AutoJump) {
+			readBool(value, autoJump);
+		}
 
 		// Feedback
 		if (key == OptionStrings::Controls_FeedbackVibration)
@@ -310,6 +315,7 @@ void Options::save() {
 	addOptionToSaveOutput(stringVec, OptionStrings::Controls_UseTouchScreen, useTouchScreen);
 	addOptionToSaveOutput(stringVec, OptionStrings::Controls_UseTouchJoypad, isJoyTouchArea);
 	addOptionToSaveOutput(stringVec, OptionStrings::Controls_FeedbackVibration, destroyVibration);
+	addOptionToSaveOutput(stringVec, OptionStrings::Controls_AutoJump, autoJump);
 
 	addOptionToSaveOutput(stringVec, OptionStrings::Graphics_Debug, renderDebug);
 	addOptionToSaveOutput(stringVec, OptionStrings::Graphics_RenderDistance, viewDistance);

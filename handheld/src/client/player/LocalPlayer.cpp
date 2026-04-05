@@ -93,6 +93,7 @@ bool LocalPlayer::isSolidTile(int x, int y, int z) {
 }
 
 void LocalPlayer::tick() {
+	this->autoJumpEnabled = this->minecraft->options.autoJump;
 
 	super::tick();
 	if(!useItem.isNull()) {

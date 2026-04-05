@@ -17,6 +17,7 @@ const char* OptionStrings::Controls_UseTouchScreen     = "ctrl_usetouchscreen";
 const char* OptionStrings::Controls_UseTouchJoypad     = "ctrl_usetouchjoypad";
 const char* OptionStrings::Controls_IsLefthanded       = "ctrl_islefthanded";
 const char* OptionStrings::Controls_FeedbackVibration  = "feedback_vibration";
+const char* OptionStrings::Controls_AutoJump           = "autojump";
 
 const char* OptionStrings::Game_DifficultyLevel = "game_difficulty";
 const char* OptionStrings::Game_HideGui         = "game_hidegui";
