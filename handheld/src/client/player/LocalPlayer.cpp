@@ -49,7 +49,7 @@ LocalPlayer::LocalPlayer(Minecraft* minecraft, Level* level, User* user, int dim
 	input(NULL),
 	sentInventoryItemId(-1),
 	sentInventoryItemData(-1),
-	autoJumpEnabled(true),
+	autoJumpEnabled(minecraft->options.autoJump),
 	armorTypeHash(0)
 {
 	this->dimension = dimension;
@@ -93,8 +93,6 @@ bool LocalPlayer::isSolidTile(int x, int y, int z) {
 }
 
 void LocalPlayer::tick() {
-	this->autoJumpEnabled = this->minecraft->options.autoJump;
-
 	super::tick();
 	if(!useItem.isNull()) {
 		ItemInstance* item = inventory->getSelected();
