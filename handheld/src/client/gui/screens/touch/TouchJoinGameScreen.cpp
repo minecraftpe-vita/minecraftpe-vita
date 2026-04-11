@@ -1,4 +1,5 @@
 #include "TouchJoinGameScreen.h"
+#include "../EnterIpAddressScreen.h"
 #include "../StartMenuScreen.h"
 #include "../ProgressScreen.h"
 #include "../../Font.h"
@@ -64,6 +65,7 @@ void AvailableGamesList::renderItem( int i, int x, int y, int h, Tesselator& t )
 JoinGameScreen::JoinGameScreen()
 :	bJoin(  2, "Join Game"),
 	bBack(  3, "Back"),
+	bDirect(4, "Enter IP"),
 	bHeader(0, ""),
 	gamesList(NULL)
 {
@@ -81,6 +83,7 @@ void JoinGameScreen::init()
 	//buttons.push_back(&bJoin);
 	buttons.push_back(&bBack);
 	buttons.push_back(&bHeader);
+	buttons.push_back(&bDirect);
 
 	minecraft->raknetInstance->clearServerList();
 	gamesList = new AvailableGamesList(minecraft, width, height);
@@ -98,13 +101,17 @@ void JoinGameScreen::setupPositions() {
 	bJoin.y =	0;
 	bBack.y =   0;
 	bHeader.y = 0;
+	bDirect.y =   0;
 	//#endif
 
 	// Center buttons
 	//bJoin.x = width / 2 - 4 - bJoin.w;
 	bBack.x = 0;//width / 2 + 4;
 	bHeader.x = bBack.width;
-	bHeader.width = width - bHeader.x;
+	bDirect.x = width - bDirect.width;
+
+	bHeader.width = width - (bBack.width + bDirect.width);
+
 }
 
 void JoinGameScreen::buttonClicked(Button* button)
@@ -128,6 +135,9 @@ void JoinGameScreen::buttonClicked(Button* button)
 	{
 		minecraft->cancelLocateMultiplayer();
 		minecraft->screenChooser.setScreen(SCREEN_STARTMENU);
+	}
+	if(button->id == bDirect.id) {
+		minecraft->setScreen(new EnterIpAddressScreen());
 	}
 }
 
