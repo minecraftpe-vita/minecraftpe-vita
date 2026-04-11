@@ -167,7 +167,8 @@ Options::Option::USE_TOUCH_JOYPAD	 (17, "options.usetouchpad", false, true),
 Options::Option::DESTROY_VIBRATION   (18, "options.destroyvibration", false, true),
 Options::Option::PIXELS_PER_MILLIMETER(19, "options.pixelspermilimeter", true, false),
 Options::Option::RENDER_DEBUG		  (20, "options.renderDebug", false, true),
-Options::Option::AUTO_JUMP			  (21, "options.autojump", false, true);
+Options::Option::AUTO_JUMP			  (21, "options.autojump", false, true),
+Options::Option::USERNAME			  (22, "options.username", false, false);
 
 const float Options::SOUND_MIN_VALUE = 0.0f;
 const float Options::SOUND_MAX_VALUE = 1.0f;
@@ -304,9 +305,7 @@ void Options::load() {
 
 void Options::save() {
 	StringVector stringVec;
-#ifdef EDIT_USERNAME
 	addOptionToSaveOutput(stringVec, OptionStrings::Multiplayer_Username, username);
-#endif
 	addOptionToSaveOutput(stringVec, OptionStrings::Multiplayer_ServerVisible, serverVisible);
 
 	addOptionToSaveOutput(stringVec, OptionStrings::Controls_InvertMouse, invertYMouse);

@@ -190,6 +190,7 @@ options.usetouchpad=Split Touch Controls
 options.destroyvibration=Vibrate on Destroy
 options.autojump=Auto Jump
 options.renderDebug=Debug Rendering
+options.username=Username
 
 options.group.video=Video Settings
 options.group.game=Game Settings

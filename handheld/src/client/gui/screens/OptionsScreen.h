@@ -34,9 +34,7 @@ private:
 	Button* btnNextPage;
 	Button* btnPrevPage;
 	OptionsPane* optionPane;
-#ifdef EDIT_USERNAME
 	TextBox* editUsername;
-#endif
 	int currentPage;
 	int maxPages;
 };

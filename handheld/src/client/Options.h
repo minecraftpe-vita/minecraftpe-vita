@@ -52,6 +52,7 @@ public:
 		static const Option RENDER_DEBUG;
 
 		static const Option AUTO_JUMP;
+		static const Option USERNAME;
 		/*
 		 s tatic Option* getItem(int id) {    *
 		 for (Option item : Option.values()) {

@@ -65,7 +65,9 @@ void AvailableGamesList::renderItem( int i, int x, int y, int h, Tesselator& t )
 JoinGameScreen::JoinGameScreen()
 :	bJoin(  2, "Join Game"),
 	bBack(  3, "Back"),
+#ifndef DEMO_MODE
 	bDirect(4, "Enter IP"),
+#endif
 	bHeader(0, ""),
 	gamesList(NULL)
 {
@@ -83,7 +85,9 @@ void JoinGameScreen::init()
 	//buttons.push_back(&bJoin);
 	buttons.push_back(&bBack);
 	buttons.push_back(&bHeader);
+#ifndef DEMO_MODE
 	buttons.push_back(&bDirect);
+#endif
 
 	minecraft->raknetInstance->clearServerList();
 	gamesList = new AvailableGamesList(minecraft, width, height);
@@ -101,16 +105,22 @@ void JoinGameScreen::setupPositions() {
 	bJoin.y =	0;
 	bBack.y =   0;
 	bHeader.y = 0;
-	bDirect.y =   0;
+#ifndef DEMO_MODE
+	bDirect.y = 0;
+#endif
 	//#endif
 
 	// Center buttons
 	//bJoin.x = width / 2 - 4 - bJoin.w;
 	bBack.x = 0;//width / 2 + 4;
 	bHeader.x = bBack.width;
+#ifndef DEMO_MODE
 	bDirect.x = width - bDirect.width;
 
 	bHeader.width = width - (bBack.width + bDirect.width);
+#else
+	bHeader.width = width - (bBack.width);
+#endif
 
 }
 
@@ -136,9 +146,11 @@ void JoinGameScreen::buttonClicked(Button* button)
 		minecraft->cancelLocateMultiplayer();
 		minecraft->screenChooser.setScreen(SCREEN_STARTMENU);
 	}
+#ifndef DEMO_MODE
 	if(button->id == bDirect.id) {
 		minecraft->setScreen(new EnterIpAddressScreen());
 	}
+#endif
 }
 
 bool JoinGameScreen::handleBackEvent(bool isDown)

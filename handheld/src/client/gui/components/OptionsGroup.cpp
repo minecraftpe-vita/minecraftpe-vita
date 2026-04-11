@@ -117,15 +117,18 @@ void OptionsGroup::createStepSlider( const Options::Option* option, Minecraft* m
 	setupPositions();
 }
 
-OptionsGroup& OptionsGroup::addOptionTextEntry( std::string text, int id, Minecraft* minecraft, TextBox** outButton ) {
+OptionsGroup& OptionsGroup::addOptionTextEntry(const Options::Option* option, int id, std::string text, Minecraft* minecraft, TextBox** outButton) {
 	TextBox* element;
 	element = new TextBox(id, text);
 
 	element->width = 160;
 	element->height = 30;
-	OptionsItem* item = new OptionsItem("", element);
+
+	std::string itemLabel = I18n::get(option->getCaptionId());
+	OptionsItem* item = new OptionsItem(itemLabel, element);
 	addChild(item);
 	setupPositions();
+
 	if (outButton) *outButton = element;
 	return *this;
 }

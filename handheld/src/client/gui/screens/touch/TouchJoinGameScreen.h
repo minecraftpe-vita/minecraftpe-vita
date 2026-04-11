@@ -65,7 +65,9 @@ public:
 private:
 	Button bJoin;
 	TButton bBack;
+#ifndef DEMO_MODE
 	TButton bDirect;
+#endif
 	THeader bHeader;
 	AvailableGamesList* gamesList;
 };

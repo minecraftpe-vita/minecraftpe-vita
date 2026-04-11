@@ -21,7 +21,7 @@ EnterIpAddressScreen::EnterIpAddressScreen()
 :	bHeader(0, "Enter IP Address"),
 	bBack(1, "Back"),
 	bJoin(2, "Join"),
-	bServerIp(3, "127.0.0.1:19132")
+	bServerIp(3, "")
 {
 }
 

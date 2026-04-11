@@ -19,7 +19,7 @@ public:
 	virtual void setupPositions();
 	virtual void render(Minecraft* minecraft, int xm, int ym);
 	virtual OptionsGroup& addOptionItem(const Options::Option* option, Minecraft* minecraft);
-	virtual OptionsGroup& addOptionTextEntry(std::string text, int id, Minecraft* minecraft, TextBox** outButton = NULL);
+	virtual OptionsGroup& addOptionTextEntry(const Options::Option* option, int id, std::string text, Minecraft* minecraft, TextBox** outButton = NULL);
 	virtual OptionsGroup& addTextLabel(std::string text);
 	virtual OptionsGroup& addButtonItem(int id, std::string text, Minecraft* minecraft);
 protected:
