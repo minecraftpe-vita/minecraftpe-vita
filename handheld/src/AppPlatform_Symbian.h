@@ -37,6 +37,8 @@ struct AppPlatform_Symbian : AppPlatform {
 
 	std::string getKeyboardInput() override { return iBuffer; }
 
+	int getKeyboardY() override { return 297; };
+
 	bool isPowerVR() override { return false; }
 
 	std::string defaultUsername() override { return "Carla"; /* Symbian^4 would've been Carla */ }

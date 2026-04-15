@@ -35,13 +35,17 @@ void EnterIpAddressScreen::init() {
 	buttons.push_back(&bJoin);
 	buttons.push_back(&bBack);
 	buttons.push_back(&bServerIp);
+#ifndef __EPOC32__
 	bServerIp.setFocus(minecraft);
+#endif
 }
 
 void EnterIpAddressScreen::tick(){
+#ifndef __EPOC32__
 	if(!bServerIp.focused) {
 		buttonClicked(&bJoin);
 	}
+#endif
 }
 
 void EnterIpAddressScreen::buttonClicked(Button* button) {

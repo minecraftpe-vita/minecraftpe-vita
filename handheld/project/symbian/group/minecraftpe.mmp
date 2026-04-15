@@ -72,6 +72,7 @@ source client/gui/screens/ChestScreen.cpp
 source client/gui/screens/ChooseLevelScreen.cpp
 source client/gui/screens/ConfirmScreen.cpp
 source client/gui/screens/DeathScreen.cpp
+source client/gui/screens/EnterIpAddressScreen.cpp
 source client/gui/screens/FurnaceScreen.cpp
 source client/gui/screens/InBedScreen.cpp
 source client/gui/screens/IngameBlockSelectionScreen.cpp

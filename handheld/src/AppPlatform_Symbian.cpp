@@ -16,4 +16,6 @@ void AppPlatform_Symbian::showKeyboard(std::string defaultText, int maxLength) {
 	container()->PromptTextL(iBuffer, maxLength);
 }
 
-bool AppPlatform_Symbian::isKeyboardVisible() { return container()->IsImeShown(); }
+bool AppPlatform_Symbian::isKeyboardVisible() {
+	return container()->IsImeShown();
+}
