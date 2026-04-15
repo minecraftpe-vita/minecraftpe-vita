@@ -146,29 +146,29 @@ void Options::resetDebugOptions() {
 }
 
 const Options::Option
-Options::Option::MUSIC				 (0, "options.music",		true, false),
-Options::Option::SOUND				 (1, "options.sound",		true, false),
-Options::Option::INVERT_MOUSE		 (2, "options.invertMouse",	false, true),
-Options::Option::SENSITIVITY		 (3, "options.sensitivity",	true, false),
-Options::Option::RENDER_DISTANCE	 (4, "options.renderDistance",false, false),
-Options::Option::VIEW_BOBBING		 (5, "options.viewBobbing",	false, true),
-Options::Option::ANAGLYPH			 (6, "options.anaglyph",		false, true),
-Options::Option::LIMIT_FRAMERATE	 (7, "options.limitFramerate",false, true),
-Options::Option::DIFFICULTY			 (8, "options.difficulty",	false, false),
-Options::Option::GRAPHICS			 (9, "options.graphics",		false, false),
-Options::Option::AMBIENT_OCCLUSION	 (10, "options.ao",		false, true),
-Options::Option::GUI_SCALE			 (11, "options.guiScale",	false, false),
-Options::Option::THIRD_PERSON		 (12, "options.thirdperson",	false, true),
-Options::Option::HIDE_GUI			 (13, "options.hidegui",     false, true),
-Options::Option::SERVER_VISIBLE		 (14, "options.servervisible", false, true),
-Options::Option::LEFT_HANDED		 (15, "options.lefthanded", false, true),
-Options::Option::USE_TOUCHSCREEN	 (16, "options.usetouchscreen", false, true),
-Options::Option::USE_TOUCH_JOYPAD	 (17, "options.usetouchpad", false, true),
-Options::Option::DESTROY_VIBRATION   (18, "options.destroyvibration", false, true),
-Options::Option::PIXELS_PER_MILLIMETER(19, "options.pixelspermilimeter", true, false),
-Options::Option::RENDER_DEBUG		  (20, "options.renderDebug", false, true),
-Options::Option::AUTO_JUMP			  (21, "options.autojump", false, true),
-Options::Option::USERNAME			  (22, "options.username", false, false);
+Options::Option::MUSIC				 (0, "options.music",		true, false, false),
+Options::Option::SOUND				 (1, "options.sound",		true, false, false),
+Options::Option::INVERT_MOUSE		 (2, "options.invertMouse",	false, true, false),
+Options::Option::SENSITIVITY		 (3, "options.sensitivity",	true, false, false),
+Options::Option::RENDER_DISTANCE	 (4, "options.renderDistance",false, false, false),
+Options::Option::VIEW_BOBBING		 (5, "options.viewBobbing",	false, true, false),
+Options::Option::ANAGLYPH			 (6, "options.anaglyph",		false, true, false),
+Options::Option::LIMIT_FRAMERATE	 (7, "options.limitFramerate",false, true, false),
+Options::Option::DIFFICULTY			 (8, "options.difficulty",	false, false, false),
+Options::Option::GRAPHICS			 (9, "options.graphics",		false, false, false),
+Options::Option::AMBIENT_OCCLUSION	 (10, "options.ao",		false, true, false),
+Options::Option::GUI_SCALE			 (11, "options.guiScale",	false, false, false),
+Options::Option::THIRD_PERSON		 (12, "options.thirdperson",	false, true, false),
+Options::Option::HIDE_GUI			 (13, "options.hidegui",     false, true, false),
+Options::Option::SERVER_VISIBLE		 (14, "options.servervisible", false, true, false),
+Options::Option::LEFT_HANDED		 (15, "options.lefthanded", false, true, false),
+Options::Option::USE_TOUCHSCREEN	 (16, "options.usetouchscreen", false, true, false),
+Options::Option::USE_TOUCH_JOYPAD	 (17, "options.usetouchpad", false, true, false),
+Options::Option::DESTROY_VIBRATION   (18, "options.destroyvibration", false, true, false),
+Options::Option::PIXELS_PER_MILLIMETER(19, "options.pixelspermilimeter", true, false, false),
+Options::Option::RENDER_DEBUG		  (20, "options.renderDebug", false, true, false),
+Options::Option::AUTO_JUMP			  (21, "options.autojump", false, true, false),
+Options::Option::USERNAME			  (22, "options.username", false, false, true);
 
 const float Options::SOUND_MIN_VALUE = 0.0f;
 const float Options::SOUND_MAX_VALUE = 1.0f;
@@ -226,6 +226,12 @@ void Options::set(const Options::Option* item, int value) {
 	// save();
 }
 
+void Options::set(const Options::Option* item, std::string& value) {
+	if(item == &Options::Option::USERNAME) {
+		username = value;
+	}
+	//notifyOptionUpdate(item, value);
+}
 
 void Options::update() {
 	viewDistance = 2;

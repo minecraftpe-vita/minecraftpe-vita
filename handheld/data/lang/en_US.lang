@@ -194,6 +194,7 @@ options.username=Username
 
 options.group.video=Video Settings
 options.group.game=Game Settings
+options.group.multiplayer=Multiplayer Settings
 options.group.control=Control Settings
 options.group.audio=Audio Settings
 

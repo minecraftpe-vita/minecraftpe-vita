@@ -25,9 +25,9 @@ public:
 	void setPressed(Minecraft* minecraft) override;
 	void renderBg(Minecraft* minecraft, int xm, int ym ) override;
 
-private:
+protected:
+	Minecraft* _minecraft;
 	std::string defaultText;
-	Minecraft* minecraftRef;
 public:
 	std::string text;
 	bool focused;

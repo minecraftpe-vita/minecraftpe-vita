@@ -17,8 +17,7 @@ OptionsScreen::OptionsScreen()
   bHeader(NULL),
   btnNextPage(NULL),
   btnPrevPage(NULL),
-  optionPane(NULL),
-  editUsername(NULL) {
+  optionPane(NULL) {
 	currentPage = 0;
 	maxPages = 3;
 }
@@ -44,11 +43,6 @@ OptionsScreen::~OptionsScreen() {
 		delete optionPane;
 		optionPane = NULL;
 	}
-	if(editUsername != NULL) {
-		delete editUsername;
-		editUsername = NULL;
-	}
-
 }
 
 void OptionsScreen::init() {
@@ -168,11 +162,11 @@ void OptionsScreen::generateOptionScreens() {
 		optionPane->createOptionsGroup("options.group.game")
 			.addOptionItem(&Options::Option::DIFFICULTY, minecraft)
 			.addOptionItem(&Options::Option::THIRD_PERSON, minecraft)
-			.addOptionItem(&Options::Option::HIDE_GUI, minecraft)
-			.addOptionItem(&Options::Option::SERVER_VISIBLE, minecraft);
-#ifdef EDIT_USERNAME
+			.addOptionItem(&Options::Option::HIDE_GUI, minecraft);
+
+		optionPane->createOptionsGroup("options.group.multiplayer")
+			.addOptionItem(&Options::Option::SERVER_VISIBLE, minecraft)
 			.addOptionItem(&Options::Option::USERNAME, minecraft);
-#endif
 	} else if (currentPage == 2) {
 		optionPane->createOptionsGroup("options.group.control")
 			.addOptionItem(&Options::Option::SENSITIVITY, minecraft)
@@ -205,14 +199,9 @@ void OptionsScreen::mouseReleased( int x, int y, int buttonNum ) {
 }
 
 void OptionsScreen::tick() {
-	if(editUsername != nullptr && editUsername->focused) {
-		minecraft->options.username = editUsername->text;
-	}
-	{
-		if(optionPane != NULL)
-			optionPane->tick(minecraft);
-		super::tick();
-	}
+	if(optionPane != NULL)
+		optionPane->tick(minecraft);
+	super::tick();
 }
 
 void OptionsScreen::keyPressed(int key) {

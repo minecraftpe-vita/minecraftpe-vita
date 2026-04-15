@@ -37,6 +37,9 @@ OptionsGroup& OptionsGroup::addOptionItem( const Options::Option* option, Minecr
 		createProgressSlider(option, minecraft);
 	else if(option->isInt())
 		createStepSlider(option, minecraft);
+	else if(option->isString()) {
+		createTextBox(option, minecraft);
+	}
 	return *this;
 }
 
@@ -102,6 +105,27 @@ public:
 	}
 };
 
+class OptionTextBox : public TextBox {
+	public:
+	const Options::Option* _option;
+	OptionTextBox(const Options::Option* option, Minecraft* mc) : TextBox(99999, mc->options.getStringValue(option)) {
+		_option = option;
+		_minecraft = mc;
+	}
+
+	virtual void mouseClicked(Minecraft* minecraft, int x, int y, int buttonNum) {
+		if(buttonNum == MouseAction::ACTION_LEFT && clicked(minecraft, x, y)) {
+			minecraft->soundEngine->playUI("random.click", 1, 1);
+			this->setPressed(minecraft);
+		}
+	}
+
+	virtual bool loseFocus(Minecraft* minecraft) {
+		minecraft->options.set(_option, this->text);
+		return TextBox::loseFocus(minecraft);
+	}
+};
+
 void OptionsGroup::createStepSlider( const Options::Option* option, Minecraft* minecraft ) {
 	Button* element;
 	if (minecraft->useTouchscreen()) {
@@ -117,19 +141,31 @@ void OptionsGroup::createStepSlider( const Options::Option* option, Minecraft* m
 	setupPositions();
 }
 
-OptionsGroup& OptionsGroup::addOptionTextEntry(const Options::Option* option, int id, std::string text, Minecraft* minecraft, TextBox** outButton) {
-	TextBox* element;
-	element = new TextBox(id, text);
+void OptionsGroup::createTextBox( const Options::Option* option, Minecraft* minecraft ) {
+	OptionTextBox* element;
+	element = new OptionTextBox(option, minecraft);
 
-	element->width = 160;
-	element->height = 30;
+	element->width = 100;
+	element->height = 20;
+
+	std::string itemLabel = I18n::get(option->getCaptionId());
+	OptionsItem* item = new OptionsItem(itemLabel, element);
+	addChild(item);
+	setupPositions();
+}
+
+OptionsGroup& OptionsGroup::addOptionTextEntry(const Options::Option* option, Minecraft* minecraft) {
+	OptionTextBox* element;
+	element = new OptionTextBox(option, minecraft);
+
+	element->width = 100;
+	element->height = 20;
 
 	std::string itemLabel = I18n::get(option->getCaptionId());
 	OptionsItem* item = new OptionsItem(itemLabel, element);
 	addChild(item);
 	setupPositions();
 
-	if (outButton) *outButton = element;
 	return *this;
 }
 

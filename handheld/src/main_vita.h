@@ -14,6 +14,7 @@
 #include <psp2/kernel/clib.h>
 #include <psp2/net/net.h>
 #include <psp2/apputil.h>
+#include <psp2/power.h>
 #include <psp2/net/netctl.h>
 #include <gpu_es4/psp2_pvr_hint.h>
 
@@ -108,7 +109,7 @@ static void initEgl(App* app, AppContext* state, uint32_t w, uint32_t h)
 	int surface_width, surface_height;
 	eglQuerySurface(state->display, state->surface, EGL_WIDTH, &surface_width);
 	eglQuerySurface(state->display, state->surface, EGL_HEIGHT, &surface_height);
-	sceClibPrintf("Surface Width: %d, Surface Height: %d\n", surface_width, surface_height);
+	LOGI("Surface Width: %d, Surface Height: %d\n", surface_width, surface_height);
 
 	_inited_egl = true;
 	if (!_app_inited) {
@@ -322,7 +323,7 @@ void handleController() {
 }
 
 int main(int argc, char** argv) {
-	int ret;
+	int ret = 0;
 
 	checkSce(sceSysmoduleLoadModule(SCE_SYSMODULE_NET));
 	checkSce(sceSysmoduleLoadModule(SCE_SYSMODULE_IME));
@@ -339,6 +340,11 @@ int main(int argc, char** argv) {
 
 	SceNpCommunicationConfig cfg = {0};
 	checkSce(sceNpInit(&cfg, nullptr));
+
+	checkSce(scePowerSetArmClockFrequency(444));
+	checkSce(scePowerSetBusClockFrequency(222));
+	checkSce(scePowerSetGpuClockFrequency(222));
+	checkSce(scePowerSetGpuXbarClockFrequency(166));
 
 	MAIN_CLASS* app = new MAIN_CLASS();
 

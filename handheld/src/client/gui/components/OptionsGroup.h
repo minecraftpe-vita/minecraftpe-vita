@@ -19,13 +19,15 @@ public:
 	virtual void setupPositions();
 	virtual void render(Minecraft* minecraft, int xm, int ym);
 	virtual OptionsGroup& addOptionItem(const Options::Option* option, Minecraft* minecraft);
-	virtual OptionsGroup& addOptionTextEntry(const Options::Option* option, int id, std::string text, Minecraft* minecraft, TextBox** outButton = NULL);
+	virtual OptionsGroup& addOptionTextEntry(const Options::Option* option, Minecraft* minecraft);
 	virtual OptionsGroup& addTextLabel(std::string text);
 	virtual OptionsGroup& addButtonItem(int id, std::string text, Minecraft* minecraft);
 protected:
 	virtual void createToggle(const Options::Option* option, Minecraft* minecraft);
 	virtual void createProgressSlider(const Options::Option* option, Minecraft* minecraft);
 	virtual void createStepSlider(const Options::Option* option, Minecraft* minecraft);
+	virtual void createTextBox(const Options::Option* option, Minecraft* minecraft);
+
 	std::string label;
 };
 

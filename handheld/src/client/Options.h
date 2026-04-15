@@ -23,6 +23,7 @@ public:
 	{
 		const bool _isProgress;
 		const bool _isBoolean;
+		const bool _isString;
 		const std::string _captionId;
 		const int _ordinal;
 
@@ -64,10 +65,11 @@ public:
 	}
 	*/
 
-		Option(int ordinal, const std::string& captionId, bool hasProgress, bool isBoolean)
+		Option(int ordinal, const std::string& captionId, bool hasProgress, bool isBoolean, bool isString)
 		:	_captionId(captionId),
 		_isProgress(hasProgress),
 		_isBoolean(isBoolean),
+		_isString(isString),
 		_ordinal(ordinal)
 		{}
 
@@ -82,6 +84,10 @@ public:
 		bool isInt() const {
 			if (this == &RENDER_DISTANCE) return true;
 			return (!_isBoolean && !_isProgress);
+		}
+
+		bool isString() const {
+			return _isString;
 		}
 
 		int getId() {
@@ -203,6 +209,7 @@ public:
 
 	void set(const Option* item, float value);
 	void set(const Option* item, int value);
+	void set(const Option* item, std::string& value);
 
 	void toggle(const Option* option, int dir) {
 		if (option == &Option::INVERT_MOUSE)	invertYMouse = !invertYMouse;
@@ -237,6 +244,13 @@ public:
 		if (option == &Option::AUTO_JUMP) autoJump = !autoJump;
 		notifyOptionUpdate(option, getBooleanValue(option));
 		//save();
+	}
+
+	std::string getStringValue(const Option* item) {
+		if(item == &Option::USERNAME) {
+			return username;
+		}
+		return "";
 	}
 
 	int getIntValue(const Option* item) {

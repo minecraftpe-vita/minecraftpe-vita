@@ -10,7 +10,7 @@ TextBox::TextBox( int id, const std::string& msg )
  : Button(id, 0, 0, 0, 0, msg),
  focused(false),
  defaultText(msg),
- minecraftRef(nullptr),
+ _minecraft(nullptr),
  text(msg){
 
 }
@@ -19,7 +19,7 @@ TextBox::TextBox( int id, int x, int y, const std::string& msg )
  : Button(id, x, y, 0, 0, msg),
 	focused(false),
 	defaultText(msg),
-	minecraftRef(nullptr),
+	_minecraft(nullptr),
 	text(msg){
 }
 
@@ -27,14 +27,14 @@ TextBox::TextBox( int id, int x, int y, int w, int h, const std::string& msg )
  : Button(id, x, y, w, h, msg),
    focused(false),
    defaultText(msg),
-   minecraftRef(nullptr),
+   _minecraft(nullptr),
    text(msg) {
 }
 
 TextBox::~TextBox() {
 	if(focused) {
-		if(minecraftRef != nullptr) {
-			this->minecraftRef->platform()->hideKeyboard();
+		if(_minecraft != nullptr) {
+			this->_minecraft->platform()->hideKeyboard();
 		}
 	}
 
@@ -43,7 +43,7 @@ TextBox::~TextBox() {
 void TextBox::setFocus(Minecraft* minecraft) {
 	if(!focused) {
 		if(minecraft->platform()->isKeyboardVisible()) return;
-		this->minecraftRef = minecraft;
+		this->_minecraft = minecraft;
 
 		minecraft->platform()->showKeyboard(text);
 		focused = true;
@@ -52,9 +52,9 @@ void TextBox::setFocus(Minecraft* minecraft) {
 }
 
 bool TextBox::loseFocus(Minecraft* minecraft) {
+	this->_minecraft = minecraft;
 	if(focused) {
-		minecraft->platform()->hideKeyboard();
-		this->minecraftRef = minecraft;
+		if(minecraft->platform()->isKeyboardVisible()) minecraft->platform()->hideKeyboard();
 
 		focused = false;
 		return true;
@@ -64,6 +64,7 @@ bool TextBox::loseFocus(Minecraft* minecraft) {
 }
 
 void TextBox::setPressed(Minecraft* minecraft) {
+	this->_minecraft = minecraft;
 	this->setFocus(minecraft);
 }
 
@@ -72,7 +73,7 @@ void TextBox::render( Minecraft* minecraft, int xm, int ym ) {
 	if(focused) {
 		std::string input = minecraft->platform()->getKeyboardInput();
 		if(!minecraft->platform()->isKeyboardVisible()) {
-			focused = false;
+			this->loseFocus(minecraft);
 
 			if(input.empty()) {
 				// set default if it was left empty.

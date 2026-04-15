@@ -55,7 +55,6 @@
 
 #if defined(__VITA__)
 #include "player/input/VitaInput.h"
-#include <psp2/power.h>
 #endif
 
 #include "player/input/MouseTurnInput.h"
@@ -361,18 +360,6 @@ void Minecraft::leaveGame(bool renameLevel /*=false*/)
 }
 
 void Minecraft::prepareLevel(const std::string& title) {
-	#ifdef __VITA__
-	int prevArmClk = scePowerGetArmClockFrequency();
-	int prevBusClk = scePowerGetBusClockFrequency();
-	int prevGpuClk = scePowerGetGpuClockFrequency();
-	int prevXbarClk = scePowerGetGpuXbarClockFrequency();
-
-	scePowerSetArmClockFrequency(444);
-	scePowerSetBusClockFrequency(222);
-	scePowerSetGpuClockFrequency(222);
-	scePowerSetGpuXbarClockFrequency(166);
-	#endif
-
 	LOGI("status: 1\n");
 	progressStageStatusId = 1;
 
@@ -445,12 +432,6 @@ void Minecraft::prepareLevel(const std::string& title) {
 	C.print(" - clear: ");
 	D.print(" - prepr: ");
 	progressStageStatusId = 0;
-#ifdef __VITA__
-	scePowerSetArmClockFrequency(prevArmClk);
-	scePowerSetBusClockFrequency(prevBusClk);
-	scePowerSetGpuClockFrequency(prevGpuClk);
-	scePowerSetGpuXbarClockFrequency(prevXbarClk);
-#endif
 }
 
 void Minecraft::update() {
