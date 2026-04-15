@@ -168,7 +168,7 @@ Options::Option::DESTROY_VIBRATION   (18, "options.destroyvibration", false, tru
 Options::Option::PIXELS_PER_MILLIMETER(19, "options.pixelspermilimeter", true, false, false),
 Options::Option::RENDER_DEBUG		  (20, "options.renderDebug", false, true, false),
 Options::Option::AUTO_JUMP			  (21, "options.autojump", false, true, false),
-Options::Option::USERNAME			  (22, "options.username", false, false, true);
+Options::Option::USERNAME			    (22, "options.username", false, false, true);
 
 const float Options::SOUND_MIN_VALUE = 0.0f;
 const float Options::SOUND_MAX_VALUE = 1.0f;

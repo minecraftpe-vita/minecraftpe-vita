@@ -33,13 +33,12 @@ void OptionsGroup::render( Minecraft* minecraft, int xm, int ym ) {
 OptionsGroup& OptionsGroup::addOptionItem( const Options::Option* option, Minecraft* minecraft ) {
 	if(option->isBoolean())
 		createToggle(option, minecraft);
+	else if(option->isString())
+		createTextBox(option, minecraft);
 	else if(option->isProgress())
 		createProgressSlider(option, minecraft);
 	else if(option->isInt())
 		createStepSlider(option, minecraft);
-	else if(option->isString()) {
-		createTextBox(option, minecraft);
-	}
 	return *this;
 }
 
