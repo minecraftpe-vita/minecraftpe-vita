@@ -36,7 +36,7 @@ unsigned int sceLibcHeapSize = 3 * 1024 * 1024;
 
 static bool _inited_egl = false;
 static bool _app_inited = false;
-static bool _pstv = false;
+static bool _vita_tv = false;
 
 static void initPvrPSP2() {
 	const char* libgpu_es4_ext =	"app0:module/libgpu_es4_ext.suprx";
@@ -251,7 +251,8 @@ static void trackpadRelease(int stick, uint8_t x, uint8_t y) {
 void handleController() {
 	SceCtrlData ctrl = {0};
 	static SceCtrlData prevCtrl = {0};
-	sceCtrlReadBufferPositive(0, &ctrl, 1);
+
+	_vita_tv ? sceCtrlReadBufferPositive2(0, &ctrl, 1) : sceCtrlReadBufferPositive(0, &ctrl, 1);
 
 	//sceClibPrintf("ctrl.rx = %d ctrl.ry = %d\n", ctrl.rx, ctrl.ry);
 	trackpadPress(2, ctrl.rx, ctrl.ry);
@@ -311,7 +312,7 @@ void handleController() {
 	}
 
 	// handle playstation tv specific controls.
-	if(!_pstv) {
+	if(!_vita_tv) {
 
 		// psvita: placing and breaking blocks is on L/R
 		if(changedButtons & SCE_CTRL_LTRIGGER) {
@@ -321,8 +322,10 @@ void handleController() {
 		if(changedButtons & SCE_CTRL_RTRIGGER) {
 			Mouse::feed(MouseAction::ACTION_LEFT, BTN_STATE(ctrl.buttons, SCE_CTRL_RTRIGGER), 0,0);
 		}
+
 	}
 	else {
+
 		// pstv: sneak is L3
 		if(changedButtons & SCE_CTRL_L3) {
 			Keyboard::feed(Keyboard::KEY_DOWN, BTN_STATE(ctrl.buttons, SCE_CTRL_L3));
@@ -392,9 +395,9 @@ int main(int argc, char** argv) {
 	context.doRender = true;
 	context.platform = &platform;
 
-	initEgl(app, &context, platform.getScreenWidth(), platform.getScreenHeight());
+	_vita_tv = sceKernelIsPSVitaTV();
 
-	_pstv = sceKernelIsPSVitaTV();
+	initEgl(app, &context, platform.getScreenWidth(), platform.getScreenHeight());
 
 	checkSce(sceTouchSetSamplingState(0, SCE_TOUCH_SAMPLING_STATE_START));
 	checkSce(sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG));
@@ -403,7 +406,7 @@ int main(int argc, char** argv) {
 	while (running) {
 		handleTouch();
 		handleController();
-		sceImeUpdate();
+		platform._tick();
 		app->update();
 	}
 

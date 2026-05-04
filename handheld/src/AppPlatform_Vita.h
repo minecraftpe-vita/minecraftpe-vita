@@ -10,6 +10,8 @@
 #include <psp2/appmgr.h>
 #include <psp2/libime.h>
 #include <psp2/registrymgr.h>
+#include <psp2/kernel/processmgr.h>
+#include <psp2/rtc.h>
 
 #include <cstdlib>
 
@@ -27,6 +29,27 @@ static SceUInt8 ime_out_utf8[sizeof(ime_out)] = {0};
 static SceWChar16 ime_inital[SCE_IME_MAX_TEXT_LENGTH] = { 0 };
 static bool ime_is_open = false;
 
+
+static void VibrateController(uint64_t ms) {
+
+	static int64_t vbTimeStart = 0;
+	static int64_t vbTimeElapsed = 0;
+
+	if(ms != 0) {
+		vbTimeStart = sceKernelGetProcessTimeWide();
+		vbTimeElapsed = ms * 1000.0;
+	}
+
+	if(vbTimeElapsed > 0 ) {
+		SceCtrlActuator actuatorSetting = {0};
+		actuatorSetting.small = 0x7F;
+		actuatorSetting.large = 0x7F;
+		sceCtrlSetActuator(1, &actuatorSetting);
+
+		vbTimeElapsed -= (sceKernelGetProcessTimeWide() - vbTimeStart);
+	}
+
+}
 
 static void Utf16ToUtf8(const uint16_t *src, uint8_t *dst)
 {
@@ -81,13 +104,16 @@ static void ImeEventHandler(void *arg, const SceImeEventData *e)
 	}
 }
 
+
+
 class AppPlatform_Vita : public AppPlatform
 {
 public:
-	bool supportsTouchscreen() override { return isPstv; }
 
 	int getScreenWidth() override { return width; }
 	int getScreenHeight() override { return height; }
+
+	bool supportsTouchscreen() override { return !isVitaTv; }
 
 	void buyGame() override {
 
@@ -155,9 +181,23 @@ public:
 		return imetxt;
 	}
 
-	int getKeyboardY() override { return 297; };
+	int getKeyboardY() override {
+		return 297;
+	};
 
-	bool isPowerVR() override { return true; }
+	void _tick() override {
+		sceImeUpdate();
+		VibrateController(0);
+	}
+
+
+	void vibrate(int milliSeconds) override {
+		VibrateController(milliSeconds);
+	}
+
+	bool isPowerVR() override {
+		return true;
+	}
 
 	std::string defaultUsername() override {
 		SceNpId npid;
@@ -167,7 +207,7 @@ public:
 			return std::string(npid.handle.data);
 		}
 		else {
-			LOGI("Failed to read npid: %x", ret);
+			LOGI("Failed to read npid: %x\n", ret);
 
 			// read from registry as a fallback
 			char rd_username[0x100] = {0};
@@ -218,7 +258,7 @@ public:
 		return blob;
 	}
 	std::string getPlatformStringVar (int stringId) override {
-		if(isPstv) return "PlayStation TV";
+		if(isVitaTv) return "PlayStation TV";
 		else return "PlayStation Vita";
 	}
 
@@ -278,7 +318,7 @@ public:
 private:
 	int width = 960;
 	int height = 544;
-	bool isPstv = sceKernelIsPSVitaTV();
+	bool isVitaTv = sceKernelIsPSVitaTV();
 };
 
 #endif

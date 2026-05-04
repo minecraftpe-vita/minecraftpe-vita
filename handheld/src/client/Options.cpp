@@ -39,10 +39,7 @@ void Options::initDefaultValues() {
 	limitFramerate = false;
 	fancyGraphics = true;//false;
 	ambientOcclusion = false;
-	if(minecraft->supportNonTouchScreen())
-		useTouchScreen = false;
-	else
-		useTouchScreen = true;
+	useTouchScreen = minecraft->platform()->supportsTouchscreen();
 	pixelsPerMillimeter = minecraft->platform()->getPixelsPerMillimeter();
 	//useMouseForDigging = true;
 
@@ -71,8 +68,8 @@ void Options::initDefaultValues() {
 	keyMenuCancel   = KeyMapping("key.menu.cancel",   Keyboard::KEY_BACKSPACE);
 	#ifdef __VITA__
 	// set vita keymap,
-	keyMenuNext     = KeyMapping("key.menu.next",     Keyboard::KEY_RIGHT);
-	keyMenuPrevious = KeyMapping("key.menu.previous", Keyboard::KEY_LEFT);
+	keyMenuNext     = KeyMapping("key.menu.next",     Keyboard::KEY_DOWN);
+	keyMenuPrevious = KeyMapping("key.menu.previous", Keyboard::KEY_UP);
 	keyMenuOk       = KeyMapping("key.menu.ok",       Keyboard::KEY_SPACE);
 	keyMenuCancel   = KeyMapping("key.menu.cancel",   Keyboard::KEY_ESCAPE);
 
