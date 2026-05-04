@@ -325,12 +325,6 @@ void handleController() {
 
 	}
 	else {
-
-		// pstv: sneak is L3
-		if(changedButtons & SCE_CTRL_L3) {
-			Keyboard::feed(Keyboard::KEY_DOWN, BTN_STATE(ctrl.buttons, SCE_CTRL_L3));
-		}
-
 		// pstv: hange selected slot, navigate menus is L1/L2
 		if(changedButtons & SCE_CTRL_R1) {
 			Keyboard::feed(Keyboard::KEY_RIGHT, BTN_STATE(ctrl.buttons, SCE_CTRL_R1));

@@ -57,6 +57,8 @@ public:
 	virtual void handle(const RakNet::RakNetGUID& source, ContainerSetSlotPacket* packet);
 	virtual void handle(const RakNet::RakNetGUID& source, ContainerClosePacket* packet);
 	virtual void handle(const RakNet::RakNetGUID& source, SignUpdatePacket* packet);
+	// patch: add chat handler on server side.
+	virtual void handle(const RakNet::RakNetGUID& source, ChatPacket* packet);
 
 	bool allowsIncomingConnections() { return _allowIncoming; }
 	void allowIncomingConnections(bool doAllow);

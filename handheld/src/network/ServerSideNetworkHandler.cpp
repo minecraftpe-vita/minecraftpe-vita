@@ -168,6 +168,20 @@ void ServerSideNetworkHandler::onDisconnect(const RakNet::RakNetGUID& guid)
 	}
 }
 
+void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID& source, ChatPacket* packet)
+{
+	const PlayerList& players = level->players;
+	for (unsigned int i = 0; i < players.size(); i++)
+	{
+		Player* player = players[i];
+
+		if (player->owner == source)
+		{
+			displayGameMessage("<" + player->name + "> "+packet->message);
+		}
+	}
+}
+
 void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID& source, LoginPacket* packet)
 {
 	if (!level) return;

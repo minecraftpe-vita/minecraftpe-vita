@@ -5,8 +5,8 @@
 #include "../../../AppPlatform.h"
 #include "../../../platform/log.h"
 #include "../../../network/RakNetInstance.h"
-#include "../../../network/ServerSideNetworkHandler.h"
 #include "../../../network/packet/ChatPacket.h"
+#include "../../../network/packet/MessagePacket.h"
 
 ChatScreen::ChatScreen()
 :	bSend(0, "Send"),
@@ -50,19 +50,32 @@ void ChatScreen::buttonClicked(Button* button) {
 
 		if(!bMessage.text.empty()){
 			// construct chat message: "<username> message"
-			std::string msg = std::string("<") + minecraft->options.username + "> " + bMessage.text;
-			#ifndef NO_NETWORK
-			if (minecraft->netCallback) {
-				// send chat packet
-				ChatPacket chatPacket(msg);
+			std::string msgFormatted = std::string("<") + minecraft->options.username + "> " + bMessage.text;
+
+#ifndef NO_NETWORK
+			if (minecraft->netCallback && minecraft->raknetInstance->isServer()) {
+				// If we are hosting, then send MsgPacket ..
+				MessagePacket msgPacket(msgFormatted.c_str());
+				minecraft->raknetInstance->send(msgPacket);
+
+				// display the message locally too ..
+				minecraft->gui.addMessage(msgFormatted);
+
+			} else if (minecraft->netCallback) {
+				// Otherwise, sent ChatPacket
+				ChatPacket chatPacket(bMessage.text, false);
 				minecraft->raknetInstance->send(chatPacket);
 			}
-			#endif
-			// display local message,
-			minecraft->gui.addMessage(msg);
+#else
+		// display local message,
+		minecraft->gui.addMessage(msgFormatted);
+#endif
+
+
 		}
 
 		minecraft->setScreen(NULL);
+		return;
 	}
 }
 
