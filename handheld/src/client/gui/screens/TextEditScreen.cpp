@@ -140,14 +140,14 @@ void TextEditScreen::keyPressed( int eventKey ) {
 	}
 
 #if defined(__VITA__)
-	else if(eventKey == minecraft->options.keyMenuPrevious.key) { // mapped to dpad up
+	else if(eventKey == minecraft->options.keyUp.key) { // mapped to dpad up
 		line--;
 		if(line < 0)
 			line = 3;
 		if(line >= 4)
 			line = 0;
 	}
-	else if(eventKey == minecraft->options.keyMenuNext.key) { // mapped to dpad down
+	else if(eventKey == minecraft->options.keyDown.key) { // mapped to dpad down
 		line++;
 		if(line < 0)
 			line = 3;

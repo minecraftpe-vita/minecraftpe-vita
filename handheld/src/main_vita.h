@@ -12,6 +12,7 @@
 #include <psp2/touch.h>
 #include <psp2/ctrl.h>
 #include <psp2/kernel/clib.h>
+#include <psp2/kernel/sysmem.h>
 #include <psp2/net/net.h>
 #include <psp2/apputil.h>
 #include <psp2/power.h>
@@ -35,6 +36,7 @@ unsigned int sceLibcHeapSize = 3 * 1024 * 1024;
 
 static bool _inited_egl = false;
 static bool _app_inited = false;
+static bool _pstv = false;
 
 static void initPvrPSP2() {
 	const char* libgpu_es4_ext =	"app0:module/libgpu_es4_ext.suprx";
@@ -261,22 +263,22 @@ void handleController() {
 		LOGI("changedButtons = %08x\n", changedButtons);
 	}
 
-
-	// sneak
-	if(changedButtons & SCE_CTRL_DOWN) {
-		Keyboard::feed(Keyboard::KEY_DOWN, BTN_STATE(ctrl.buttons, SCE_CTRL_DOWN));
-	}
-
-	// f5 (very good idea key)
+	// f5, (very good idea key), menu navigation
 	if(changedButtons & SCE_CTRL_UP) {
 		Keyboard::feed(Keyboard::KEY_UP, BTN_STATE(ctrl.buttons, SCE_CTRL_UP));
 	}
 
-	// change selected slot
+	// sneak, menu navigation
+	if(changedButtons & SCE_CTRL_DOWN) {
+		Keyboard::feed(Keyboard::KEY_DOWN, BTN_STATE(ctrl.buttons, SCE_CTRL_DOWN));
+	}
+
+	// change selected slot, menu navigation
 	if(changedButtons & SCE_CTRL_RIGHT) {
 		Keyboard::feed(Keyboard::KEY_RIGHT, BTN_STATE(ctrl.buttons, SCE_CTRL_RIGHT));
 	}
 
+	// change selected slot, menu navigation
 	if(changedButtons & SCE_CTRL_LEFT) {
 		Keyboard::feed(Keyboard::KEY_LEFT, BTN_STATE(ctrl.buttons, SCE_CTRL_LEFT));
 	}
@@ -303,22 +305,47 @@ void handleController() {
 		Keyboard::feed(Keyboard::KEY_P, BTN_STATE(ctrl.buttons, SCE_CTRL_START));
 	}
 
-	// psvita: placing and breaking blocks
-	if(changedButtons & SCE_CTRL_LTRIGGER) {
-		Mouse::feed(MouseAction::ACTION_RIGHT, BTN_STATE(ctrl.buttons, SCE_CTRL_LTRIGGER), 0,0);
+	// chat
+	if(changedButtons & SCE_CTRL_SELECT) {
+		Keyboard::feed(Keyboard::KEY_T, BTN_STATE(ctrl.buttons, SCE_CTRL_SELECT));
 	}
 
-	if(changedButtons & SCE_CTRL_RTRIGGER) {
-		Mouse::feed(MouseAction::ACTION_LEFT, BTN_STATE(ctrl.buttons, SCE_CTRL_RTRIGGER), 0,0);
+	// handle playstation tv specific controls.
+	if(!_pstv) {
+
+		// psvita: placing and breaking blocks is on L/R
+		if(changedButtons & SCE_CTRL_LTRIGGER) {
+			Mouse::feed(MouseAction::ACTION_RIGHT, BTN_STATE(ctrl.buttons, SCE_CTRL_LTRIGGER), 0,0);
+		}
+
+		if(changedButtons & SCE_CTRL_RTRIGGER) {
+			Mouse::feed(MouseAction::ACTION_LEFT, BTN_STATE(ctrl.buttons, SCE_CTRL_RTRIGGER), 0,0);
+		}
+	}
+	else {
+		// pstv: sneak is L3
+		if(changedButtons & SCE_CTRL_L3) {
+			Keyboard::feed(Keyboard::KEY_DOWN, BTN_STATE(ctrl.buttons, SCE_CTRL_L3));
+		}
+
+		// pstv: hange selected slot, navigate menus is L1/L2
+		if(changedButtons & SCE_CTRL_R1) {
+			Keyboard::feed(Keyboard::KEY_RIGHT, BTN_STATE(ctrl.buttons, SCE_CTRL_R1));
+		}
+
+		if(changedButtons & SCE_CTRL_L1) {
+			Keyboard::feed(Keyboard::KEY_LEFT, BTN_STATE(ctrl.buttons, SCE_CTRL_L1));
+		}
+
+		// pstv: placing and breaking blocks is on L2/R2
+		if(changedButtons & SCE_CTRL_L2) {
+			Mouse::feed(MouseAction::ACTION_RIGHT, BTN_STATE(ctrl.buttons, SCE_CTRL_L2), 0,0);
+		}
+		if(changedButtons & SCE_CTRL_R2) {
+			Mouse::feed(MouseAction::ACTION_LEFT, BTN_STATE(ctrl.buttons, SCE_CTRL_R2), 0,0);
+		}
 	}
 
-	// pstv: placing and breaking blocks
-	if(changedButtons & SCE_CTRL_L1) {
-		Mouse::feed(MouseAction::ACTION_RIGHT, BTN_STATE(ctrl.buttons, SCE_CTRL_L1), 0,0);
-	}
-	if(changedButtons & SCE_CTRL_R1) {
-		Mouse::feed(MouseAction::ACTION_LEFT, BTN_STATE(ctrl.buttons, SCE_CTRL_R1), 0,0);
-	}
 
 }
 
@@ -365,7 +392,9 @@ int main(int argc, char** argv) {
 	context.doRender = true;
 	context.platform = &platform;
 
-	initEgl(app, &context, width, height);
+	initEgl(app, &context, platform.getScreenWidth(), platform.getScreenHeight());
+
+	_pstv = sceKernelIsPSVitaTV();
 
 	checkSce(sceTouchSetSamplingState(0, SCE_TOUCH_SAMPLING_STATE_START));
 	checkSce(sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG));

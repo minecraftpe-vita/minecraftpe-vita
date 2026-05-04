@@ -71,8 +71,8 @@ void Options::initDefaultValues() {
 	keyMenuCancel   = KeyMapping("key.menu.cancel",   Keyboard::KEY_BACKSPACE);
 	#ifdef __VITA__
 	// set vita keymap,
-	keyMenuNext     = KeyMapping("key.menu.next",     Keyboard::KEY_DOWN);
-	keyMenuPrevious = KeyMapping("key.menu.previous", Keyboard::KEY_UP);
+	keyMenuNext     = KeyMapping("key.menu.next",     Keyboard::KEY_RIGHT);
+	keyMenuPrevious = KeyMapping("key.menu.previous", Keyboard::KEY_LEFT);
 	keyMenuOk       = KeyMapping("key.menu.ok",       Keyboard::KEY_SPACE);
 	keyMenuCancel   = KeyMapping("key.menu.cancel",   Keyboard::KEY_ESCAPE);
 
@@ -81,8 +81,16 @@ void Options::initDefaultValues() {
 
 	keyBuild        = KeyMapping("key.inventory", Keyboard::KEY_E);
 	keyCraft        = KeyMapping("key.crafting", Keyboard::KEY_C);
+	keyDrop         = KeyMapping("key.drop", Keyboard::KEY_ESCAPE);
 	keyUse          = KeyMapping("key.use", Keyboard::KEY_X);
 	keyDestroy      = KeyMapping("key.destroy", Keyboard::KEY_Z);
+
+	// control menus with dpad keys
+	keyUp	          = KeyMapping("key.forward", Keyboard::KEY_UP);
+	keyLeft         = KeyMapping("key.left", Keyboard::KEY_LEFT);
+	keyDown         = KeyMapping("key.back", Keyboard::KEY_DOWN);
+	keyRight        = KeyMapping("key.right", Keyboard::KEY_RIGHT);
+
 	#endif
 
 	int k = 0;

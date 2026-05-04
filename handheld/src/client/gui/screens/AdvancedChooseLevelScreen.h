@@ -30,12 +30,12 @@ public:
 
 private:
 
-	Touch::THeader bHeader;
-	Touch::TButton bBack;
-	Touch::TButton bStart;
-	TextBox bLevelName;
-	Touch::TButton bGameMode;
-	TextBox bSeed;
+	Touch::THeader* bHeader;
+	Button* bBack;
+	Button* bStart;
+	TextBox* bLevelName;
+	Button* bGameMode;
+	TextBox* bSeed;
 
 	int gameType;
 };

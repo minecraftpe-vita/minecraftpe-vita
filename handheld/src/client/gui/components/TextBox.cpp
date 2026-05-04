@@ -104,7 +104,7 @@ void TextBox::render( Minecraft* minecraft, int xm, int ym ) {
 		minecraft->screen->toGUICoordinate(keyboardX, keyboardY);
 
 		if((this->y + this->height) >= keyboardY) {
-			this->y = (keyboardY - this->height) - 2;
+			this->y = (keyboardY - this->height);
 		}
 
 		Button::render(minecraft, xm, ym);

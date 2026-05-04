@@ -17,8 +17,6 @@
 
 #include "np_mgr.h"
 
-static const int width = 960;
-static const int height = 544;
 
 static void png_funcReadFile(png_structp pngPtr, png_bytep data, png_size_t length) {
 	((std::istream*)png_get_io_ptr(pngPtr))->read((char*)data, length);
@@ -71,7 +69,6 @@ static void ImeEventHandler(void *arg, const SceImeEventData *e)
 	switch (e->id) {
 		case SCE_IME_EVENT_UPDATE_TEXT:
 			Utf16ToUtf8((SceWChar16 *)ime_out, (uint8_t*)ime_out_utf8);
-			LOGI("text_so_far: %s\n", ime_out_utf8);
 			break;
 		case SCE_IME_EVENT_PRESS_ENTER:
 			sceImeClose();
@@ -87,7 +84,7 @@ static void ImeEventHandler(void *arg, const SceImeEventData *e)
 class AppPlatform_Vita : public AppPlatform
 {
 public:
-	bool supportsTouchscreen() override { return true; }
+	bool supportsTouchscreen() override { return isPstv; }
 
 	int getScreenWidth() override { return width; }
 	int getScreenHeight() override { return height; }
@@ -220,6 +217,10 @@ public:
 
 		return blob;
 	}
+	std::string getPlatformStringVar (int stringId) override {
+		if(isPstv) return "PlayStation TV";
+		else return "PlayStation Vita";
+	}
 
 	TextureData loadTexture(const std::string& filename_, bool textureFolder) override {
 		TextureData out;
@@ -273,6 +274,11 @@ public:
 			return out;
 		}
 	}
+
+private:
+	int width = 960;
+	int height = 544;
+	bool isPstv = sceKernelIsPSVitaTV();
 };
 
 #endif

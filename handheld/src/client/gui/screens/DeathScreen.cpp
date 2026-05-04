@@ -65,6 +65,15 @@ void DeathScreen::render( int xm, int ym, float a )
 		Screen::render(xm, ym, a);
 }
 
+void DeathScreen::keyPressed(int eventKey) {
+	// disallow closing the respawn screen
+	if(eventKey == Keyboard::KEY_ESCAPE) {
+		return;
+	}
+
+	return Screen::keyPressed(eventKey);
+}
+
 void DeathScreen::buttonClicked( Button* button )
 {
 	if (_tick < WAIT_TICKS) return;

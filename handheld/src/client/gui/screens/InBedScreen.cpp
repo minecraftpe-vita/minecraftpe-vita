@@ -34,6 +34,16 @@ void InBedScreen::setupPositions() {
 	bWakeUp->x = width/2 - bWakeUp->width/2;
 }
 
+void InBedScreen::keyPressed(int eventKey) {
+	// handle closing the wakeup screen with keyboard/gamepad control
+	if(eventKey == Keyboard::KEY_ESCAPE) {
+		buttonClicked(bWakeUp);
+	}
+	else {
+		Screen::keyPressed(eventKey);
+	}
+}
+
 void InBedScreen::render( int xm, int ym, float a ) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

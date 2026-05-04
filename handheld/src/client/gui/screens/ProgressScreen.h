@@ -10,9 +10,7 @@ public:
 
 	void render(int xm, int ym, float a);
 	bool isInGameScreen();
-#if defined(__VITA__) || defined(WIN32) || defined(RPI)
 	void keyPressed(int eventKey);
-#endif
 
 	void tick();
 private:

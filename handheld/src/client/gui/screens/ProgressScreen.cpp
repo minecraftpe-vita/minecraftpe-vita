@@ -91,8 +91,6 @@ void ProgressScreen::render( int xm, int ym, float a )
 
 bool ProgressScreen::isInGameScreen() { return false; }
 
-#if defined(__VITA__) || defined(WIN32) || defined(RPI)
-// honestly this is probably just a genuine bug in MCPE, and maybe shouldnt be ifdef vita,
 void ProgressScreen::keyPressed(int eventKey) {
 	// disallow closing the progress screen
 	if(eventKey == Keyboard::KEY_ESCAPE) {
@@ -101,7 +99,6 @@ void ProgressScreen::keyPressed(int eventKey) {
 
 	return Screen::keyPressed(eventKey);
 }
-#endif
 
 void ProgressScreen::tick() {
 	// After 10 seconds of not connecting -> write an error message and go back

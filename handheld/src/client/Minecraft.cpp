@@ -62,6 +62,7 @@
 #include "../world/level/MobSpawner.h"
 #include "../util/Mth.h"
 #include "../network/packet/InteractPacket.h"
+
 #ifndef STANDALONE_SERVER
 #include "gui/screens/PrerenderTilesScreen.h"
 #include "renderer/Textures.h"
@@ -85,6 +86,7 @@
 #include "gamemode/CreatorMode.h"
 #ifndef STANDALONE_SERVER
 #include "gui/screens/ArmorScreen.h"
+#include "gui/screens/ChatScreen.h"
 #endif
 #include "../world/level/levelgen/synth/ImprovedNoise.h"
 #ifndef STANDALONE_SERVER
@@ -728,6 +730,17 @@ void Minecraft::tickInput() {
 						// open inventory
 						screenChooser.setScreen(SCREEN_BLOCKSELECTION);
 					}
+			#ifndef DEMO_MODE
+					if (key == options.keyChat.key) {
+						setScreen(new ChatScreen());
+					}
+			#endif
+					// drop currently selected inventory slot.
+					if(key == options.keyDrop.key) {
+						if (!isCreativeMode() && player->inventory->getItem(player->inventory->selected) != nullptr) {
+							player->inventory->dropSlot(player->inventory->selected, false);
+						}
+					}
 			#endif
 
 			#if defined(__VITA__)
@@ -751,13 +764,6 @@ void Minecraft::tickInput() {
 					options.thirdPersonView = !options.thirdPersonView;
 				}
 
-				// drop currently selected inventory slot. (mapped to circle)
-				if(key == Keyboard::KEY_ESCAPE) {
-					if (!isCreativeMode() && player->inventory->getItem(player->inventory->selected) != nullptr) {
-						player->inventory->dropSlot(player->inventory->selected, false);
-					}
-				}
-
 				// pause the game (mapped to start)
 				if (key == Keyboard::KEY_P) {
 					pauseGame(false);
@@ -768,12 +774,6 @@ void Minecraft::tickInput() {
 					options.thirdPersonView = !options.thirdPersonView;
 				}
 
-				// drop currently selected inventory slot.
-				if(key == Keyboard::KEY_Q) {
-					if (!isCreativeMode() && player->inventory->getItem(player->inventory->selected) != nullptr) {
-						player->inventory->dropSlot(player->inventory->selected, false);
-					}
-				}
 
 				if (key == Keyboard::KEY_ESCAPE) {
 					// pause the game
@@ -1125,7 +1125,7 @@ bool Minecraft::needsClaimNetIf() {
 			|| (level && level->players.size() > 1)) {
 		return true;
 	}
-	auto serv = dynamic_cast<ServerSideNetworkHandler *>(netCallback);
+	ServerSideNetworkHandler* serv = dynamic_cast<ServerSideNetworkHandler *>(netCallback);
 	if (serv) { return serv->allowsIncomingConnections(); }
 	return false;
 }

@@ -47,8 +47,6 @@ void RenameMPLevelScreen::tick(){
 }
 
 void RenameMPLevelScreen::buttonClicked(Button* button) {
-	Screen::buttonClicked(button);
-
 	if(button == &bCancel) {
 		minecraft->screenChooser.setScreen(SCREEN_STARTMENU);
 	}
