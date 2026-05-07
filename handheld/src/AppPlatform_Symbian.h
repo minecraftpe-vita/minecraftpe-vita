@@ -17,7 +17,7 @@
 #include <cstdint>
 
 struct AppPlatform_Symbian : AppPlatform {
-	AppPlatform_Symbian() {
+	AppPlatform_Symbian() : iImeRequested(false) {
 		TRAPD(err, (iVibra = CHWRMVibra::NewL()));
 		if (err != KErrNone) {
 			fprintf(stderr, "Vibra open failed: %d\n", err);
@@ -99,6 +99,7 @@ struct AppPlatform_Symbian : AppPlatform {
 private:
 	CHWRMVibra *iVibra;
 	std::string iBuffer;
+	bool iImeRequested;
 };
 
 #endif
