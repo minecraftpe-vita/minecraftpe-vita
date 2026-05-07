@@ -15,7 +15,7 @@
 #include "../../util/Mth.h"
 #include "../../world/entity/player/Inventory.h"
 
-#include "../../platform/Time.h"
+#include "../../platform/CTime.h"
 #include "Textures.h"
 #include "../../world/item/UseAnim.h"
 #include "../../world/item/BowItem.h"

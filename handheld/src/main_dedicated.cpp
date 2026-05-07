@@ -9,7 +9,7 @@
 #include "world/level/LevelSettings.h"
 #include "world/level/Level.h"
 #include "server/ArgumentsSettings.h"
-#include "platform/Time.h"
+#include "platform/CTime.h"
 #include "SharedConstants.h"
 
 #define MAIN_CLASS NinecraftApp

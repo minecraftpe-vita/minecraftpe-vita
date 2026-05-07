@@ -3,7 +3,7 @@
 
 #include "ITouchScreenModel.h"
 #include <vector>
-#include "../../../../platform/Time.h"
+#include "../../../../platform/CTime.h"
 
 /// Interface for an area that can be point tested
 class IArea{

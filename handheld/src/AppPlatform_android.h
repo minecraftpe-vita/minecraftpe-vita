@@ -4,7 +4,7 @@
 #include "AppPlatform.h"
 #include "client/renderer/gles.h"
 #include "platform/log.h"
-#include "platform/Time.h"
+#include "platform/CTime.h"
 #include <jni.h>
 #include <cmath>
 #include <exception>

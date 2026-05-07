@@ -3,7 +3,7 @@
 #include "TextureData.h"
 #include "ptexture/DynamicTexture.h"
 #include "../Options.h"
-#include "../../platform/Time.h"
+#include "../../platform/CTime.h"
 #include "../../AppPlatform.h"
 
 /*static*/ int  Textures::textureChanges = 0;
