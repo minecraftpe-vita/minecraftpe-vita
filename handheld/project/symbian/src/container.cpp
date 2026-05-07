@@ -9,6 +9,7 @@
 #include <escapeutils.h>
 #include <w32std.h>
 #include <e32event.h>
+#include <hal.h>
 #include <aknquerydialog.h>
 #include <aknnotewrappers.h>
 #include <stdio.h>
@@ -93,33 +94,49 @@ void CMcpeContainer::ConstructL(const TRect &aRect, CAknAppUi *aAppUi) {
 
 	eglBindAPI(EGL_OPENGL_ES_API);
 
-	EGLConfig config;
+	EGLConfig configs[20];
 	EGLint numOfConfigs = 0;
 
-	TDisplayMode displayMode = Window().DisplayMode();
-	TInt bufferSize = TDisplayModeUtils::NumDisplayModeBitsPerPixel(displayMode);
+	TInt cpuFreqKHz;
+	HAL::Get(HAL::ECPUSpeed, cpuFreqKHz);
+
+	const bool hasFastCpu = cpuFreqKHz >= 900000;
 
 	// clang-format off
 	const EGLint attribList[] = {
-		EGL_BUFFER_SIZE, bufferSize,
 		EGL_RENDERABLE_TYPE, EGL_OPENGL_ES_BIT,
 		EGL_SURFACE_TYPE, EGL_SWAP_BEHAVIOR_PRESERVED_BIT|EGL_WINDOW_BIT,
+		EGL_RED_SIZE, hasFastCpu ? 5 : 4,
+		EGL_GREEN_SIZE, hasFastCpu ? 5 : 4,
+		EGL_BLUE_SIZE, hasFastCpu ? 5 : 4,
 		EGL_DEPTH_SIZE, 1,
-		EGL_STENCIL_SIZE, 1,
 		EGL_NONE,
 	};
 	// clang-format on
 
-	if (eglChooseConfig(iEglDisplay, attribList, &config, 1, &numOfConfigs) ==
+	if (eglChooseConfig(iEglDisplay, attribList, configs, sizeof configs / sizeof *configs, &numOfConfigs) ==
 			EGL_FALSE) {
 		_LIT(KChooseConfigFailed, "eglChooseConfig failed");
 		User::Panic(KChooseConfigFailed, 0);
 	}
 
 	if (numOfConfigs == 0) {
-		_LIT(KNoConfig, "Can't find the requested config.");
+		_LIT(KNoConfig, "Can't find a matching config.");
 		User::Panic(KNoConfig, 0);
 	}
+
+	const auto getBitDepth = [this](EGLConfig config) -> EGLint {
+		EGLint r, g, b;
+		eglGetConfigAttrib(iEglDisplay, config, EGL_RED_SIZE, &r);
+		eglGetConfigAttrib(iEglDisplay, config, EGL_GREEN_SIZE, &g);
+		eglGetConfigAttrib(iEglDisplay, config, EGL_BLUE_SIZE, &b);
+		return r + g + b;
+	};
+	EGLConfig config = *std::min_element(
+		configs,
+		configs + numOfConfigs,
+		[&](EGLConfig a, EGLConfig b) { return getBitDepth(a) < getBitDepth(b); }
+	);
 
 	iAppCxt.surface = iEglSurface = eglCreateWindowSurface(iEglDisplay, config, &Window(), NULL);
 
@@ -135,7 +152,7 @@ void CMcpeContainer::ConstructL(const TRect &aRect, CAknAppUi *aAppUi) {
 	// clang-format on
 
 	iAppCxt.context = iEglContext =
-			eglCreateContext(iEglDisplay, config, EGL_NO_CONTEXT, contextAttrs);
+		eglCreateContext(iEglDisplay, config, EGL_NO_CONTEXT, contextAttrs);
 	if (iEglContext == NULL) {
 		_LIT(KCreateContextFailed, "eglCreateContext failed");
 		User::Panic(KCreateContextFailed, 0);
@@ -164,7 +181,8 @@ void CMcpeContainer::ConstructL(const TRect &aRect, CAknAppUi *aAppUi) {
 	iApp->setSize(Size().iWidth, Size().iHeight);
 
 	iPeriodic = CPeriodic::NewL(CActive::EPriorityIdle);
-	iPeriodic->Start(100, 100, TCallBack(CMcpeContainer::DrawCallBack, this));
+	// limit to 30 fps on "slow" devices, or 60 fps on "fast" devices
+	iPeriodic->Start(0, hasFastCpu ? 16667 : 33333, TCallBack(CMcpeContainer::DrawCallBack, this));
 
 	Window().PointerFilter(EPointerFilterDrag, 0);
 }
@@ -230,8 +248,6 @@ TInt CMcpeContainer::DrawCallBack(TAny *aInstance) {
 #endif
 
 	User::ResetInactivityTime();
-
-	User::After(100);
 
 	return 0;
 }
