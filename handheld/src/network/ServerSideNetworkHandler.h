@@ -63,6 +63,9 @@ public:
 	bool allowsIncomingConnections() { return _allowIncoming; }
 	void allowIncomingConnections(bool doAllow);
 
+#if defined(__EPOC32__) && !defined(NO_NETWORK)
+	inline bool hasPendingPlayer() const { return !_pendingPlayers.empty(); }
+#endif
 	Player* popPendingPlayer(const RakNet::RakNetGUID& source);
 private:
 

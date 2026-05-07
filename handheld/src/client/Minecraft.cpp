@@ -1122,12 +1122,15 @@ bool Minecraft::isOnline()
 bool Minecraft::needsClaimNetIf() {
 	if (isLookingForMultiplayer
 			|| isOnlineClient()
-			|| (level && level->players.size() > 1)) {
+			|| (level && (level->players.size() > 1))) {
 		return true;
 	}
-	ServerSideNetworkHandler* serv = dynamic_cast<ServerSideNetworkHandler *>(netCallback);
-	if (serv) { return serv->allowsIncomingConnections(); }
-	return false;
+	ServerSideNetworkHandler *serv = dynamic_cast<ServerSideNetworkHandler *>(netCallback);
+	if (serv) {
+		return serv->allowsIncomingConnections()
+			|| serv->hasPendingPlayer();
+	}
+	return netCallback != nullptr;
 }
 #endif
 

@@ -112,9 +112,12 @@ struct CNetKeepAlive : CActive {
 
 	enum TStatus {
 		ENetIdle,
+		ENetLinkBroken,
 		ENetConnecting,
 		ENetMonitoring,
 	};
+
+	inline bool IsArmed() const { return iStatusCode != ENetIdle; }
 
 private:
 	CNetKeepAlive();

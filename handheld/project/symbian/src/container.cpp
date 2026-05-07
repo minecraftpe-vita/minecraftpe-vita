@@ -238,7 +238,7 @@ TInt CMcpeContainer::DrawCallBack(TAny *aInstance) {
 	instance->iApp->update();
 
 #ifndef NO_NETWORK
-	TBool isActive = instance->iNetKeepAlive->IsActive();
+	TBool isActive = instance->iNetKeepAlive->IsArmed();
 	TBool needsNet = instance->iApp->needsClaimNetIf();
 	if (isActive && !needsNet) {
 		instance->iNetKeepAlive->Cancel();
@@ -346,19 +346,23 @@ CNetKeepAlive *CNetKeepAlive::NewL() {
 void CNetKeepAlive::RunL() {
 	switch (iStatusCode) {
 	case ENetMonitoring:
+	case ENetLinkBroken:
 		switch (iProgress().iStage) {
-		case KConnectionClosed:
-		case KLinkLayerClosed:
-			iConn.CancelProgressNotification();
-			iStatusCode = ENetIdle;
-			LOGI("NetIf down! Reconnecting..\n");
-			ConnectL();
-			return;
+		case KConnectionUp:
+			iStatusCode = ENetMonitoring;
+			break;
+		case KConnectionDown:
+			if (iStatusCode == ENetMonitoring) {
+				iConn.CancelProgressNotification();
+				iStatusCode = ENetLinkBroken;
+
+				ConnectL();
+				return;
+			}
+			break;
 		}
 		// fall-through
 	case ENetConnecting:
-		iStatusCode = ENetMonitoring;
-
 		iConn.ProgressNotification(iProgress, iStatus);
 		SetActive();
 		break;
@@ -370,7 +374,7 @@ void CNetKeepAlive::DoCancel() {
 }
 
 void CNetKeepAlive::ConnectL() {
-	if (iStatusCode != ENetIdle) { return; }
+	if (iStatusCode != ENetIdle && iStatusCode != ENetLinkBroken) { return; }
 
 	User::LeaveIfError(iConn.Open(iSockServ));
 
@@ -389,7 +393,7 @@ void CNetKeepAlive::ConnectL() {
 
 void CNetKeepAlive::Disconnect() {
 	if (iStatusCode == ENetIdle) { return; }
-	if (iStatusCode == ENetMonitoring) {
+	if (iStatusCode != ENetConnecting) {
 		iConn.CancelProgressNotification();
 	}
 	iStatusCode = ENetIdle;
