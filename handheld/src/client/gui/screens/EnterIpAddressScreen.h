@@ -9,6 +9,7 @@
 
 class EnterIpAddressScreen: public Screen
 {
+    typedef Screen super;
 public:
     EnterIpAddressScreen();
     virtual ~EnterIpAddressScreen();
@@ -19,10 +20,10 @@ public:
     void render(int xm, int ym, float a) override;
     void buttonClicked(Button* button) override;
 private:
-    Touch::THeader bHeader;
-    Touch::TButton bJoin;
-    Touch::TButton bBack;
-    TextBox bServerIp;
+    Touch::THeader* bHeader;
+    Button* bJoin;
+    Button* bBack;
+    TextBox* bServerIp;
 
 #if 0
     virtual void init();

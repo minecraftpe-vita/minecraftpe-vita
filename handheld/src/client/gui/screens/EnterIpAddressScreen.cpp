@@ -18,32 +18,55 @@ static char ILLEGAL_FILE_CHARACTERS[] = {
 };
 
 EnterIpAddressScreen::EnterIpAddressScreen()
-:	bHeader(0, "Enter IP Address"),
-	bBack(1, "Back"),
-	bJoin(2, "Join"),
-	bServerIp(3, "")
+:	bHeader(0),
+	bBack(0),
+	bJoin(0),
+	bServerIp(0)
 {
 }
 
 
 EnterIpAddressScreen::~EnterIpAddressScreen()
 {
+	delete bHeader;
+	delete bBack;
+	delete bJoin;
+	delete bServerIp;
 }
 
 void EnterIpAddressScreen::init() {
-	buttons.push_back(&bHeader);
-	buttons.push_back(&bJoin);
-	buttons.push_back(&bBack);
-	buttons.push_back(&bServerIp);
+
+	if(minecraft->useTouchscreen()) {
+		bHeader = new Touch::THeader(0, "Enter IP Address");
+		bBack = new Touch::TButton(1, "Back");
+		bJoin = new Touch::TButton(2, "Join");
+		bServerIp = new TextBox(3, "");
+	}
+	else {
+		bHeader = new Touch::THeader(0, "Enter IP Address");
+		bBack = new Button(1, "Back");
+		bJoin = new Button(2, "Join");
+		bServerIp = new TextBox(3, "");
+	}
+
+	buttons.push_back(bHeader);
+	buttons.push_back(bJoin);
+	buttons.push_back(bBack);
+	buttons.push_back(bServerIp);
+
+	tabButtons.push_back(bServerIp);
+	tabButtons.push_back(bJoin);
+	tabButtons.push_back(bBack);
+
 #ifndef __EPOC32__
-	bServerIp.setFocus(minecraft);
+	bServerIp->setFocus(minecraft);
 #endif
 }
 
 void EnterIpAddressScreen::tick(){
 #ifndef __EPOC32__
-	if(!bServerIp.focused) {
-		buttonClicked(&bJoin);
+	if(!bServerIp->focused) {
+		buttonClicked(bJoin);
 	}
 #endif
 }
@@ -51,11 +74,11 @@ void EnterIpAddressScreen::tick(){
 void EnterIpAddressScreen::buttonClicked(Button* button) {
 	Screen::buttonClicked(button);
 
-	if(button == &bBack) {
+	if(button == bBack) {
 		minecraft->screenChooser.setScreen(SCREEN_JOINGAME);
 	}
-	if(button == &bJoin) {
-		std::string serverIp = bServerIp.text;
+	if(button == bJoin) {
+		std::string serverIp = bServerIp->text;
 
 		PingedCompatibleServer server;
 		server.name = RakNet::RakString("TransRights");
@@ -65,8 +88,8 @@ void EnterIpAddressScreen::buttonClicked(Button* button) {
 
 		minecraft->joinMultiplayer(server);
 		{
-			bJoin.active = false;
-			bBack.active = false;
+			bJoin->active = false;
+			bBack->active = false;
 			minecraft->setScreen(new ProgressScreen());
 		}
 
@@ -76,20 +99,25 @@ void EnterIpAddressScreen::buttonClicked(Button* button) {
 void EnterIpAddressScreen::setupPositions() {
 	int padding = 10;
 
-	bJoin.y = 0;
-	bJoin.x = width - bJoin.width;
+	if(!minecraft->useTouchscreen()) {
+		bJoin->width = 70;
+		bBack->width = 70;
+	}
 
-	bBack.x = 0;
-	bBack.y = 0;
+	bJoin->y = 0;
+	bJoin->x = width - bJoin->width;
 
-	bHeader.x = bBack.width;
-	bHeader.width = width - (bBack.width + bJoin.width);
-	bHeader.height = bJoin.height;
+	bBack->x = 0;
+	bBack->y = 0;
 
-	bServerIp.x = padding;
-	bServerIp.y = bHeader.height + (padding*2);
-	bServerIp.width = width - (padding*2);
-	bServerIp.height = bHeader.height;
+	bHeader->x = bBack->width;
+	bHeader->width = width - (bBack->width + bJoin->width);
+	bHeader->height = bJoin->height;
+
+	bServerIp->x = padding;
+	bServerIp->y = bHeader->height + (padding*2);
+	bServerIp->width = width - (padding*2);
+	bServerIp->height = bHeader->height;
 }
 
 void EnterIpAddressScreen::render(int xm, int ym, float a)
@@ -98,9 +126,9 @@ void EnterIpAddressScreen::render(int xm, int ym, float a)
 	//renderDirtBackground(0);
 	glEnable2(GL_BLEND);
 
-	drawCenteredString(minecraft->font, "Enter the ip address of a server to connect to it:", width/2, bServerIp.y - 10, 0xffcccccc);
+	drawCenteredString(minecraft->font, "Enter the ip address of a server to connect to it:", width/2, bServerIp->y - 10, 0xffcccccc);
 
-	Screen::render(xm, ym, a);
+	super::render(xm, ym, a);
 	glDisable2(GL_BLEND);
 
 }
