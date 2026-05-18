@@ -13,31 +13,31 @@
 
 
 OptionsScreen::OptionsScreen()
-: btnClose(NULL),
+: bClose(NULL),
   bHeader(NULL),
-  btnNextPage(NULL),
-  btnPrevPage(NULL),
+  bNextPage(NULL),
+  bPrevPage(NULL),
   optionPane(NULL) {
 	currentPage = 0;
 	maxPages = 3;
 }
 
 OptionsScreen::~OptionsScreen() {
-	if(btnClose != NULL) {
-		delete btnClose;
-		btnClose = NULL;
+	if(bClose != NULL) {
+		delete bClose;
+		bClose = NULL;
 	}
 	if(bHeader != NULL) {
 		delete bHeader;
 		bHeader = NULL;
 	}
-	if(btnNextPage != NULL) {
-		delete btnNextPage;
-		btnNextPage = NULL;
+	if(bNextPage != NULL) {
+		delete bNextPage;
+		bNextPage = NULL;
 	}
-	if(btnPrevPage != NULL) {
-		delete btnPrevPage;
-		btnPrevPage = NULL;
+	if(bPrevPage != NULL) {
+		delete bPrevPage;
+		bPrevPage = NULL;
 	}
 	if(optionPane != NULL) {
 		delete optionPane;
@@ -48,48 +48,60 @@ OptionsScreen::~OptionsScreen() {
 void OptionsScreen::init() {
 	bHeader = new Touch::THeader(0, "Options");
 	if(minecraft->useTouchscreen()) {
-		btnPrevPage = new Touch::TButton(201, "<");
-		btnNextPage = new Touch::TButton(202, ">");
+		bPrevPage = new Touch::TButton(201, "<");
+		bNextPage = new Touch::TButton(202, ">");
+
+		// set imagebutton on bClose ..
+		bClose= new ImageButton(200, "");
+
+		ImageDef def;
+		def.name = "gui/touchgui.png";
+		def.width = 34;
+		def.height = 26;
+
+		def.setSrc(IntRectangle(150, 0, (int)def.width, (int)def.height));
+		((ImageButton*)bClose)->setImageDef(def, true);
 	}
 	else {
-		btnPrevPage = new Button(201, "<");
-		btnNextPage = new Button(202, ">");
+		bPrevPage = new Button(201, "<");
+		bNextPage = new Button(202, ">");
+		bClose = new Button(200, "Close");
 	}
-	btnClose = new ImageButton(1, "");
-	ImageDef def;
-	def.name = "gui/touchgui.png";
-	def.width = 34;
-	def.height = 26;
-
-	def.setSrc(IntRectangle(150, 0, (int)def.width, (int)def.height));
-	btnClose->setImageDef(def, true);
 
 	buttons.push_back(bHeader);
-	buttons.push_back(btnPrevPage);
-	buttons.push_back(btnNextPage);
-	buttons.push_back(btnClose);
-	
+	buttons.push_back(bPrevPage);
+	buttons.push_back(bNextPage);
+	buttons.push_back(bClose);
+
+	tabButtons.push_back(bClose);
+	tabButtons.push_back(bPrevPage);
+	tabButtons.push_back(bNextPage);
+
 	generateOptionScreens();
 }
 
 void OptionsScreen::setupPositions() {
-	btnClose->x = width - btnClose->width;
-	btnClose->y = 0;
+	if(!minecraft->useTouchscreen()) {
+		bClose->width = 70;
+	}
 
-	btnPrevPage->width = 40;
-	btnPrevPage->height = btnClose->height;
-	btnPrevPage->x = 20;
-	btnPrevPage->y = height - btnPrevPage->height - 10;
+	bClose->x = width - bClose->width;
+	bClose->y = 0;
 
-	btnNextPage->width = 40;
-	btnNextPage->height = btnClose->height;
-	btnNextPage->x = width - btnNextPage->width - 20;
-	btnNextPage->y = height - btnNextPage->height - 10;
+	bPrevPage->width = 40;
+	bPrevPage->height = bClose->height;
+	bPrevPage->x = 20;
+	bPrevPage->y = height - bPrevPage->height - 10;
+
+	bNextPage->width = 40;
+	bNextPage->height = bClose->height;
+	bNextPage->x = width - bNextPage->width - 20;
+	bNextPage->y = height - bNextPage->height - 10;
 
 	bHeader->x = 0;
 	bHeader->y = 0;
-	bHeader->width = width - btnClose->width;
-	bHeader->height = btnClose->height;
+	bHeader->width = width - bClose->width;
+	bHeader->height = bClose->height;
 
 	if (optionPane != NULL) {
 		int paneWidth = (width > 400) ? 360 : 260; 
@@ -97,7 +109,7 @@ void OptionsScreen::setupPositions() {
 		optionPane->width = paneWidth;
 		optionPane->x = (width - paneWidth) / 2; 
 		optionPane->y = bHeader->height;
-		optionPane->height = height - bHeader->height - btnPrevPage->height - 15;
+		optionPane->height = height - bHeader->height - bPrevPage->height - 15;
 		optionPane->setupPositions();
 	}
 }
@@ -116,20 +128,20 @@ void OptionsScreen::removed()
 }
 
 void OptionsScreen::buttonClicked( Button* button ) {
-	if(button == btnClose) {
+	if(button == bClose) {
 		// we should really .. only save when closing the menu?
 		minecraft->options.save();
 
 		minecraft->reloadOptions();
 		minecraft->screenChooser.setScreen(SCREEN_STARTMENU);
-	} else if (button == btnPrevPage) {
+	} else if (button == bPrevPage) {
 		if (currentPage > 0) {
 			currentPage--;
 		} else {
 			currentPage = maxPages - 1;
 		}
 		generateOptionScreens();
-	} else if (button == btnNextPage) {
+	} else if (button == bNextPage) {
 		if (currentPage < maxPages - 1) {
 			currentPage++;
 		} else {
@@ -206,7 +218,7 @@ void OptionsScreen::tick() {
 
 void OptionsScreen::keyPressed(int key) {
 	if(key == Keyboard::KEY_ESCAPE) {
-		buttonClicked(btnClose);
+		buttonClicked(bClose);
 	}
 
 	super::keyPressed(key);

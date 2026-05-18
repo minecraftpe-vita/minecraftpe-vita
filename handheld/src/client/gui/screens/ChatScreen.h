@@ -8,9 +8,10 @@
 
 class ChatScreen: public Screen
 {
+	typedef Screen super;
 public:
 	ChatScreen();
-	virtual ~ChatScreen() {};
+	virtual ~ChatScreen();
 
 	void init() override;
 	void render(int xm, int ym, float a) override;
@@ -19,8 +20,8 @@ public:
 	void tick() override;
 
 private:
-	Touch::TButton bSend;
-	TextBox bMessage;
+	Button* bSend;
+	TextBox* bMessage;
 };
 
 #endif /*NET_MINECRAFT_CLIENT_GUI_SCREENS__ChatScreen_H__*/

@@ -15,6 +15,7 @@
 
 class AdvancedChooseLevelScreen: public ChooseLevelScreen
 {
+	typedef ChooseLevelScreen super;
 public:
 	AdvancedChooseLevelScreen();
 	virtual ~AdvancedChooseLevelScreen();

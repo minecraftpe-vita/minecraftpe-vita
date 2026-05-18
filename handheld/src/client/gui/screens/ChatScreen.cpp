@@ -9,24 +9,43 @@
 #include "../../../network/packet/MessagePacket.h"
 
 ChatScreen::ChatScreen()
-:	bSend(0, "Send"),
-	bMessage(1, "")
+:	bSend(0),
+	bMessage(0)
 {
+}
+
+ChatScreen::~ChatScreen() {
+	delete bSend;
+	delete bMessage;
 }
 
 void ChatScreen::init() {
 #if defined(__APPLE__) || defined(ANDROID)
 	minecraft->platform()->createUserInput(DialogDefinitions::DIALOG_NEW_CHAT_MESSAGE);
 #else
-	buttons.push_back(&bSend);
-	buttons.push_back(&bMessage);
-	bMessage.setFocus(minecraft);
+
+	if (minecraft->useTouchscreen()) {
+		bSend = new Touch::TButton(0, "Send");
+		bMessage = new TextBox(1, "");
+	}
+	else {
+		bSend = new Button(0, "Send");
+		bMessage = new TextBox(1, "");
+	}
+
+	buttons.push_back(bSend);
+	buttons.push_back(bMessage);
+
+	tabButtons.push_back(bSend);
+	tabButtons.push_back(bMessage);
+
+	bMessage->setFocus(minecraft);
 #endif
 }
 
 void ChatScreen::tick(){
-	if(!bMessage.focused && !bMessage.text.empty()) {
-		buttonClicked(&bSend);
+	if(!bMessage->focused && !bMessage->text.empty()) {
+		buttonClicked(bSend);
 	}
 
 	if(minecraft->platform()->isKeyboardVisible()) {
@@ -36,21 +55,21 @@ void ChatScreen::tick(){
 		minecraft->screen->toGUICoordinate(keyboardX, keyboardY);
 
 		// move it if nessecary
-		if((bSend.y + bSend.height) >= keyboardY) {
-			bSend.y = (keyboardY - bSend.height);
+		if(keyboardY > 0 && (bSend->y + bSend->height) >= keyboardY) {
+			bSend->y = (keyboardY - bSend->height);
 		}
 	}
 	else {
-		bSend.y = bMessage.y;
+		bSend->y = bMessage->y;
 	}
 }
 
 void ChatScreen::buttonClicked(Button* button) {
-	if(button == &bSend) {
+	if(button == bSend) {
 
-		if(!bMessage.text.empty()){
+		if(!bMessage->text.empty()){
 			// construct chat message: "<username> message"
-			std::string msgFormatted = std::string("<") + minecraft->options.username + "> " + bMessage.text;
+			std::string msgFormatted = std::string("<") + minecraft->options.username + "> " + bMessage->text;
 
 #ifndef NO_NETWORK
 			if (minecraft->netCallback && minecraft->raknetInstance->isServer()) {
@@ -63,7 +82,7 @@ void ChatScreen::buttonClicked(Button* button) {
 
 			} else if (minecraft->netCallback) {
 				// Otherwise, sent ChatPacket
-				ChatPacket chatPacket(bMessage.text, false);
+				ChatPacket chatPacket(bMessage->text, false);
 				minecraft->raknetInstance->send(chatPacket);
 			}
 #else
@@ -81,13 +100,18 @@ void ChatScreen::buttonClicked(Button* button) {
 
 void ChatScreen::setupPositions() {
 
-	bMessage.x = 0;
-	bMessage.height = bSend.height;
-	bMessage.y = height - bMessage.height;
-	bMessage.width = width - bSend.width;
+	if(!minecraft->useTouchscreen()) {
+		bSend->width = 70;
+	}
 
-	bSend.x = bMessage.width;
-	bSend.y = bMessage.y;
+	bMessage->x = 0;
+	bMessage->height = bSend->height;
+	bMessage->y = height - bMessage->height;
+	bMessage->width = width - bSend->width;
+
+
+	bSend->x = bMessage->width;
+	bSend->y = bMessage->y;
 }
 
 void ChatScreen::render(int xm, int ym, float a)
@@ -108,7 +132,7 @@ void ChatScreen::render(int xm, int ym, float a)
 
 
 	glEnable2(GL_BLEND);
-	Screen::render(xm, ym, a);
+	super::render(xm, ym, a);
 	glDisable2(GL_BLEND);
 	#endif
 }

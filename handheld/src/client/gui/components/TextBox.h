@@ -12,6 +12,7 @@ class Minecraft;
 
 class TextBox: public Button
 {
+	typedef Button super;
 public:
 	TextBox(int id, const std::string& msg);
 	TextBox(int id, int x, int y, const std::string& msg);
@@ -21,8 +22,10 @@ public:
 	virtual void setFocus(Minecraft* minecraft);
 	virtual bool loseFocus(Minecraft* minecraft);
 
-	void render(Minecraft* minecraft, int xm, int ym) override;
 	void setPressed(Minecraft* minecraft) override;
+
+	void render(Minecraft* mc, int xm, int ym) override;
+	void renderFace(Minecraft* mc, int xm, int ym) override;
 	void renderBg(Minecraft* minecraft, int xm, int ym ) override;
 
 protected:

@@ -24,17 +24,10 @@ static void png_funcReadFile(png_structp pngPtr, png_bytep data, png_size_t leng
 	((std::istream*)png_get_io_ptr(pngPtr))->read((char*)data, length);
 }
 
-static SceWChar16 ime_out[SCE_IME_MAX_PREEDIT_LENGTH + SCE_IME_MAX_TEXT_LENGTH + 1] = {0};
-static SceUInt8 ime_out_utf8[sizeof(ime_out)] = {0};
-static SceWChar16 ime_inital[SCE_IME_MAX_TEXT_LENGTH] = { 0 };
-static bool ime_is_open = false;
-
+static int64_t vbTimeStart = 0;
+static int64_t vbTimeElapsed = 0;
 
 static void VibrateController(uint64_t ms) {
-
-	static int64_t vbTimeStart = 0;
-	static int64_t vbTimeElapsed = 0;
-
 	if(ms != 0) {
 		vbTimeStart = sceKernelGetProcessTimeWide();
 		vbTimeElapsed = ms * 1000.0;
@@ -87,19 +80,71 @@ static void Utf8ToUtf16(const uint8_t *src, uint16_t* dst)
 	dst[++i] = 0;
 }
 
+
+static SceWChar16 ime_out[SCE_IME_MAX_PREEDIT_LENGTH + SCE_IME_MAX_TEXT_LENGTH + 1] = {0};
+static SceUInt8 ime_out_utf8[sizeof(ime_out)] = {0};
+static SceWChar16 ime_inital[SCE_IME_MAX_TEXT_LENGTH] = { 0 };
+
+static bool ime_is_open = false;
+static int ime_carret_pos = -1;
+static int ime_pos_x = -1;
+static int ime_pos_y = -1;
+
 static void ImeEventHandler(void *arg, const SceImeEventData *e)
 {
+
+	LOGI("e->id: %x\n", e->id);
+
+	LOGI("e->param.rect.x: %i\n", e->param.rect.x);
+	LOGI("e->param.rect.y: %i\n", e->param.rect.y);
+	LOGI("e->param.rect.width: %i\n", e->param.rect.width);
+	LOGI("e->param.rect.height: %i\n", e->param.rect.height);
+
+	LOGI("e->param.text.preeditIndex: %i\n", e->param.text.preeditIndex);
+	LOGI("e->param.text.preeditLength: %i\n", e->param.text.preeditLength);
+	LOGI("e->param.text.caretIndex: %i\n", e->param.text.caretIndex);
+	LOGI("e->param.text.str: %p\n", e->param.text.str);
+	LOGI("e->param.text.editIndex: %i\n", e->param.text.editIndex);
+	LOGI("e->param.text.editLengthChange: %i\n", e->param.text.editLengthChange);
+
+	LOGI("e->param.caretIndex: %i\n", e->param.caretIndex);
+
+
 	switch (e->id) {
+		case SCE_IME_EVENT_OPEN:
+			ime_pos_x = e->param.rect.x;
+			ime_pos_y = e->param.rect.y;
+			ime_is_open = true;
+			break;
 		case SCE_IME_EVENT_UPDATE_TEXT:
+			ime_carret_pos = e->param.text.caretIndex;
 			Utf16ToUtf8((SceWChar16 *)ime_out, (uint8_t*)ime_out_utf8);
 			break;
+		case SCE_IME_EVENT_UPDATE_CARET:
+			ime_carret_pos = e->param.caretIndex;
+			break;
+		case SCE_IME_EVENT_CHANGE_SIZE:
+			ime_pos_x = e->param.rect.x;
+			ime_pos_y = e->param.rect.y;
+			break;
+
 		case SCE_IME_EVENT_PRESS_ENTER:
 			sceImeClose();
+
+			// reset ime
 			ime_is_open = false;
+			ime_carret_pos =  -1;
+			ime_pos_y = -1;
+			ime_pos_x = -1;
 			break;
 		case SCE_IME_EVENT_PRESS_CLOSE:
 			sceImeClose();
+
+			// reset ime
 			ime_is_open = false;
+			ime_carret_pos =  -1;
+			ime_pos_y = -1;
+			ime_pos_x = -1;
 			break;
 	}
 }
@@ -162,7 +207,6 @@ public:
 		param.work = ime_workram;
 
 		sceImeOpen(&param);
-
 		ime_is_open = true;
 	}
 
@@ -177,12 +221,20 @@ public:
 
 	std::string getKeyboardInput() override {
 		Utf16ToUtf8(ime_out, ime_out_utf8);
-		std::string imetxt = std::string((char*)ime_out_utf8);
-		return imetxt;
+		std::string ime_txt = std::string((char*)ime_out_utf8);
+		return ime_txt;
 	}
 
+	int getKeyboardCarret() override {
+		return ime_carret_pos;
+	};
+
+	int getKeyboardX() override {
+		return ime_pos_x;
+	};
+
 	int getKeyboardY() override {
-		return 297;
+		return ime_pos_y;
 	};
 
 	void _tick() override {

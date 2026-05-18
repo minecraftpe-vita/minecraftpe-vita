@@ -9,6 +9,7 @@
 
 class RenameMPLevelScreen: public Screen
 {
+    typedef Screen super;
 public:
     RenameMPLevelScreen(const std::string& levelId);
     virtual ~RenameMPLevelScreen();
@@ -19,10 +20,10 @@ public:
     void render(int xm, int ym, float a) override;
     void buttonClicked(Button* button) override;
 private:
-    Touch::THeader bHeader;
-    Touch::TButton bSave;
-    Touch::TButton bCancel;
-    TextBox bLevelName;
+    Touch::THeader* bHeader;
+    Button* bSave;
+    Button* bCancel;
+    TextBox* bLevelName;
 
 #if 0
     virtual void init();

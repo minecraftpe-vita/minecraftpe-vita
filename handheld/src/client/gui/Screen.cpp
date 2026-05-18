@@ -174,6 +174,7 @@ void Screen::keyPressed( int eventKey )
 		Button* button = tabButtons[tabButtonIndex];
 		if (button->active) {
 			minecraft->soundEngine->playUI("random.click", 1, 1);
+			button->setPressed(minecraft);
 			buttonClicked(button);
 		}
 	}

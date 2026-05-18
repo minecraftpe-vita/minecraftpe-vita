@@ -69,11 +69,17 @@ void TextBox::setPressed(Minecraft* minecraft) {
 }
 
 
-void TextBox::render( Minecraft* minecraft, int xm, int ym ) {
+
+void TextBox::render(Minecraft* mc, int xm, int ym) {
+	int prevY = this->y;
+
 	if(focused) {
-		std::string input = minecraft->platform()->getKeyboardInput();
-		if(!minecraft->platform()->isKeyboardVisible()) {
-			this->loseFocus(minecraft);
+		// update textbox to contain most recent typed text;
+
+		std::string input = mc->platform()->getKeyboardInput();
+
+		if(!mc->platform()->isKeyboardVisible()) {
+			this->loseFocus(mc);
 
 			if(input.empty()) {
 				// set default if it was left empty.
@@ -81,40 +87,67 @@ void TextBox::render( Minecraft* minecraft, int xm, int ym ) {
 			}
 		}
 
-		int padding = 3;
-
-		// find portion that can fit inside the textbox
-		int offset = 0;
-		int len = input.length();
-
-		while(minecraft->font->width(input.substr(offset, offset-len)) > this->width - padding)
-			offset++;
-
-		this->msg = input.substr(offset, offset-len);
-
 		// set text to current input
 		this->text = input;
 
+		// move button onscreen if its blocked by the keyboard;
 
-		int prevY = this->y;
+		// get the keyboard position ..
+		int keyboardX = mc->platform()->getKeyboardX();
+		int keyboardY = mc->platform()->getKeyboardY();
+		mc->screen->toGUICoordinate(keyboardX, keyboardY);
 
-		int keyboardX = minecraft->platform()->getKeyboardX();
-		int keyboardY = minecraft->platform()->getKeyboardY();
-
-		minecraft->screen->toGUICoordinate(keyboardX, keyboardY);
-
-		if((this->y + this->height) >= keyboardY) {
+		// set render position to be above the keyboard if the keyboard is open
+		if(keyboardY > 0 && (this->y + this->height) >= keyboardY) {
 			this->y = (keyboardY - this->height);
 		}
 
-		Button::render(minecraft, xm, ym);
+	}
+	super::render(mc, xm, ym);
+	this->y = prevY;
+}
 
-		this->y = prevY;
+// render non-centered
+void TextBox::renderFace(Minecraft* mc, int xm, int ym) {
+	Font* font = mc->font;
 
-		return;
+	int caret = focused ? mc->platform()->getKeyboardCarret() : text.length();
+	if(caret < 0 || caret > text.length())
+		caret = text.length();
+
+
+	// find portion of text that fits within the textbox;
+	int padding = 10;
+	int offset = caret;
+	int end = caret;
+
+	while(font->width(text.substr(offset, end)) < (this->width - padding*2) && ( offset > 0 || end < text.length() )) {
+		if(offset > 0) offset--;
+		if(end < text.length()) end++;
 	}
 
-	Button::render(minecraft, xm, ym);
+	std::string visibleInput = text.substr(offset, end);
+
+	// calculate caret position in textbox
+	int caretX = font->width(visibleInput.substr(0, caret - offset));
+	int caretY = 1;
+
+	// draw the textbox to the screen, along with text + caret
+	int drawX = x + padding;
+	int drawY = y + (height - 8) / 2;
+
+	if (!active) {
+		drawString(font, visibleInput, drawX, drawY, 0xffa0a0a0);
+		if(focused) drawString(font, "_", drawX + caretX, drawY+caretY, 0xffa0a0a0);
+	} else {
+		if (hovered(mc, xm, ym) || selected) {
+			drawString(font, visibleInput, drawX, drawY, 0xffffa0);
+			drawString(font, "_", drawX + caretX, drawY+caretY, 0xffffa0);
+		} else {
+			drawString(font, visibleInput, drawX, drawY, 0xe0e0e0);
+			if(focused) drawString(font, "_", drawX + caretX, drawY+caretY, 0xe0e0e0);
+		}
+	}
 }
 
 // use THeader sprite ..

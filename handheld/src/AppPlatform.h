@@ -142,6 +142,8 @@ public:
 
 	virtual int getKeyboardY() { return getScreenHeight(); };
 
+	virtual int getKeyboardCarret() { return -1; };
+
 	virtual std::string defaultUsername() { return "Steve"; }
 protected:
 	bool keyboardVisible;

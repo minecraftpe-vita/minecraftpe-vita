@@ -28,7 +28,7 @@ AdvancedChooseLevelScreen::~AdvancedChooseLevelScreen()
 }
 
 void AdvancedChooseLevelScreen::init() {
-    ChooseLevelScreen::init();
+    super::init();
 
     if (minecraft->useTouchscreen()) {
         bHeader = new Touch::THeader(0, "World name"),
@@ -53,6 +53,12 @@ void AdvancedChooseLevelScreen::init() {
     buttons.push_back(bLevelName);
     buttons.push_back(bGameMode);
     buttons.push_back(bSeed);
+
+    tabButtons.push_back(bLevelName);
+    tabButtons.push_back(bGameMode);
+    tabButtons.push_back(bSeed);
+    tabButtons.push_back(bBack);
+    tabButtons.push_back(bStart);
 }
 
 void AdvancedChooseLevelScreen::setupPositions() {
@@ -60,8 +66,8 @@ void AdvancedChooseLevelScreen::setupPositions() {
     int padding = 30;
 
     if(!minecraft->useTouchscreen()) {
-        bBack->width = 50;
-        bStart->width = 50;
+        bBack->width = 70;
+        bStart->width = 70;
     }
 
 

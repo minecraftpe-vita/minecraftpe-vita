@@ -16,42 +16,64 @@ static char ILLEGAL_FILE_CHARACTERS[] = {
 
 RenameMPLevelScreen::RenameMPLevelScreen( const std::string& levelId )
 :	_levelId(levelId),
-	bHeader(0, "Save world as"),
-	bCancel(1, "Cancel"),
-	bSave(2, "Save"),
-	bLevelName(2, "Saved World")
+	bHeader(0),
+	bCancel(0),
+	bSave(0),
+	bLevelName(0)
 {
 }
 
 
 RenameMPLevelScreen::~RenameMPLevelScreen()
 {
+	delete bHeader;
+	delete bCancel;
+	delete bSave;
+	delete bLevelName;
 }
 
 void RenameMPLevelScreen::init() {
 #if defined(__APPLE__) || defined(ANDROID)
 	minecraft->platform()->createUserInput(DialogDefinitions::DIALOG_RENAME_MP_WORLD);
 #else
-	buttons.push_back(&bHeader);
-	buttons.push_back(&bSave);
-	buttons.push_back(&bCancel);
-	buttons.push_back(&bLevelName);
-	bLevelName.setFocus(minecraft);
+	if(minecraft->useTouchscreen()) {
+		bHeader = new Touch::THeader(0, "Save world as");
+		bCancel = new Touch::TButton(1, "Cancel");
+		bSave = new Touch::TButton(2, "Save");
+		bLevelName =new TextBox(3, "Saved World");
+	}
+	else {
+		bHeader = new Touch::THeader(0, "Save world as");
+		bCancel = new Button(1, "Cancel");
+		bSave = new Button(2, "Save");
+		bLevelName =new TextBox(3, "Saved World");
+	}
+	buttons.push_back(bHeader);
+	buttons.push_back(bSave);
+	buttons.push_back(bCancel);
+	buttons.push_back(bLevelName);
+
+
+	tabButtons.push_back(bLevelName);
+	tabButtons.push_back(bSave);
+	tabButtons.push_back(bCancel);
+
+	bLevelName->setFocus(minecraft);
 #endif
 }
 
 void RenameMPLevelScreen::tick(){
-	if(!bLevelName.focused) {
-		buttonClicked(&bSave);
+	if(!bLevelName->focused) {
+		buttonClicked(bSave);
 	}
 }
 
 void RenameMPLevelScreen::buttonClicked(Button* button) {
-	if(button == &bCancel) {
+	if(button == bCancel) {
 		minecraft->screenChooser.setScreen(SCREEN_STARTMENU);
 	}
-	if(button == &bSave) {
-		std::string levelId = bLevelName.text;
+	if(button == bSave) {
+		std::string levelId = bLevelName->text;
 
 		if (!levelId.empty()) {
 			// Read the level name.
@@ -72,20 +94,25 @@ void RenameMPLevelScreen::buttonClicked(Button* button) {
 void RenameMPLevelScreen::setupPositions() {
 	int padding = 10;
 
-	bSave.y = 0;
-	bSave.x = width - bSave.width;
+	if(!minecraft->useTouchscreen()) {
+		bSave->width = 70;
+		bCancel->width = 70;
+	}
 
-	bCancel.x = 0;
-	bCancel.y = 0;
+	bSave->y = 0;
+	bSave->x = width - bSave->width;
 
-	bHeader.x = bCancel.width;
-	bHeader.width = width - (bCancel.width + bSave.width);
-	bHeader.height = bSave.height;
+	bCancel->x = 0;
+	bCancel->y = 0;
 
-	bLevelName.x = padding;
-	bLevelName.y = bHeader.height + (padding*2);
-	bLevelName.width = width - (padding*2);
-	bLevelName.height = bHeader.height;
+	bHeader->x = bCancel->width;
+	bHeader->width = width - (bCancel->width + bSave->width);
+	bHeader->height = bSave->height;
+
+	bLevelName->x = padding;
+	bLevelName->y = bHeader->height + (padding*2);
+	bLevelName->width = width - (padding*2);
+	bLevelName->height = bHeader->height;
 }
 
 void RenameMPLevelScreen::render(int xm, int ym, float a)
@@ -98,9 +125,9 @@ void RenameMPLevelScreen::render(int xm, int ym, float a)
 		//renderDirtBackground(0);
 		glEnable2(GL_BLEND);
 
-		drawCenteredString(minecraft->font, "Enter a name to save this world as:", width/2, bLevelName.y - 10, 0xffcccccc);
+		drawCenteredString(minecraft->font, "Enter a name to save this world as:", width/2, bLevelName->y - 10, 0xffcccccc);
 
-		Screen::render(xm, ym, a);
+		super::render(xm, ym, a);
 		glDisable2(GL_BLEND);
 	#else
 		int status = minecraft->platform()->getUserInputStatus();

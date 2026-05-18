@@ -30,9 +30,9 @@ public:
 	virtual void keyboardNewChar(char c);
 private:
 	Touch::THeader* bHeader;
-	ImageButton* btnClose;
-	Button* btnNextPage;
-	Button* btnPrevPage;
+	Button* bClose;
+	Button* bNextPage;
+	Button* bPrevPage;
 	OptionsPane* optionPane;
 	int currentPage;
 	int maxPages;
