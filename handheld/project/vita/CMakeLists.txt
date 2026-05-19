@@ -45,9 +45,9 @@ set(VITA_GATE ${CMAKE_CURRENT_LIST_DIR}/sce_sys/livearea/contents/gate_demo.png)
 add_definitions(-DDEMO_MODE)
 endif()
 
-add_compile_options(-O3)
 
 if(PUBLISH)
+add_compile_options(-O3 -g0)
 add_definitions(-DPUBLISH)
 endif()
 

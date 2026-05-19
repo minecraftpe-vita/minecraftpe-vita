@@ -121,7 +121,7 @@ void TextBox::renderFace(Minecraft* mc, int xm, int ym) {
 	int offset = caret;
 	int end = 0;
 
-	while(font->width(text.substr(offset, end)) < (this->width - padding*2) && ( offset > 0 || end < text.length() )) {
+	while( font->width(text.substr(offset, end)) < (this->width - padding*2) && ( offset > 0 || end < text.length() ) ) {
 		if(offset > 0) offset--;
 		if(end < text.length()) end++;
 	}
