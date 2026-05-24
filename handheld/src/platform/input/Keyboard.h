@@ -79,6 +79,8 @@ public:
 	static const int KEY_F11 = 122;
 	static const int KEY_F12 = 123;
 
+	static const int KEY_TAB = 250;
+
 	static const int KEY_ESCAPE = 27;
 	static const int KEY_SPACE = 32;
 	static const int KEY_LSHIFT = 10;

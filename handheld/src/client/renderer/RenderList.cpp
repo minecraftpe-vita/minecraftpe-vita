@@ -40,7 +40,6 @@ void RenderList::addR(const RenderChunk& chunk) {
 }
 
 void RenderList::render() {
-
 	if (!inited) return;
 	if (!rendered) {
 		bufferLimit = listIndex;

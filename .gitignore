@@ -1,7 +1,4 @@
-/build
-/build_demo
-/build_server
-
+/build*
 handheld/project/win32_gl/Release/*
 handheld/project/win32_gl/Debug/*
 handheld/project/win32/Release/*

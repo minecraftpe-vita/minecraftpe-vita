@@ -13,7 +13,7 @@ class CarriedTile: public Tile
     typedef Tile super;
 public:
     CarriedTile(int id, int texDefault, int texTop = -1)
-	:	super(id, tex, Material::dirt),
+	:	super(id, texDefault, Material::dirt),
 		texDefault(texDefault),
 		texTop(texTop >= 0? texTop : texDefault)
 	{

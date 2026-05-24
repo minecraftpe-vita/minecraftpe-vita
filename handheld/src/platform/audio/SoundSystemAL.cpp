@@ -106,20 +106,7 @@ void SoundSystemAL::destroy() {}
 
 void SoundSystemAL::setListenerPos( float x, float y, float z )
 {
-    // Note: listener position is thought to be 0,0,0 now
-    
-    /*
-    if (_listenerPos.x != x || _listenerPos.y != y || _listenerPos.z != z) {
-        _listenerPos.set(x, y, z);
-        alListener3f(AL_POSITION, x, y, z);
-        
-        static int _n = 0;
-        if (++_n == 20) {
-            _n = 0;
-            LOGI("Setting position for listener: %f, %f, %f\n", _listenerPos.x, _listenerPos.y, _listenerPos.z);
-        }
-    }
-  */
+    alListener3f(AL_POSITION, x, y, z);
 }
 
 void SoundSystemAL::setListenerAngle( float deg )
@@ -248,6 +235,6 @@ bool SoundSystemAL::getBufferId(const SoundDesc& sound, ALuint* buf) {
     _buffers.push_back(buffer);
 
     // @huge @attn @note @fix: The original data is free'd
-    sound.destroy();
+    //sound.destroy();
     return true;
 }

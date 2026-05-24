@@ -40,3 +40,7 @@
 #ifdef __VITA__
     #include "main_vita.h"
 #endif
+
+#ifdef LINUX
+    #include "main_linux.h"
+#endif

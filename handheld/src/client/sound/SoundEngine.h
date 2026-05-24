@@ -11,6 +11,8 @@
 	#include "../../platform/audio/SoundSystemVita.h"
 #elif defined(__EPOC32__)
 	#include "../../platform/audio/SoundSystemSymbian.h"
+#elif defined(__linux__)
+	#include "../../platform/audio/SoundSystemAL.h"
 #else
 	#include "../../platform/audio/SoundSystem.h"
 #endif
@@ -33,6 +35,8 @@ class SoundEngine
 		SoundSystemVita soundSystem;
 	#elif defined(__EPOC32__)
 		SoundSystemSymbian soundSystem;
+	#elif defined(__linux__)
+		SoundSystemAL soundSystem;
 	#else
 	    SoundSystem soundSystem;
 	#endif

@@ -64,7 +64,7 @@ LevelRenderer::LevelRenderer( Minecraft* mc)
 	tileRenderer(NULL),
 	destroyProgress(0)
 {
-#ifdef OPENGL_ES
+#ifdef USE_VBO
 	int maxChunksWidth = 2 * LEVEL_WIDTH / CHUNK_SIZE + 1;
 	numListsOrBuffers = maxChunksWidth * maxChunksWidth * (128/CHUNK_SIZE) * 3;
 	chunkBuffers = new GLuint[numListsOrBuffers];

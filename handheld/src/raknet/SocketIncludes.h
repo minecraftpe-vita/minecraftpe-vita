@@ -21,7 +21,15 @@ typedef int socklen_t;
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+
+#ifdef __cplusplus
+#define restrict 
+#endif
 #include <netdb.h>
+#ifdef __cplusplus
+#undef restrict 
+#endif
+
 #include <unistd.h>
 #include <fcntl.h>
 #define INVALID_SOCKET -1

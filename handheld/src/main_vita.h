@@ -30,9 +30,10 @@
 #define checkGl() assert(glGetError() == 0)
 #define checkSce(x) ret = x; LOGI(#x ": %08x\n", ret);
 
+#define USED __attribute__((used))
 
-int _newlib_heap_size_user   = 64 * 1024 * 1024;
-unsigned int sceLibcHeapSize = 3 * 1024 * 1024;
+USED int _newlib_heap_size_user   = 64 * 1024 * 1024;
+USED unsigned int sceLibcHeapSize = 3 * 1024 * 1024;
 
 static bool _inited_egl = false;
 static bool _app_inited = false;
@@ -116,7 +117,7 @@ static void initEgl(App* app, AppContext* state, uint32_t w, uint32_t h)
 	_inited_egl = true;
 	if (!_app_inited) {
 		_app_inited = true;
-		app->init(*state);
+		app->init_ctx(*state);
 	} else {
 		app->onGraphicsReset(*state);
 	}
@@ -342,8 +343,6 @@ void handleController() {
 			Mouse::feed(MouseAction::ACTION_LEFT, BTN_STATE(ctrl.buttons, SCE_CTRL_R2), 0,0);
 		}
 	}
-
-
 }
 
 int main(int argc, char** argv) {
@@ -415,6 +414,12 @@ int main(int argc, char** argv) {
 
 
 	return 0;
+}
+
+void __assert_func(const char * file, int line, const char * func, const char * err) {
+    sceClibPrintf("assertion %s failed %s:%d %s\n", err, file, line, func);
+    sceKernelExitProcess(1);
+    while(1);
 }
 
 #endif

@@ -7,6 +7,9 @@
 #ifdef STANDALONE_SERVER
 #define NO_EGL
 #endif
+#ifdef LINUX
+#define NO_EGL
+#endif
 
 #include "AppPlatform.h"
 #ifndef NO_EGL 
@@ -36,7 +39,7 @@ public:
 	}
 	virtual ~App() {}
 
-	void init(AppContext& c) {
+	void init_ctx(AppContext& c) {
         _context = c;
 		init();
 		_inited = true;

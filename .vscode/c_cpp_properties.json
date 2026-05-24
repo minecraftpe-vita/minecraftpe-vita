@@ -1,0 +1,33 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "LINUX"
+            ],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-clang-x64"
+        },
+        {
+            "name": "Vita",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "__VITA__",
+                "__PSVITA__",
+                "__psp2__"
+            ],
+            "compilerPath": "/usr/local/vitasdk/bin/arm-vita-eabi-gcc",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-arm"
+        }
+    ],
+    "version": 4
+}

@@ -22,17 +22,26 @@
             #include<GLES/glext.h>
         #endif
     #endif
+#elif defined(LINUX)
+	#include <glad/gl.h>
+	#define USE_VBO
+	#define glFogx(a,b)	glFogi(a,b)
+	#define glOrthof(a,b,c,d,e,f) glOrtho(a,b,c,d,e,f)
+	#define glDepthRangef(a,b) glDepthRange(a,b)
 #else
     // Uglyness to fix redeclaration issues
     #ifdef WIN32
 	   #include <WinSock2.h>
 	   #include <Windows.h>
 	#endif
-	#include <gl/glew.h>
-	#include <gl/GL.h>
+	#include <GL/glew.h>
+	#include <GL/gl.h>
 
+	#undef glFogx
+	#undef glOrthof
 	#define glFogx(a,b)	glFogi(a,b)
 	#define glOrthof(a,b,c,d,e,f) glOrtho(a,b,c,d,e,f)
+	#define USE_VBO
 #endif
 
 
