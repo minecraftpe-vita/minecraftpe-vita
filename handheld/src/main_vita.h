@@ -33,7 +33,7 @@
 #define USED __attribute__((used))
 
 USED int _newlib_heap_size_user   = 64 * 1024 * 1024;
-USED unsigned int sceLibcHeapSize = 3 * 1024 * 1024;
+USED unsigned int sceLibcHeapSize = 5 * 1024 * 1024;
 
 static bool _inited_egl = false;
 static bool _app_inited = false;
@@ -345,6 +345,7 @@ void handleController() {
 	}
 }
 
+
 int main(int argc, char** argv) {
 	int ret = 0;
 
@@ -364,6 +365,7 @@ int main(int argc, char** argv) {
 	SceNpCommunicationConfig cfg = {0};
 	checkSce(sceNpInit(&cfg, nullptr));
 
+	// set  cpu & gpu clock speeds for better performance,
 	checkSce(scePowerSetArmClockFrequency(444));
 	checkSce(scePowerSetBusClockFrequency(222));
 	checkSce(scePowerSetGpuClockFrequency(222));
@@ -374,14 +376,6 @@ int main(int argc, char** argv) {
 	// savedata0 is too slow .. (probably bcs pfs)
 	app->externalStoragePath = "ux0:/data/minecraftpe";
 	app->externalCacheStoragePath = "ux0:/data/minecraftpe";
-
-	int commandPort = 0;
-	if (argc > 1) {
-		commandPort = atoi(argv[1]);
-	}
-
-	if (commandPort != 0)
-		app->commandPort = commandPort;
 
 	AppContext context;
 	AppPlatform_Vita platform;

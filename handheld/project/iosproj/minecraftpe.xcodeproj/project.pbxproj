@@ -2016,8 +2016,8 @@
 		D5B50D6814CFF66F005F7284 /* Multitouch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Multitouch.cpp; sourceTree = "<group>"; };
 		D5B50D6914CFF66F005F7284 /* Multitouch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Multitouch.h; sourceTree = "<group>"; };
 		D5B50D6A14CFF66F005F7284 /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = log.h; sourceTree = "<group>"; };
-		D5B50D6B14CFF66F005F7284 /* time.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = time.cpp; sourceTree = "<group>"; };
-		D5B50D6C14CFF66F005F7284 /* time.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = time.h; sourceTree = "<group>"; };
+		D5B50D6B14CFF66F005F7284 /* CTime.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CTime.cpp; sourceTree = "<group>"; };
+		D5B50D6C14CFF66F005F7284 /* CTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTime.h; sourceTree = "<group>"; };
 		D5B50E5614CFF66F005F7284 /* SharedConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedConstants.h; sourceTree = "<group>"; };
 		D5B50E5714CFF66F005F7284 /* terrain_4444.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = terrain_4444.h; sourceTree = "<group>"; };
 		D5B50E5814CFF66F005F7284 /* terrain_5551.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = terrain_5551.h; sourceTree = "<group>"; };
@@ -3656,8 +3656,8 @@
 				D5B50D6014CFF66F005F7284 /* file.h */,
 				D5B50D6114CFF66F005F7284 /* input */,
 				D5B50D6A14CFF66F005F7284 /* log.h */,
-				D5B50D6B14CFF66F005F7284 /* time.cpp */,
-				D5B50D6C14CFF66F005F7284 /* time.h */,
+				D5B50D6B14CFF66F005F7284 /* CTime.cpp */,
+				D5B50D6C14CFF66F005F7284 /* CTime.h */,
 			);
 			path = platform;
 			sourceTree = "<group>";

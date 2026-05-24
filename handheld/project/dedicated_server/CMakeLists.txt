@@ -13,7 +13,7 @@ set(CompileFiles ../../src/main.cpp
 ../../src/platform/input/Keyboard.cpp
 ../../src/platform/input/Mouse.cpp
 ../../src/platform/input/Multitouch.cpp
-../../src/platform/time.cpp
+../../src/platform/CTime.cpp
 ../../src/platform/CThread.cpp
 ../../src/NinecraftApp.cpp
 ../../src/Performance.cpp

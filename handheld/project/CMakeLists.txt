@@ -29,7 +29,7 @@ set(CMAKE_COLOR_DIAGNOSTICS ON)
 
 project(minecraftcpp)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -std=gnu99")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 
 set(HANDHELD "${CMAKE_CURRENT_LIST_DIR}/../src/")
@@ -192,7 +192,7 @@ add_executable(${PROJECT_NAME}
   ${HANDHELD}/platform/input/Mouse.cpp
   ${HANDHELD}/platform/input/Multitouch.cpp
   ${HANDHELD}/platform/input/Controller.cpp
-  ${HANDHELD}/platform/time.cpp
+  ${HANDHELD}/platform/CTime.cpp
   ${HANDHELD}/world/food/SimpleFoodData.cpp
   ${HANDHELD}/world/phys/HitResult.cpp
   ${HANDHELD}/world/inventory/ContainerMenu.cpp
