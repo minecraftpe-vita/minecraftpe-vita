@@ -113,7 +113,7 @@ void TextEditScreen::lostFocus() {
 void TextEditScreen::tick() {
 	frame++;
 
-#if !defined(__ANDROID__) && !defined(__APPLE__)
+#if !defined(ANDROID) && !defined(__APPLE__)
 	if(minecraft->platform()->isKeyboardVisible()) {
 		std::string fullstring = minecraft->platform()->getKeyboardInput();
 		if(fullstring.length() < 16) {

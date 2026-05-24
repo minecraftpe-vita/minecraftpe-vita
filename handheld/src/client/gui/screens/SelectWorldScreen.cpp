@@ -253,7 +253,7 @@ void SelectWorldScreen::buttonClicked(Button* button)
 		//minecraft->setScreen(new ProgressScreen());
 
 		if (_state == _STATE_DEFAULT && !_hasStartedLevel) {
-#if defined(__ANDROID__) || defined(__APPLE__)
+#if defined(ANDROID) || defined(__APPLE__)
 			minecraft->platform()->createUserInput(DialogDefinitions::DIALOG_CREATE_NEW_WORLD);
 #endif
 			_state = _STATE_CREATEWORLD;
@@ -308,7 +308,7 @@ void SelectWorldScreen::tick()
 		#elif defined(_WIN32) && 0 // honestly our custom choose level scren is probably better than whatever win32 does
 			std::string name = getUniqueLevelName("perf");
 			minecraft->setScreen(new SimpleChooseLevelScreen(name));
-		#elif !defined(__ANDROID__) || !defined(__APPLE__)
+		#elif !defined(ANDROID) || !defined(__APPLE__)
 			minecraft->setScreen(new AdvancedChooseLevelScreen());
 			return;
 		#else

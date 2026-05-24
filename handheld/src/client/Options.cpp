@@ -8,7 +8,11 @@
 #include <sstream>
 
 /*static*/
+#ifdef GLDEBUG
+bool Options::debugGl = true;
+#else
 bool Options::debugGl = false;
+#endif
 
 void Options::initDefaultValues() {
 	difficulty = Difficulty::NORMAL;
