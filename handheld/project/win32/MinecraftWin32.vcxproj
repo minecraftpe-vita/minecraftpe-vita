@@ -145,7 +145,7 @@
     <ClCompile Include="..\..\src\platform\input\Keyboard.cpp" />
     <ClCompile Include="..\..\src\platform\input\Mouse.cpp" />
     <ClCompile Include="..\..\src\platform\input\Multitouch.cpp" />
-    <ClCompile Include="..\..\src\platform\time.cpp" />
+    <ClCompile Include="..\..\src\platform\CTime.cpp" />
     <ClCompile Include="..\..\src\raknet\BitStream.cpp" />
     <ClCompile Include="..\..\src\raknet\CCRakNetSlidingWindow.cpp" />
     <ClCompile Include="..\..\src\raknet\CCRakNetUDT.cpp" />

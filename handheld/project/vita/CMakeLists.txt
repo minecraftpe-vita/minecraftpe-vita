@@ -19,12 +19,14 @@ project(minecraftcpp)
 include("${VITASDK}/share/vita.cmake" REQUIRED)
 
 set(VITA_APP_NAME "Minecraft PE")
+set(VITA_APP_CONTENT_ID "UP0000-MCPE00000_00-MINECRAFTPE00000")
+set(VITA_PARENTAL_LEVEL 3) # PEGI-7, ESRB E, CERO A, PG, etc
+
 set(VITA_TITLEID  "MCPE00000")
 set(VITA_VERSION  "00.61")
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -std=gnu99")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
-set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
 
 set(HANDHELD "${CMAKE_CURRENT_LIST_DIR}/../../src/")
 set(ASSETS_DIR "${CMAKE_CURRENT_LIST_DIR}/../../data")
@@ -39,6 +41,7 @@ add_definitions(-D__VITA__)
 if(DEMO)
 set(VITA_APP_NAME "Minecraft PE Demo")
 set(VITA_TITLEID  "MCPEDEMO0")
+set(VITA_APP_CONTENT_ID "UP0000-MCPEDEMO0_00-MINECRAFTPE00000")
 set(VITA_ICON0 ${CMAKE_CURRENT_LIST_DIR}/sce_sys/icon0_demo.png)
 set(VITA_BG ${CMAKE_CURRENT_LIST_DIR}/sce_sys/livearea/contents/bg_demo.png)
 set(VITA_GATE ${CMAKE_CURRENT_LIST_DIR}/sce_sys/livearea/contents/gate_demo.png)
@@ -51,6 +54,7 @@ add_compile_options(-O3 -g0)
 add_definitions(-DPUBLISH)
 endif()
 
+set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=${VITA_PARENTAL_LEVEL} -s CONTENT_ID=${VITA_APP_CONTENT_ID}")
 
 add_library(raknet
   ${HANDHELD}/raknet/DS_Table.cpp
@@ -200,7 +204,7 @@ add_executable(${PROJECT_NAME}
   ${HANDHELD}/platform/input/Mouse.cpp
   ${HANDHELD}/platform/input/Multitouch.cpp
   ${HANDHELD}/platform/input/Controller.cpp
-  ${HANDHELD}/platform/time.cpp
+  ${HANDHELD}/platform/CTime.cpp
   ${HANDHELD}/world/food/SimpleFoodData.cpp
   ${HANDHELD}/world/phys/HitResult.cpp
   ${HANDHELD}/world/inventory/ContainerMenu.cpp

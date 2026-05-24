@@ -161,7 +161,7 @@ source platform/input/Controller.cpp
 source platform/input/Keyboard.cpp
 source platform/input/Mouse.cpp
 source platform/input/Multitouch.cpp
-source platform/time.cpp
+source platform/CTime.cpp
 source server/ArgumentsSettings.cpp
 source server/CreatorLevel.cpp
 source server/ServerLevel.cpp
