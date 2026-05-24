@@ -373,10 +373,14 @@ int main(int argc, char** argv) {
 
 	MAIN_CLASS* app = new MAIN_CLASS();
 
-	// savedata0 is too slow .. (probably bcs pfs)
+	// savedata0 is slow .. causes lag on every autosave, (probably because pfs)
+#ifdef RETAIL
+	app->externalStoragePath = "savedata0:/data/minecraftpe";
+	app->externalCacheStoragePath = "savedata0:/data/minecraftpe";
+#else
 	app->externalStoragePath = "ux0:/data/minecraftpe";
 	app->externalCacheStoragePath = "ux0:/data/minecraftpe";
-
+#endif
 	AppContext context;
 	AppPlatform_Vita platform;
 	context.doRender = true;

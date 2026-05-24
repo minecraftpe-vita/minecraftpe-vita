@@ -41,9 +41,11 @@ endif()
 
 if(PUBLISH)
   add_compile_definitions(PUBLISH)
+  add_compile_definitions(NDEBUG)
 endif()
 
 add_compile_options(-O3 -g)
+
 
 add_library(raknet
   ${HANDHELD}/raknet/DS_Table.cpp
