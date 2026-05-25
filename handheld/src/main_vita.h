@@ -203,8 +203,8 @@ void handleTouch() {
                 int16_t x = touch_to_screen_x(curr->x);
                 int16_t y = touch_to_screen_y(curr->y);
                 //sceClibPrintf("touchMove %d %d %d\n", curr->id, x, y);
-                if (slot == 0) Mouse::feed(MouseAction::ACTION_MOVE, MouseAction::DATA_DOWN, x, y);
-                Multitouch::feed(1, MouseAction::DATA_DOWN, x, y, slot);
+                if (slot == 0) Mouse::feed(MouseAction::ACTION_MOVE, MouseAction::DATA_UP, x, y);
+                Multitouch::feed(0, MouseAction::DATA_UP, x, y, slot);
                 break;
             }
         }
