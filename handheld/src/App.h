@@ -39,7 +39,7 @@ public:
 	}
 	virtual ~App() {}
 
-	void init_ctx(AppContext& c) {
+	void init(AppContext& c) {
         _context = c;
 		init();
 		_inited = true;

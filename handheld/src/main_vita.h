@@ -117,7 +117,7 @@ static void initEgl(App* app, AppContext* state, uint32_t w, uint32_t h)
 	_inited_egl = true;
 	if (!_app_inited) {
 		_app_inited = true;
-		app->init_ctx(*state);
+		app->init(*state);
 	} else {
 		app->onGraphicsReset(*state);
 	}

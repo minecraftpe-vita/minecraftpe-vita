@@ -106,7 +106,7 @@ int main(int argc, char** argv) {
 	context.doRender = true;
 	context.platform = &platform;
 
-	app->init_ctx(context);
+	app->init(context);
 
     int width, height;
     glfwGetWindowSize(window, &width, &height);
