@@ -9,7 +9,7 @@ SECUREID 0xE000C418
 EPOCSTACKSIZE 0x20000
 EPOCHEAPSIZE 0x800000 0x3000000
 
-CAPABILITY LocalServices+ReadUserData+UserEnvironment+WriteUserData+NetworkServices
+CAPABILITY LocalServices+NetworkServices
 
 #include "common.mmh"
 
@@ -323,6 +323,8 @@ LIBRARY apparc.lib
 LIBRARY extendedconnpref.lib
 LIBRARY netmeta.lib
 LIBRARY esock.lib
+LIBRARY remconcoreapi.lib
+LIBRARY remconinterfacebase.lib
 LIBRARY libGLESv1_CM.lib
 LIBRARY libegl.lib
 LIBRARY ws32.lib

@@ -2,6 +2,7 @@
 #include "OptionStrings.h"
 #include "Minecraft.h"
 #include "player/LocalPlayer.h"
+#include "../util/Mth.h"
 #include "../platform/log.h"
 #include "../world/Difficulty.h"
 #include <cmath>
@@ -208,6 +209,16 @@ const char* Options::GUI_SCALE[] = {
 	"options.guiScale.normal",
 	"options.guiScale.large"
 };
+
+void Options::adjustBy(const Option* item, float relValue) {
+	if (item == &Option::MUSIC) {
+		music = Mth::clamp(sound + relValue, MUSIC_MIN_VALUE, MUSIC_MAX_VALUE);
+		notifyOptionUpdate(&Option::MUSIC, music);
+	} else if (item == &Option::SOUND) {
+		sound = Mth::clamp(sound + relValue, SOUND_MIN_VALUE, SOUND_MAX_VALUE);
+		notifyOptionUpdate(&Option::SOUND, sound);
+	}
+}
 
 void Options::set(const Options::Option* item, float value) {
 	if (item == &Options::Option::MUSIC) {

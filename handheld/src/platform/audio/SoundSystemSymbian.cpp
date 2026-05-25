@@ -182,7 +182,8 @@ void SoundSystemSymbian::playAt(const SoundDesc &sound, float x, float y, float 
 
 			cm_set_pan(src, pan);
 		}
-		cm_set_gain(src, volume);
+		volume = Mth::clamp(volume, 0.f, 1.f);
+		cm_set_gain(src, volume * volume);
 		if (pitch >= .01f) { cm_set_pitch(src, pitch); }
 
 		cm_play(src);
@@ -192,20 +193,7 @@ void SoundSystemSymbian::playAt(const SoundDesc &sound, float x, float y, float 
 
 void SoundHandlerSymbian::RequestSound() {
 	auto pCont = CMcpeContainer::instance();
-
-	if (pCont->iOutputStatus == CMcpeContainer::ESetVolume) {
-		pCont->iOutputStatus = CMcpeContainer::EOpen;
-		if (pCont->iVolume < 0)
-			pCont->iVolume = 0;
-		if (pCont->iVolume > iOutputStream->MaxVolume())
-			pCont->iVolume = iOutputStream->MaxVolume();
-
-		iOutputStream->SetVolume(pCont->iVolume);
-	}
-
-	//memset(reinterpret_cast<void *>(iBuffer), 0, sizeof iBuffer);
 	cm_process(iBuffer, BUFFER_SIZE);
-
 	iOutputStream->WriteL(iBufferPtr);
 }
 
@@ -213,15 +201,7 @@ void SoundHandlerSymbian::MaoscOpenComplete(TInt aError) {
 	auto pCont = CMcpeContainer::instance();
 
 	if (aError == KErrNone) {
-		//pCont->iVolume = iOutputStream->MaxVolume() / 2;
-		pCont->iVolume = iOutputStream->MaxVolume();
-		pCont->iVolumeStep = iOutputStream->MaxVolume() / 8;
-
-		if (pCont->iVolumeStep == 0) {
-			pCont->iVolumeStep = 1;
-		}
-
-		iOutputStream->SetVolume(pCont->iVolume);
+		iOutputStream->SetVolume(iOutputStream->MaxVolume());
 		iOutputStream->SetPriority(EPriorityNormal, EMdaPriorityPreferenceTime);
 
 		pCont->iOutputStatus = CMcpeContainer::EOpen;

@@ -185,6 +185,8 @@ void CMcpeContainer::ConstructL(const TRect &aRect, CAknAppUi *aAppUi) {
 	iPeriodic->Start(0, hasFastCpu ? 16667 : 33333, TCallBack(CMcpeContainer::DrawCallBack, this));
 
 	Window().PointerFilter(EPointerFilterDrag, 0);
+
+	iRcObserver = CBasicRemConObserver::NewL(*this);
 }
 
 bool CMcpeContainer::PromptTextL(std::string &out, TInt maxLength) {
@@ -252,36 +254,20 @@ TInt CMcpeContainer::DrawCallBack(TAny *aInstance) {
 	return 0;
 }
 
-bool CMcpeContainer::IsScanCodeNonModifier(TInt aScanCode) {
-	return !(
-		aScanCode == EStdKeyLeftFunc ||
-		aScanCode == EStdKeyRightFunc ||
-		aScanCode == EStdKeyLeftCtrl ||
-		aScanCode == EStdKeyRightCtrl ||
-		aScanCode == EStdKeyLeftShift ||
-		aScanCode == EStdKeyRightShift
-	);
-}
-
-void CMcpeContainer::HandleWsEventL(const TWsEvent &aEvent, CCoeControl *aDestination) {
-	TInt scanCode;
-	switch (aEvent.Type()) {
+TKeyResponse CMcpeContainer::OfferKeyEventL(const TKeyEvent& aKeyEvent, TEventCode aType) {
+	switch (aType) {
+	case EEventKey:
+		break;
 	case EEventKeyDown:
-		scanCode = aEvent.Key()->iScanCode;
-		switch (aEvent.Key()->iCode) {
-		case EStdKeyIncVolume:
-			// TODO: Volume control broken?
-			iVolume += iVolumeStep;
-			iOutputStatus = ESetVolume;
-			break;
-		case EStdKeyDecVolume:
-			iVolume -= iVolumeStep;
-			iOutputStatus = ESetVolume;
-			break;
-		}
 		break;
 	case EEventKeyUp:
 		break;
+	}
+	return EKeyWasConsumed;
+}
+
+void CMcpeContainer::HandleWsEventL(const TWsEvent &aEvent, CCoeControl *aDestination) {
+	switch (aEvent.Type()) {
 	case EEventPointer: {
 		const auto pos = aEvent.Pointer()->iPosition;
 		const auto ident = aEvent.Pointer()->PointerNumber();
@@ -306,6 +292,19 @@ void CMcpeContainer::HandleWsEventL(const TWsEvent &aEvent, CCoeControl *aDestin
 	}
 }
 
+void CMcpeContainer::HandleVolumeKeyL(TKeyCode aKey) {
+	switch (aKey) {
+	case EKeyIncVolume:
+		iApp->options.adjustBy(&Options::Option::SOUND, .1f);
+		iApp->options.adjustBy(&Options::Option::MUSIC, .1f);
+		break;
+	case EKeyDecVolume:
+		iApp->options.adjustBy(&Options::Option::SOUND, -.1f);
+		iApp->options.adjustBy(&Options::Option::MUSIC, -.1f);
+		break;
+	}
+}
+
 void CMcpeContainer::SizeChanged() {
 	if (iApp) { iApp->setSize(Size().iWidth, Size().iHeight); }
 }
@@ -320,9 +319,10 @@ void CMcpeContainer::HandleResourceChange(TInt aType) {
 
 CMcpeContainer::~CMcpeContainer() {
 	delete iPeriodic;
-
+#ifndef NO_NETWORK
 	delete iNetKeepAlive;
-
+#endif
+	delete iRcObserver;
 	delete iApp;
 
 	eglMakeCurrent(iEglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
@@ -412,3 +412,57 @@ void CNetKeepAlive::ConstructL() {
 	User::LeaveIfError(iSockServ.Connect());
 }
 #endif // !(defined NO_NETWORK)
+
+CBasicRemConObserver *CBasicRemConObserver::NewL(MBasicRemConObserver& aObserver) {
+	auto self = new (ELeave) CBasicRemConObserver(aObserver);
+	CleanupStack::PushL(self);
+	self->ConstructL();
+	CleanupStack::Pop();
+	return self;
+}
+
+CBasicRemConObserver::CBasicRemConObserver(MBasicRemConObserver& aTarget) : CActive(EPriorityUserInput), iTarget(aTarget) {}
+
+CBasicRemConObserver::~CBasicRemConObserver() {
+	delete iCoreTarget;
+	delete iInterfaceSelector;
+}
+
+void CBasicRemConObserver::ConstructL() {
+	CActiveScheduler::Add(this);
+
+	iInterfaceSelector = CRemConInterfaceSelector::NewL();
+	iCoreTarget = CRemConCoreApiTarget::NewL(*iInterfaceSelector, *this);
+
+	iInterfaceSelector->OpenTargetL();
+}
+
+void CBasicRemConObserver::FinishCommandL(TRemConCoreApiOperationId aId) {
+	if (IsActive()) {
+		iQueue.push(aId);
+	} else {
+		iCoreTarget->SendResponse(iStatus, aId, KErrNone);
+		SetActive();
+	}
+}
+
+void CBasicRemConObserver::RunL() {
+	if (!iQueue.empty()) {
+		FinishCommandL(iQueue.front());
+		iQueue.pop();
+	}
+}
+
+void CBasicRemConObserver::DoCancel() {}
+
+void CBasicRemConObserver::MrccatoCommand(TRemConCoreApiOperationId aOperationId, TRemConCoreApiButtonAction aButtonAct) {
+	switch (aOperationId) {
+	case ERemConCoreApiVolumeUp:
+		iTarget.HandleVolumeKeyL(EKeyIncVolume);
+		break;
+	case ERemConCoreApiVolumeDown:
+		iTarget.HandleVolumeKeyL(EKeyDecVolume);
+		break;
+	}
+	FinishCommandL(aOperationId);
+}

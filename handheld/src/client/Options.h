@@ -211,6 +211,8 @@ public:
 	void set(const Option* item, int value);
 	void set(const Option* item, std::string& value);
 
+	void adjustBy(const Option* item, float relValue);
+
 	void toggle(const Option* option, int dir) {
 		if (option == &Option::INVERT_MOUSE)	invertYMouse = !invertYMouse;
 		if (option == &Option::RENDER_DISTANCE) {
