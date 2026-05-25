@@ -96,7 +96,7 @@ vita_create_vpk(${PROJECT_NAME}.vpk ${VITA_TITLEID} ${PROJECT_NAME}.self
   NAME ${VITA_APP_NAME}
   ${VPK_ARGS}
 
-  FILE ${CMAKE_CURRENT_LIST_DIR}/module/libGLESv2.suprx                        module/libGLESv2.suprx
+  FILE ${CMAKE_CURRENT_LIST_DIR}/module/libGLESv1_CM.suprx                     module/libGLESv1_CM.suprx
   FILE ${CMAKE_CURRENT_LIST_DIR}/module/libgpu_es4_ext.suprx                   module/libgpu_es4_ext.suprx
   FILE ${CMAKE_CURRENT_LIST_DIR}/module/libIMGEGL.suprx                        module/libIMGEGL.suprx
   FILE ${CMAKE_CURRENT_LIST_DIR}/module/libpvrPSP2_WSEGL.suprx                 module/libpvrPSP2_WSEGL.suprx
