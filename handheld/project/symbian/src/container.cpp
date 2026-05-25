@@ -296,8 +296,8 @@ void CMcpeContainer::HandleWsEventL(const TWsEvent &aEvent, CCoeControl *aDestin
 			Multitouch::feed(1, MouseAction::DATA_UP, pos.iX, pos.iY, ident);
 			break;
 		case TPointerEvent::EDrag:
-			if (0 == ident) { Mouse::feed(MouseAction::ACTION_MOVE, MouseAction::DATA_DOWN, pos.iX, pos.iY); }
-			Multitouch::feed(1, MouseAction::DATA_DOWN, pos.iX, pos.iY, ident);
+			if (0 == ident) { Mouse::feed(MouseAction::ACTION_MOVE, MouseAction::DATA_UP, pos.iX, pos.iY); }
+			Multitouch::feed(0, MouseAction::DATA_UP, pos.iX, pos.iY, ident);
 			break;
 		}
 	} break;
