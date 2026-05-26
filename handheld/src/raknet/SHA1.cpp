@@ -221,13 +221,13 @@ bool CSHA1::HashFile( char *szFileName )
 
 	for ( i = 0; i < ulBlocks; i++ )
 	{
-		fread( uData, 1, MAX_FILE_READ_BUFFER, fIn );
+		if(fread( uData, 1, MAX_FILE_READ_BUFFER, fIn ) != MAX_FILE_READ_BUFFER) return false;
 		Update( uData, MAX_FILE_READ_BUFFER );
 	}
 
 	if ( ulRest != 0 )
 	{
-		fread( uData, 1, ulRest, fIn );
+		if(fread( uData, 1, ulRest, fIn ) != ulRest) return false;
 		Update( uData, ulRest );
 	}
 
@@ -245,14 +245,16 @@ void CSHA1::Final()
 		0, 0, 0, 0, 0, 0, 0, 0
 	};
 
-	for ( i = 0; i < 8; i++ )
+	for ( i = 0; i < 8; i++ ) {
 		finalcount[ i ] = (unsigned char) ( ( m_count[ ( i >= 4 ? 0 : 1 ) ]
 		>> ( ( 3 - ( i & 3 ) ) * 8 ) ) & 255 ); // Endian independent
+	}
 
 		Update( ( unsigned char * ) "\200", 1 );
 
-		while ( ( m_count[ 0 ] & 504 ) != 448 )
+		while ( ( m_count[ 0 ] & 504 ) != 448 ) {
 			Update( ( unsigned char * ) "\0", 1 );
+		}
 
 		Update( finalcount, 8 ); // Cause a SHA1Transform()
 

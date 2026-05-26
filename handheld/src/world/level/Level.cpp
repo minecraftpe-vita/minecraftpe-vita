@@ -136,8 +136,8 @@ bool Level::checkAndHandleWater(const AABB& box, const Material* material, Entit
 
     bool ok = false;
     Vec3 current(0,0,0);
-    for (int x = x0; x < x1; x++)
-        for (int y = y0; y < y1; y++)
+    for (int x = x0; x < x1; x++) {
+        for (int y = y0; y < y1; y++) {
             for (int z = z0; z < z1; z++) {
                 Tile* tile = Tile::tiles[getTile(x, y, z)];
                 if (tile != NULL && tile->material == material) {
@@ -148,6 +148,8 @@ bool Level::checkAndHandleWater(const AABB& box, const Material* material, Entit
                     }
                 }
             }
+        }
+    }
 	float len = current.length();
     if (len > 0) {
         const float pow = 0.004f / len;
@@ -2036,7 +2038,7 @@ Pos Level::getSharedSpawnPos() {
     return Pos(levelData.getXSpawn(), levelData.getYSpawn(), levelData.getZSpawn());
 }
 
-void Level::setSpawnPos(Pos spawnPos) {
+void Level::setSpawnPos(const Pos& spawnPos) {
     levelData.setSpawn(spawnPos.x, spawnPos.y, spawnPos.z);
 }
 
@@ -2147,13 +2149,14 @@ int Level::getEntitiesOfClass( int type, const AABB& bb, EntityList& list ) {
 	int zc0 = Mth::floor((bb.z0 - 2) / 16);
 	int zc1 = Mth::floor((bb.z1 + 2) / 16);
 	int count = -(int)list.size();
-	for (int xc = xc0; xc <= xc1; xc++)
+	for (int xc = xc0; xc <= xc1; xc++) {
 		for (int zc = zc0; zc <= zc1; zc++) {
 			if (hasChunk(xc, zc)) {
 				getChunk(xc, zc)->getEntitiesOfClass(type, bb, list);
 			}
 		}
-		return list.size() - count;
+    }
+	return list.size() - count;
 }
 
 int Level::countInstanceOfType( int typeId ) {

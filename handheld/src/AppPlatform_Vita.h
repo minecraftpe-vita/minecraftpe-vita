@@ -1,7 +1,6 @@
 #ifndef APPPLATFORM_VITA_H__
 #define APPPLATFORM_VITA_H__
 
-#include <fstream>
 #include <png.h>
 
 #include "AppPlatform.h"
@@ -18,11 +17,6 @@
 #include "NinecraftApp.h"
 
 #include "np_mgr.h"
-
-
-static void png_funcReadFile(png_structp pngPtr, png_bytep data, png_size_t length) {
-	((std::istream*)png_get_io_ptr(pngPtr))->read((char*)data, length);
-}
 
 static int64_t vbTimeStart = 0;
 static int64_t vbTimeElapsed = 0;
@@ -299,7 +293,7 @@ public:
 		int rd = sceIoRead(fd, blob.data, blob.size);
 		sceIoClose(fd);
 
-		if(rd != blob.size) {
+		if((size_t)rd != blob.size) {
 			LOGI("wrong size: %x %s\n", rd, fullAssetPath.c_str());
 
 			return BinaryBlob();
@@ -317,54 +311,48 @@ public:
 	TextureData loadTexture(const std::string& filename_, bool textureFolder) override {
 		TextureData out;
 
-		std::string filename = textureFolder ? "data/images/" + filename_
-		: filename_;
-		std::ifstream source(filename.c_str(), std::ios::binary);
-
-		if (source) {
-			png_structp pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-
-			if (!pngPtr)
-				return out;
-
-			png_infop infoPtr = png_create_info_struct(pngPtr);
-
-			if (!infoPtr) {
-				png_destroy_read_struct(&pngPtr, NULL, NULL);
-				return out;
-			}
-
-			// Hack to get around the broken libpng for windows
-			png_set_read_fn(pngPtr,(void*)&source, png_funcReadFile);
-
-			png_read_info(pngPtr, infoPtr);
-
-			// Set up the texdata properties
-			out.w = png_get_image_width(pngPtr, infoPtr);
-			out.h = png_get_image_height(pngPtr, infoPtr);
-
-			png_bytep* rowPtrs = new png_bytep[out.h];
-			out.data = new unsigned char[4 * out.w * out.h];
-			out.memoryHandledExternally = false;
-
-			int rowStrideBytes = 4 * out.w;
-			for (int i = 0; i < out.h; i++) {
-				rowPtrs[i] = (png_bytep)&out.data[i*rowStrideBytes];
-			}
-			png_read_image(pngPtr, rowPtrs);
-
-			// Teardown and return
-			png_destroy_read_struct(&pngPtr, &infoPtr,(png_infopp)0);
-			delete[] (png_bytep)rowPtrs;
-			source.close();
-
-			return out;
-		}
-		else
-		{
+		std::string filename = textureFolder ? "data/images/" + filename_ : filename_;
+		
+		FILE* file = fopen(filename.c_str(), "rb");
+		if(!file) {
 			LOGI("Couldn't find file: %s\n", filename.c_str());
 			return out;
 		}
+		png_structp pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+		if (!pngPtr) {
+			fclose(file);
+			return out;
+		}
+		png_init_io(pngPtr, file);
+
+		png_infop infoPtr = png_create_info_struct(pngPtr);
+		if (!infoPtr) {
+			png_destroy_read_struct(&pngPtr, NULL, NULL);
+			fclose(file);
+			return out;
+		}
+		png_read_info(pngPtr, infoPtr);
+
+		// Set up the texdata properties
+		out.width = png_get_image_width(pngPtr, infoPtr);
+		out.height = png_get_image_height(pngPtr, infoPtr);
+
+		if(out.height > 1000000) out.height = 1000000; // make gcc happy
+		png_bytep* rowPtrs = new png_bytep[out.height];
+		out.data = new unsigned char[4 * out.width * out.height];
+		out.memoryHandledExternally = false;
+
+		size_t rowStrideBytes = 4 * out.width;
+		for (size_t i = 0; i < out.height; i++) {
+			rowPtrs[i] = (png_bytep)&out.data[i*rowStrideBytes];
+		}
+		png_read_image(pngPtr, rowPtrs);
+
+		// Teardown and return
+		png_destroy_read_struct(&pngPtr, &infoPtr,(png_infopp)0);
+		delete[] (png_bytep)rowPtrs;
+		fclose(file);
+		return out;
 	}
 
 private:

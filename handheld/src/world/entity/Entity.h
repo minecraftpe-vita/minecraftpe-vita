@@ -74,7 +74,7 @@ public:
     float distanceToSqr(Entity* e);
 
 	virtual bool interactPreventDefault();
-	virtual bool interact(Player* player);
+	virtual bool interact(Entity* entity);
     virtual void playerTouch(Player* player);
 
     virtual void push(Entity* e);

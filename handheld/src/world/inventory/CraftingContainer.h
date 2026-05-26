@@ -41,12 +41,12 @@ public:
     }
 
 	//@itodo
-    void setItem(int slot, const ItemInstance& item) {
+    void setItem(int slot, const ItemInstance& item) override {
         items[slot] = item;
         //menu->slotsChanged(this);
     }
 
-    ItemInstance removeItem(int slot, int count) {
+    ItemInstance removeItemSlot(int slot, int count) {
         if (!items[slot].isNull()) {
             if (items[slot].count <= count) {
                 ItemInstance item = items[slot];

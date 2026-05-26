@@ -142,7 +142,7 @@ namespace RakNet
 
 
 	template <class Type>
-	RAK_DLL_EXPORT Type* OP_NEW_ARRAY(const int count, const char *file, unsigned int line)
+	RAK_DLL_EXPORT Type* OP_NEW_ARRAY(const unsigned int count, const char *file, unsigned int line)
 	{
 		if (count==0)
 			return 0;
@@ -160,7 +160,7 @@ namespace RakNet
 #else
 		(void) file;
 		(void) line;
-		return new Type[count];
+		return new Type[count > 1000000 ? 1000000 : count /* make gcc happy */];
 #endif
 
 	}

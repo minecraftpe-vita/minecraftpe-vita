@@ -17,7 +17,7 @@ public:
 
     virtual ~FurnaceMenu() {}
 
-    virtual void setSlot(int slot, ItemInstance* item);
+    virtual void setSlot(int slot, const ItemInstance& item);
 	virtual void setData(int id, int value);
 	virtual std::vector<ItemInstance> getItems();
 

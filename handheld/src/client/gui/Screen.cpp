@@ -166,10 +166,14 @@ void Screen::keyPressed( int eventKey )
 		return;
 
 	Options& o = minecraft->options;
-	if (eventKey == o.keyMenuNext.key)
-		if (++tabButtonIndex == tabButtonCount) tabButtonIndex = 0;
-	if (eventKey == o.keyMenuPrevious.key)
-		if (--tabButtonIndex == -1) tabButtonIndex = tabButtonCount-1;
+	if (eventKey == o.keyMenuNext.key) {
+		++tabButtonIndex;
+		if (tabButtonIndex == tabButtonCount) tabButtonIndex = 0;
+	}
+	if (eventKey == o.keyMenuPrevious.key) {
+		--tabButtonIndex;
+		if (tabButtonIndex == -1) tabButtonIndex = tabButtonCount-1;
+	}
 	if (eventKey == o.keyMenuOk.key) {
 		Button* button = tabButtons[tabButtonIndex];
 		if (button->active) {
@@ -187,14 +191,14 @@ void Screen::updateTabButtonSelection()
 	if (minecraft->useTouchscreen())
 		return;
 
-	for (unsigned int i = 0; i < tabButtons.size(); ++i)
-		tabButtons[i]->selected = (i == tabButtonIndex);
+	for (size_t i = 0; i < tabButtons.size(); ++i)
+		tabButtons[i]->selected = ((int)i == tabButtonIndex);
 }
 
 void Screen::mouseClicked( int x, int y, int buttonNum )
 {
 	if (buttonNum == MouseAction::ACTION_LEFT) {
-		for (unsigned int i = 0; i < buttons.size(); ++i) {
+		for (size_t i = 0; i < buttons.size(); ++i) {
 			Button* button = buttons[i];
             //LOGI("Hit-testing button: %p\n", button);
 			if (button->clicked(minecraft, x, y)) {
@@ -220,7 +224,7 @@ void Screen::mouseReleased( int x, int y, int buttonNum )
 
 #if 1
 //#if defined(ANDROID) || defined(__APPLE__) //if (minecraft->isTouchscreen()) {
-		for (unsigned int i = 0; i < buttons.size(); ++i) {
+		for (size_t i = 0; i < buttons.size(); ++i) {
 			Button* button = buttons[i];
 			if (clickedButton == button && button->clicked(minecraft, x, y)) {
 				buttonClicked(button);

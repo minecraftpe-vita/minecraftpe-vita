@@ -9,7 +9,7 @@ NinePatchDescription::NinePatchDescription( float x, float y, float x1, float x2
 }
 
 NinePatchDescription& NinePatchDescription::transformUVForImage( const TextureData& d ) {
-	return transformUVForImageSize(d.w, d.h);
+	return transformUVForImageSize(d.width, d.height);
 }
 
 NinePatchDescription& NinePatchDescription::transformUVForImageSize( int w, int h ) {
@@ -126,8 +126,8 @@ NinePatchFactory::NinePatchFactory( Textures* textures, const std::string& image
 		if (id != Textures::InvalidId) {
 			const TextureData* data = textures->getTemporaryTextureData(id);
 			if (data) { // This should never be false
-				width = data->w;
-				height = data->h;
+				width = data->width;
+				height = data->height;
 			}
 		} else {
 			LOGE("Error @ NinePatchFactory::ctor - Couldn't find texture: %s\n", imageName.c_str());

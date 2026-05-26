@@ -108,7 +108,9 @@ bool RegionFile::readChunk(int x, int z, RakNet::BitStream** destChunkData)
 
 	fseek(file, sectorNum * SECTOR_BYTES, SEEK_SET);
 	int length = 0;
-	fread(&length, sizeof(int), 1, file);
+	if(fread(&length, sizeof(int), 1, file) != 1) {
+		return false;
+	}
 
 	assert(length < ((offset & 0xff) * SECTOR_BYTES));
 	length -= sizeof(int);

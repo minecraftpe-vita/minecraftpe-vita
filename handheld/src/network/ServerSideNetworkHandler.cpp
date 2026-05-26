@@ -631,12 +631,12 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID& source, Containe
 	
 	if (ContainerType::FURNACE == p->containerMenu->containerType) {
 		//LOGI("Server:Setting slot %d: %s\n", packet->slot, packet->item.toString().c_str());
-		p->containerMenu->setSlot(packet->slot, &packet->item);
+		p->containerMenu->setSlot(packet->slot, packet->item);
 		//p->containerMenu->setSlot(packet->slot, packet->item.isNull()? NULL : &packet->item);
 	}
 	if (ContainerType::CONTAINER == p->containerMenu->containerType) {
 		//LOGI("Server:Setting slot %d: %s\n", packet->slot, packet->item.toString().c_str());
-		p->containerMenu->setSlot(packet->slot, &packet->item);
+		p->containerMenu->setSlot(packet->slot, packet->item);
 		//p->containerMenu->setSlot(packet->slot, packet->item.isNull()? NULL : &packet->item);
 	}
 }

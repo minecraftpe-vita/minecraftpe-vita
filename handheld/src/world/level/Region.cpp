@@ -14,9 +14,10 @@ Region::Region(Level* level, int x1, int y1, int z1, int x2, int y2, int z2) {
 
 	size_x = xc2 - xc1 + 1;
 	size_z = zc2 - zc1 + 1;
-	chunks = new LevelChunk**[size_x];
-	for (int i = 0; i < size_x; ++i)
-		chunks[i] = new LevelChunk*[size_z];
+	chunks = new LevelChunk**[size_x > 100000 ? 100000 : size_x /* make gcc happy */];
+	for (size_t i = 0; i < size_x; ++i) {
+		chunks[i] = new LevelChunk*[size_z > 100000 ? 100000 : size_z /* make gcc happy */];
+    }
 
     for (int xc = xc1; xc <= xc2; xc++) {
         for (int zc = zc1; zc <= zc2; zc++) {
@@ -26,7 +27,7 @@ Region::Region(Level* level, int x1, int y1, int z1, int x2, int y2, int z2) {
 }
 
 Region::~Region() {
-	for (int i = 0 ; i < size_x; ++i)
+	for (size_t i = 0 ; i < size_x; ++i)
 		delete[] chunks[i];
 	delete[] chunks;
 }
@@ -38,7 +39,7 @@ int Region::getTile(int x, int y, int z) {
     int xc = (x >> 4) - xc1;
     int zc = (z >> 4) - zc1;
 
-	if (xc < 0 || xc >= size_x || zc < 0 || zc >= size_z) {
+	if (xc < 0 || (size_t)xc >= size_x || zc < 0 || (size_t)zc >= size_z) {
         return 0;
     }
 

@@ -112,14 +112,14 @@ void TextBox::renderFace(Minecraft* mc, int xm, int ym) {
 	Font* font = mc->font;
 
 	int caret = focused ? mc->platform()->getKeyboardCarret() : text.length();
-	if(caret < 0 || caret > text.length())
+	if(caret < 0 || caret > (int)text.length())
 		caret = text.length();
 
 
 	// find portion of text that fits within the textbox;
 	int padding = 10;
 	int offset = caret;
-	int end = 0;
+	size_t end = 0;
 
 	while( font->width(text.substr(offset, end)) < (this->width - padding*2) && ( offset > 0 || end < text.length() ) ) {
 		if(offset > 0) offset--;

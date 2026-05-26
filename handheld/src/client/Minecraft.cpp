@@ -318,8 +318,9 @@ void Minecraft::setLevel(Level* level, const std::string& message /* ="" */, Loc
 
 void Minecraft::leaveGame(bool renameLevel /*=false*/)
 {
-    if (isGeneratingLevel || !_hasSignaledGeneratingLevelFinished)
+    if (isGeneratingLevel || !_hasSignaledGeneratingLevelFinished) {
         return;
+	}
     
 	isGeneratingLevel = false;
 	bool saveLevel = level && (!level->isClientSide || renameLevel);
@@ -1416,7 +1417,7 @@ void Minecraft::hostMultiplayer(int port) {
 //
 /*static*/
 
-	void* Minecraft::prepareLevel_tspawn(void *p_param)
+void* Minecraft::prepareLevel_tspawn(void *p_param)
 {
 	Minecraft* mc = (Minecraft*) p_param;
 	mc->generateLevel("Currently not used", mc->level);

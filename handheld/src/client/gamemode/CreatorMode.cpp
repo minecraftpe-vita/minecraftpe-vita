@@ -25,7 +25,7 @@ public:
 		_tickId = tick;
 	}
 
-	EventList<TileEvent>& getTileEvents() { return _tileEvents; }
+	EventList<TileEvent>& getTileEvents() override { return _tileEvents; }
 
 	void addevent_blockUse(int entityId, int x, int y, int z, int face) {
 		TileEvent t = {

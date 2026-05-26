@@ -116,7 +116,6 @@ void ExternalFileLevelStorageSource::getLevelList(LevelSummaryList& dest)
 #else
 	DIR *dp;
 	struct dirent *dirp;
-	struct stat st;
 	if((dp  = opendir(basePath.c_str())) == NULL) {
 		LOGI("Error listing base folder %s: %d", basePath.c_str(), _errno());
 		return;
@@ -179,7 +178,7 @@ void ExternalFileLevelStorageSource::renameLevel( const std::string& oldLevelId_
 
 	std::string levelName = Util::stringTrim(newLevelName_);
 	std::string levelId = levelName;
-	for (int i = 0; i < sizeof(ILLEGAL_FILE_CHARACTERS) / sizeof(char); ++i)
+	for (size_t i = 0; i < sizeof(ILLEGAL_FILE_CHARACTERS) / sizeof(char); ++i)
 		levelId = Util::stringReplace(levelId, std::string(1, ILLEGAL_FILE_CHARACTERS[i]), "");
 
 	LevelSummaryList levels;

@@ -14,7 +14,7 @@ public:
 	void addAdditonalSaveData(CompoundTag* entityTag);
 	void readAdditionalSaveData(CompoundTag* tag);
 	bool hurt(Entity* sourceEntity, int dmg);
-	bool interact(Player* player);
+	bool interact(Entity* entity) override;
 	int getEntityTypeId() const;
 	virtual int getAttackTime();
 	ItemInstance* getCarriedItem();

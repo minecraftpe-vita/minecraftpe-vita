@@ -478,15 +478,15 @@ void Recipes::addShapedRecipe( const ItemInstance& result, const RowList& rows, 
 	}
 
 	std::string map = "";
-	int width = rows[0].length();
-	int height = rows.size();
+	size_t width = rows[0].length();
+	size_t height = rows.size();
 
-	for (unsigned int i = 0; i < rows.size(); ++i)
+	for (size_t i = 0; i < rows.size(); ++i)
 		map += rows[i];
 
 	typedef std::map<char, ItemInstance> Map;
 	Map mappings;
-	for (unsigned int i = 0; i < types.size(); i++) {
+	for (size_t i = 0; i < types.size(); i++) {
 		const Type& type = types[i];
 		char from = type.c;
 		ItemInstance to;
@@ -502,9 +502,11 @@ void Recipes::addShapedRecipe( const ItemInstance& result, const RowList& rows, 
 		mappings.insert(std::make_pair(from, to));
 	}
 
-	ItemInstance* ids = new ItemInstance[width * height];
+	size_t size = width * height;
+	if(size > 100000) size = 100000; // make gcc happy
+	ItemInstance* ids = new ItemInstance[size];
 
-	for (int i = 0; i < width * height; i++) {
+	for (size_t i = 0; i < width * height; i++) {
 		char ch = map[i];
 		Map::iterator it = mappings.find(ch);
 		if (it != mappings.end())
@@ -575,8 +577,8 @@ Recipe* Recipes::getRecipeFor( const ItemInstance& result )
 		ItemInstance res = recipe->getResultItem();
 		if (result.id != res.id) continue;
 
-		if ( result.count == 0 && result.getAuxValue() == res.getAuxValue()
-		||	(result.count == res.count && result.getAuxValue() == res.getAuxValue()))
+		if ((result.count == 0 && result.getAuxValue() == res.getAuxValue()) || 
+			(result.count == res.count && result.getAuxValue() == res.getAuxValue()))
 			return recipe;
 	}
 	return NULL;

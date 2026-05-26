@@ -210,7 +210,6 @@ void SoundSystemVita::setListenerAngle(float deg) {
 }
 
 static void initPlayer(SceNgsHVoice voice, const SoundDesc& sound, float pitch) {
-    int ret;
     SceNgsBufferInfo bufferInfo;
     SceNgsPlayerParams *pPcmParams;
     

@@ -70,13 +70,15 @@ int FillingContainer::removeResource( const ItemInstance& item, bool requireExac
 	while (count > 0) {
 		// If any AUX value, remove any with that id
 		int slot = -1;
-		if (!requireExactAux && (Recipe::isAnyAuxValue(&item) || item.getAuxValue() == Recipe::ANY_AUX_VALUE))
+		if (!requireExactAux && (Recipe::isAnyAuxValue(&item) || item.getAuxValue() == Recipe::ANY_AUX_VALUE)) {
 			slot = getNonEmptySlot(item.id);
-		else
+		} else {
 			slot = getNonEmptySlot(item.id, item.getAuxValue());
+		}
 
-		if (slot < 0)
+		if (slot < 0) {
             return count;
+		}
 
 		// Try to remove all items, but if it's not enough,
 		// we continue on another slot next time
@@ -85,8 +87,7 @@ int FillingContainer::removeResource( const ItemInstance& item, bool requireExac
 		slotItem->count -= toRemove;
 		count -= toRemove;
 
-		if (slotItem->count <= 0)
-			clearSlot(slot);
+		if (slotItem->count <= 0) clearSlot(slot);
 		//removeItem(slot, item.count);
 	}
 	return 0;
@@ -146,16 +147,14 @@ bool FillingContainer::add( ItemInstance* item )
 	return false;
 }
 
-ItemInstance FillingContainer::removeItem( int slot, int count )
+ItemInstance FillingContainer::removeItemSlot( int slot, int count )
 {
 	ItemInstance* item = getItem(slot);
 	if (item) {
-		if (count > item->count)
-			count = item->count;
+		if (count > item->count) count = item->count;
 		item->count -= count;
 
-		if (item->count <= 0)
-			clearSlot(slot);
+		if (item->count <= 0) clearSlot(slot);
 	}
 	
 	/*
@@ -175,15 +174,15 @@ ItemInstance FillingContainer::removeItem( int slot, int count )
 	return ItemInstance();
 }
 
-void FillingContainer::setItem( int slot, ItemInstance* item )
+void FillingContainer::setItem( int slot, const ItemInstance& item )
 {
 	if (slot < 0 || slot >= numTotalSlots)
 		return;
 
 	if (ItemList* p = getSlotList(slot)) {
 		ItemList& pile = *p;
-		if (pile[slot]) *pile[slot] = item? *item : ItemInstance();
-		else pile[slot] = new ItemInstance(item? *item : ItemInstance());
+		if (pile[slot]) *pile[slot] =  item;
+		else pile[slot] = new ItemInstance(item);
 	}
 }
 

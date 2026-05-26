@@ -78,7 +78,7 @@ public:
 	bool isUsingItem();
 	ItemInstance* getUseItem();
 
-	void startUsingItem(ItemInstance instance, int duration);
+	void startUsingItem(const ItemInstance& instance, int duration);
 	void stopUsingItem();
 	void releaseUsingItem();
 	virtual void completeUsingItem();
@@ -108,7 +108,7 @@ public:
 	ItemInstance* getArmor(int slot);
 	int getArmorTypeHash();
 
-    void interact(Entity* entity);
+    bool interact(Entity* entity) override;
     void attack(Entity* entity);
 	virtual ItemInstance* getCarriedItem();
 	bool canUseCarriedItemWhileMoving();

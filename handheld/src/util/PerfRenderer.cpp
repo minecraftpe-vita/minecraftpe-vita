@@ -29,7 +29,7 @@ void PerfRenderer::debugFpsMeterKeyPress( int key )
 	list.erase(list.begin());
 	if (key == 0) {
 		if (node.name.length() > 0) {
-			int pos = _debugPath.rfind(".");
+			size_t pos = _debugPath.rfind('.');
 			if (pos != std::string::npos) _debugPath = _debugPath.substr(0, pos);
 		}
 	} else {

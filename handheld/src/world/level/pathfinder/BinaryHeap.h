@@ -30,7 +30,8 @@ public:
 
 		if (_size == _maxSize)
 		{
-			Node** newHeap = new Node*[_maxSize = _size << 1];
+            _maxSize = _size << 1;
+			Node** newHeap = new Node*[_maxSize > 1000000 ? 1000000 : _maxSize /* make gcc happy */];
 			for (int i = 0; i < _size; ++i)
 				newHeap[i] = _heap[i];
 

@@ -67,7 +67,7 @@ float StemTile::getGrowthSpeed( Level* level, int x, int y, int z ) {
 	bool vertical = n == this->id || s == this->id;
 	bool diagonal = d0 == this->id || d1 == this->id || d2 == this->id || d3 == this->id;
 
-	for (int xx = x - 1; xx <= x + 1; xx++)
+	for (int xx = x - 1; xx <= x + 1; xx++) {
 		for (int zz = z - 1; zz <= z + 1; zz++) {
 			int t = level->getTile(xx, y - 1, zz);
 
@@ -81,10 +81,11 @@ float StemTile::getGrowthSpeed( Level* level, int x, int y, int z ) {
 
 			speed += tileSpeed;
 		}
+	}
 
-		if (diagonal || (horizontal && vertical)) speed /= 2;
+	if (diagonal || (horizontal && vertical)) speed /= 2;
 
-		return speed;
+	return speed;
 }
 
 int StemTile::getColor( int data ) {

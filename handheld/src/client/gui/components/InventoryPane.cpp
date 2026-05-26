@@ -92,23 +92,25 @@ void InventoryPane::renderBatch( std::vector<GridItem>& items, float alpha )
 
 		t.enableColor();
 		//#ifdef DEMO_MODE //@huge @attn
-		if (!screen->isAllowed(j)) { allowed = false; t.color( 64,  64,  64); }
-		else
-			//#endif
-			if (lastItemTicks > 0 && lastItemIndex == j) {
-				int gv = 255 - lastItemTicks * 15;
-				t.color(gv, gv, gv, (allowed && citem->count <= 0)?0x60:0xff);
-			} else {
-				t.color(255, 255, 255, (allowed && citem->count <= 0)?0x60:0xff);
-			}          
-			t.noColor();
-			float xx = Gui::floorAlignToScreenPixel(item.xf + BorderPixels + 4);
-			float yy = Gui::floorAlignToScreenPixel(item.yf + BorderPixels + 4);
-			ItemRenderer::renderGuiItem(NULL, mc->textures, citem, xx, yy, 16, 16, false);
+		if (!screen->isAllowed(j)) {
+			allowed = false;
+			t.color( 64,  64,  64);
+		} else if (lastItemTicks > 0 && lastItemIndex == j) {
+			int gv = 255 - lastItemTicks * 15;
+			t.color(gv, gv, gv, (allowed && citem->count <= 0)?0x60:0xff);
+		} else {
+			t.color(255, 255, 255, (allowed && citem->count <= 0)?0x60:0xff);
+		}
+		t.noColor();
+		float xx = Gui::floorAlignToScreenPixel(item.xf + BorderPixels + 4);
+		float yy = Gui::floorAlignToScreenPixel(item.yf + BorderPixels + 4);
+		ItemRenderer::renderGuiItem(NULL, mc->textures, citem, xx, yy, 16, 16, false);
 
-			if (j == markerIndex && markerShare >= 0)
-				marked = &item, mxx = xx, myy = yy;
-
+		if (j == markerIndex && markerShare >= 0) {
+			marked = &item;
+			mxx = xx;
+			myy = yy;
+		}
 	}
 	t.endOverrideAndDraw();
 
@@ -172,29 +174,27 @@ void InventoryPane::renderBatch( std::vector<GridItem>& items, float alpha )
 	drawScrollBar(vScroll);
 }
 
-bool InventoryPane::onSelect( int gridId, bool selected )
-{
+bool InventoryPane::onSelect( int gridId, bool selected ) {
 	//screen->onItemSelected(gridId);
-	if (screen->isAllowed(gridId))
+	if (screen->isAllowed(gridId)) {
 		if (screen->addItem(this, gridId)) {
 			lastItemIndex = gridId;
 			lastItemTicks = 7;
 		}
+	}
 
-		return false;
+	return false;
 }
 
 void InventoryPane::drawScrollBar( ScrollBar& sb ) {
-	if (sb.alpha <= 0)
-		return;
+	if (sb.alpha <= 0) return;
 
 	const int color = ((int)(255.0f * sb.alpha) << 24) | 0xaaaaaa;
 	const float xx = (float)(bbox.x + bbox.w);
 	fill(xx - sb.w, sb.y, xx, sb.y + sb.h, color);
 }
 
-void InventoryPane::tick()
-{
+void InventoryPane::tick() {
 	--lastItemTicks;
 	super::tick();
 }

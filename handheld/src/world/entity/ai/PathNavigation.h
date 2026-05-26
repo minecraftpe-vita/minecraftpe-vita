@@ -331,7 +331,6 @@ private:
     Level* level;
 	Path* path;
 	bool deletePath;
-    Ref<Path>* refPath;
     float speed;
     float maxDist;
     int _tick;

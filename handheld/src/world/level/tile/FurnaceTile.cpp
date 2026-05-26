@@ -63,17 +63,17 @@ void FurnaceTile::animateTick( Level* level, int xt, int yt, int zt, Random* ran
 	float ss = random->nextFloat() * 0.6f - 0.3f;
 
 	if (dir == 4) {
-		level->addParticle(PARTICLETYPE(smoke), x - r, y, z + ss, 0, 0, 0);
-		level->addParticle(PARTICLETYPE(flame), x - r, y, z + ss, 0, 0, 0);
+		level->addParticle(ParticleType::smoke, x - r, y, z + ss, 0, 0, 0);
+		level->addParticle(ParticleType::flame, x - r, y, z + ss, 0, 0, 0);
 	} else if (dir == 5) {
-		level->addParticle(PARTICLETYPE(smoke), x + r, y, z + ss, 0, 0, 0);
-		level->addParticle(PARTICLETYPE(flame), x + r, y, z + ss, 0, 0, 0);
+		level->addParticle(ParticleType::smoke, x + r, y, z + ss, 0, 0, 0);
+		level->addParticle(ParticleType::flame, x + r, y, z + ss, 0, 0, 0);
 	} else if (dir == 2) {
-		level->addParticle(PARTICLETYPE(smoke), x + ss, y, z - r, 0, 0, 0);
-		level->addParticle(PARTICLETYPE(flame), x + ss, y, z - r, 0, 0, 0);
+		level->addParticle(ParticleType::smoke, x + ss, y, z - r, 0, 0, 0);
+		level->addParticle(ParticleType::flame, x + ss, y, z - r, 0, 0, 0);
 	} else if (dir == 3) {
-		level->addParticle(PARTICLETYPE(smoke), x + ss, y, z + r, 0, 0, 0);
-		level->addParticle(PARTICLETYPE(flame), x + ss, y, z + r, 0, 0, 0);
+		level->addParticle(ParticleType::smoke, x + ss, y, z + r, 0, 0, 0);
+		level->addParticle(ParticleType::flame, x + ss, y, z + r, 0, 0, 0);
 	}
 }
 

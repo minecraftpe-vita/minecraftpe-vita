@@ -418,8 +418,7 @@ const RectangleArea& TouchscreenInput_TestFps::getPauseRectangleArea()
 }
 
 void TouchscreenInput_TestFps::rebuild() {
-    if (_options->hideGui)
-        return;
+    if (_options->hideGui) return;
     
 	Tesselator& t = Tesselator::instance;
 	//LOGI("instance is: %p, %p, %p, %p, %p FOR %d\n", &t, aLeft, aRight, aUp, aDown, aJump, _bufferId);

@@ -1,14 +1,11 @@
-set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
-
 include("${VITASDK}/share/vita.cmake" REQUIRED)
 
 add_compile_definitions(__VITA__)
 
 set(VITA_APP_NAME "Minecraft PE")
+set(VITA_TITLEID  "MCPE00000")
 set(VITA_APP_CONTENT_ID "UP0000-MCPE00000_00-MINECRAFTPE00000")
 set(VITA_PARENTAL_LEVEL 3) # PEGI-7, ESRB E, CERO A, PG, etc
-
-set(VITA_TITLEID  "MCPE00000")
 set(VITA_VERSION  "00.61")
 
 
@@ -16,6 +13,7 @@ set(VITA_ICON0 ${CMAKE_CURRENT_LIST_DIR}/sce_sys/icon0.png)
 set(VITA_PIC0 ${CMAKE_CURRENT_LIST_DIR}/sce_sys/pic0.png)
 set(VITA_BG ${CMAKE_CURRENT_LIST_DIR}/sce_sys/livearea/contents/bg.png)
 set(VITA_GATE ${CMAKE_CURRENT_LIST_DIR}/sce_sys/livearea/contents/gate.png)
+set(VITA_VPK minecraftcpp.vpk)
 
 if(DEMO)
   set(VITA_APP_NAME "Minecraft PE Demo")
@@ -24,24 +22,22 @@ if(DEMO)
   set(VITA_ICON0 ${CMAKE_CURRENT_LIST_DIR}/sce_sys/icon0_demo.png)
   set(VITA_BG ${CMAKE_CURRENT_LIST_DIR}/sce_sys/livearea/contents/bg_demo.png)
   set(VITA_GATE ${CMAKE_CURRENT_LIST_DIR}/sce_sys/livearea/contents/gate_demo.png)
+  set(VITA_VPK minecraftcpp-demo.vpk)
 endif()
 
-set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=${VITA_PARENTAL_LEVEL} -s CONTENT_ID=${VITA_APP_CONTENT_ID}")
-
-
-target_sources(${PROJECT_NAME} PRIVATE
+target_sources(mcpe_client PRIVATE
   ${HANDHELD}/platform/audio/SoundSystemVita.cpp
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE
+target_include_directories(mcpe PUBLIC
   ${CMAKE_CURRENT_LIST_DIR}/include
 )
 
-target_link_directories(${PROJECT_NAME} PRIVATE
+target_link_directories(mcpe_client PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/lib
 )
 
-target_link_libraries(${PROJECT_NAME} PUBLIC
+target_link_libraries(mcpe_client PUBLIC
   IMGEGL_stub_weak
   gpu_es4_ext_stub
   GLESv1_CM_stub_weak
@@ -58,13 +54,9 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
   SceNpManager_stub
   SceRegistryMgr_stub
   SceIme_stub
-
-  raknet
-  png
-  z
 )
 
-vita_create_self(${PROJECT_NAME}.self ${PROJECT_NAME} UNSAFE)
+vita_create_self(mcpe_client.self mcpe_client UNSAFE)
 
 set(VPK_ARGS "")
 macro(add_assets GLOB)
@@ -91,12 +83,14 @@ add_assets(images/mob/*)
 add_assets(fonts/*)
 add_assets(lang/*)
 
-vita_create_vpk(${PROJECT_NAME}.vpk ${VITA_TITLEID} ${PROJECT_NAME}.self
+set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=${VITA_PARENTAL_LEVEL} -s CONTENT_ID=${VITA_APP_CONTENT_ID}")
+
+vita_create_vpk(${VITA_VPK} ${VITA_TITLEID} mcpe_client.self
   VERSION ${VITA_VERSION}
   NAME ${VITA_APP_NAME}
   ${VPK_ARGS}
 
-  FILE ${CMAKE_CURRENT_LIST_DIR}/module/libGLESv2.suprx                        module/libGLESv2.suprx
+  FILE ${CMAKE_CURRENT_LIST_DIR}/module/libGLESv1_CM.suprx                     module/libGLESv1_CM.suprx
   FILE ${CMAKE_CURRENT_LIST_DIR}/module/libgpu_es4_ext.suprx                   module/libgpu_es4_ext.suprx
   FILE ${CMAKE_CURRENT_LIST_DIR}/module/libIMGEGL.suprx                        module/libIMGEGL.suprx
   FILE ${CMAKE_CURRENT_LIST_DIR}/module/libpvrPSP2_WSEGL.suprx                 module/libpvrPSP2_WSEGL.suprx

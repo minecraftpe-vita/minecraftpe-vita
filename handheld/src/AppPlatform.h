@@ -50,12 +50,12 @@ public:
 	:	data(NULL),
 		size(-1) {}
 
-	BinaryBlob(unsigned char* data, unsigned int size)
+	BinaryBlob(unsigned char* data, size_t size)
 	:	data(data),
 		size(size) {}
 
 	unsigned char* data;
-	int size;
+	size_t size;
 };
 
 class PlatformStringVars {

@@ -13,7 +13,7 @@ FurnaceMenu::FurnaceMenu( FurnaceTileEntity* furnace )
 	furnaceTileEntityId = furnace->runningId;
 }
 
-void FurnaceMenu::setSlot( int slot, ItemInstance* item )
+void FurnaceMenu::setSlot( int slot, const ItemInstance& item )
 {
 	furnace->setItem(slot, item);
 }
@@ -28,6 +28,7 @@ void FurnaceMenu::setData( int id, int value )
 std::vector<ItemInstance> FurnaceMenu::getItems()
 {
 	std::vector<ItemInstance> out;
+	out.reserve(furnace->getContainerSize());
 	for (int i = 0; i < furnace->getContainerSize(); ++i)
 		out.push_back(*furnace->getItem(i));
 	return out;

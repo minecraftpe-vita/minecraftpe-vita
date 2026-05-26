@@ -74,13 +74,9 @@ void SimpleChooseLevelScreen::buttonClicked( Button* button )
 	if (hasChosen)
 		return;
 
-	int gameType;
-
-	if (button == bCreative)
-		gameType = GameType::Creative;
-
-	if (button == bSurvival)
-		gameType = GameType::Survival;
+	int gameType = GameType::Undefined;
+	if (button == bCreative) gameType = GameType::Creative;
+	if (button == bSurvival) gameType = GameType::Survival;
 
 	std::string levelId = getUniqueLevelName(levelName);
 	LevelSettings settings(getEpochTimeS(), gameType);

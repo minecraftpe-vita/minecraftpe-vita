@@ -14,8 +14,8 @@ enum TextureFormat
 
 typedef struct TextureData {
 	TextureData()
-	:	w(0),
-		h(0),
+	:	width(0),
+		height(0),
 		data(NULL),
         numBytes(0),
 		transparent(true),
@@ -24,7 +24,8 @@ typedef struct TextureData {
         identifier(-1)
 	{}
 
-	int w, h;
+	size_t width;
+    size_t height;
 	unsigned char* data;
     int numBytes;
 	bool transparent;

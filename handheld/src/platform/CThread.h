@@ -16,8 +16,6 @@
 #include <psp2/kernel/clib.h>
 #endif
 
-typedef void *( * pthread_fn )( void * );
-
 #if defined(LINUX) || defined(ANDROID) || defined(__APPLE__) || defined(POSIX) || defined(__VITA__)
 	#include <pthread.h>
 	#include <unistd.h>
@@ -28,35 +26,37 @@ typedef void *( * pthread_fn )( void * );
 	#include <unistd.h>
 #endif
 
-	class CThread
-	{
-	public:
-		CThread( pthread_fn threadFunc, void* threadParam );
+class CThread
+{
+public:
+	using pthread_fn = void* (*)(void*);
 
-		virtual ~CThread();
-		
-		static void sleep( const unsigned int millis );
+	CThread( pthread_fn threadFunc, void* threadParam );
+	virtual ~CThread();
+
+	CThread(const CThread&) = delete;
+    CThread& operator=(const CThread&) = delete;
+
+	CThread(CThread&&) = delete;
+    CThread& operator=(CThread&&) = delete;
 	
-	private:
-	#ifdef WIN32
-		LPTHREAD_START_ROUTINE		mp_threadFunc;
-		DWORD						m_threadID;
-		HANDLE						m_threadHandle;
-	#endif
-	#if defined(LINUX) || defined(ANDROID) || defined(__APPLE__) || defined(POSIX)
-		pthread_fn					mp_threadFunc;
-		pthread_t					m_thread;
-		pthread_attr_t				m_attributes;
-	#endif
-	#ifdef MACOSX
-		TaskProc					mp_threadFunc;
-		MPTaskID					m_threadID;
-	#endif
-	#ifdef __VITA__
-		SceUID m_thread;
-	#endif
-	
-	};
+	static void sleep( const unsigned int millis );
+
+private:
+	bool m_started{false};
+
+#if defined(WIN32)
+    void* m_threadHandle{nullptr};
+    unsigned long m_threadID{0};
+    void* (*mp_threadFunc)(void*){nullptr}; 
+#elif defined(__VITA__)
+    int m_thread{-1};
+    void* m_vitaArgs[2]{nullptr};
+#elif defined(LINUX) || defined(ANDROID) || defined(__APPLE__) || defined(POSIX)
+    unsigned long m_thread{0};
+#endif
+
+};
 
 
 

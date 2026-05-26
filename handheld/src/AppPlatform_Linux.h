@@ -10,11 +10,6 @@
 #include "AppPlatform.h"
 #include "NinecraftApp.h"
 
-static void png_funcReadFile(png_structp pngPtr, png_bytep data, png_size_t length) {
-	FILE* file = (FILE*)png_get_io_ptr(pngPtr);
-	fread(data, length, 1, file);
-}
-
 class AppPlatform_Linux : public AppPlatform
 {
 private:
@@ -82,50 +77,47 @@ public:
 		TextureData out;
 
 		std::string filename = textureFolder ? "data/images/" + filename_ : filename_;
-
+		
 		FILE* file = fopen(filename.c_str(), "rb");
-		if(file) {
-			png_structp pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-			if (!pngPtr) {
-				fclose(file);
-				return out;
-			}
-			png_init_io(pngPtr, file);
-
-			png_infop infoPtr = png_create_info_struct(pngPtr);
-			if (!infoPtr) {
-				png_destroy_read_struct(&pngPtr, NULL, NULL);
-				fclose(file);
-				return out;
-			}
-			png_read_info(pngPtr, infoPtr);
-
-			// Set up the texdata properties
-			out.w = png_get_image_width(pngPtr, infoPtr);
-			out.h = png_get_image_height(pngPtr, infoPtr);
-
-			png_bytep* rowPtrs = new png_bytep[out.h];
-			out.data = new unsigned char[4 * out.w * out.h];
-			out.memoryHandledExternally = false;
-
-			int rowStrideBytes = 4 * out.w;
-			for (int i = 0; i < out.h; i++) {
-				rowPtrs[i] = (png_bytep)&out.data[i*rowStrideBytes];
-			}
-			png_read_image(pngPtr, rowPtrs);
-
-			// Teardown and return
-			png_destroy_read_struct(&pngPtr, &infoPtr,(png_infopp)0);
-			delete[] (png_bytep)rowPtrs;
-			fclose(file);
-
-			return out;
-		}
-		else
-		{
+		if(!file) {
 			LOGI("Couldn't find file: %s\n", filename.c_str());
 			return out;
 		}
+		png_structp pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+		if (!pngPtr) {
+			fclose(file);
+			return out;
+		}
+		png_init_io(pngPtr, file);
+
+		png_infop infoPtr = png_create_info_struct(pngPtr);
+		if (!infoPtr) {
+			png_destroy_read_struct(&pngPtr, NULL, NULL);
+			fclose(file);
+			return out;
+		}
+		png_read_info(pngPtr, infoPtr);
+
+		// Set up the texdata properties
+		out.width = png_get_image_width(pngPtr, infoPtr);
+		out.height = png_get_image_height(pngPtr, infoPtr);
+
+		if(out.height > 1000000) out.height = 1000000; // make gcc happy
+		png_bytep* rowPtrs = new png_bytep[out.height];
+		out.data = new unsigned char[4 * out.width * out.height];
+		out.memoryHandledExternally = false;
+
+		size_t rowStrideBytes = 4 * out.width;
+		for (size_t i = 0; i < out.height; i++) {
+			rowPtrs[i] = (png_bytep)&out.data[i*rowStrideBytes];
+		}
+		png_read_image(pngPtr, rowPtrs);
+
+		// Teardown and return
+		png_destroy_read_struct(&pngPtr, &infoPtr,(png_infopp)0);
+		delete[] (png_bytep)rowPtrs;
+		fclose(file);
+		return out;
 	}
 };
 

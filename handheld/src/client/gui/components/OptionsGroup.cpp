@@ -77,7 +77,7 @@ public:
 		std::string key = mc->options.getMessage(_option);
 		msg = I18n::get(key);
 	}
-	virtual void mouseClicked(Minecraft* minecraft, int x, int y, int buttonNum) {
+	void mouseClicked(Minecraft* minecraft, int x, int y, int buttonNum) override {
 		if(buttonNum == MouseAction::ACTION_LEFT && clicked(minecraft, x, y)) {
 			minecraft->soundEngine->playUI("random.click", 1, 1);
 			minecraft->options.toggle(_option, 1);
@@ -94,7 +94,7 @@ public:
 		std::string key = mc->options.getMessage(_option);
 		msg = I18n::get(key);
 	}
-	virtual void mouseClicked(Minecraft* minecraft, int x, int y, int buttonNum) {
+	void mouseClicked(Minecraft* minecraft, int x, int y, int buttonNum) override {
 		if(buttonNum == MouseAction::ACTION_LEFT && clicked(minecraft, x, y)) {
 			minecraft->soundEngine->playUI("random.click", 1, 1);
 			minecraft->options.toggle(_option, 1);
@@ -112,14 +112,14 @@ class OptionTextBox : public TextBox {
 		_minecraft = mc;
 	}
 
-	virtual void mouseClicked(Minecraft* minecraft, int x, int y, int buttonNum) {
+	void mouseClicked(Minecraft* minecraft, int x, int y, int buttonNum) override {
 		if(buttonNum == MouseAction::ACTION_LEFT && clicked(minecraft, x, y)) {
 			minecraft->soundEngine->playUI("random.click", 1, 1);
 			this->setPressed(minecraft);
 		}
 	}
 
-	virtual bool loseFocus(Minecraft* minecraft) {
+	bool loseFocus(Minecraft* minecraft) override {
 		minecraft->options.set(_option, this->text);
 		return TextBox::loseFocus(minecraft);
 	}
@@ -169,7 +169,7 @@ OptionsGroup& OptionsGroup::addOptionTextEntry(const Options::Option* option, Mi
 }
 
 OptionsGroup& OptionsGroup::addTextLabel( std::string text ) {
-	OptionsItem* item = new OptionsItem(text, NULL);
+	OptionsItem* item = new OptionsItem(std::move(text), NULL);
 	addChild(item);
 	setupPositions();
 	return *this;

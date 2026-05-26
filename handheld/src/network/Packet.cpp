@@ -202,8 +202,8 @@ namespace PacketUtil
 	}
 
 	ItemInstance readItemInstance(RakNet::BitStream* stream) {
-		short id, aux;
-		unsigned char count;
+		short id = 0, aux = 0;
+		unsigned char count = 0;
 		stream->Read(id);
 		stream->Read(count);
 		stream->Read(aux);

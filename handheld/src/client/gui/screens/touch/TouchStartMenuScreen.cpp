@@ -65,10 +65,10 @@ void BuyButton::render(Minecraft* minecraft, int xm, int ym) {
 			const TextureData* td = minecraft->textures->getTemporaryTextureData(texId);
 			const IntRectangle* src = _imageDef.getSrc();
 			if (td != NULL && src != NULL) {
-				float u0 = (src->x) / (float)td->w;
-				float u1 = (src->x+src->w) / (float)td->w;
-				float v0 = (src->y) / (float)td->h;
-				float v1 = (src->y+src->h) / (float)td->h;
+				float u0 = (src->x) / (float)td->width;
+				float u1 = (src->x+src->w) / (float)td->width;
+				float v0 = (src->y) / (float)td->height;
+				float v1 = (src->y+src->h) / (float)td->height;
 				t.vertexUV(cx-hx, cy-hy, blitOffset, u0, v0);
 				t.vertexUV(cx-hx, cy+hy, blitOffset, u0, v1);
 				t.vertexUV(cx+hx, cy+hy, blitOffset, u1, v1);
@@ -245,9 +245,9 @@ void StartMenuScreen::render( int xm, int ym, float a )
 
 		const float x = (float)width / 2;
 		const float y = 4;
-		const float wh = 0.5f * Mth::Min((float)width/2.0f, (float)data->w / 2);
-		const float scale = 2.0f * wh / (float)data->w;
-		const float h = scale * (float)data->h;
+		const float wh = 0.5f * Mth::Min((float)width/2.0f, (float)data->width / 2);
+		const float scale = 2.0f * wh / (float)data->width;
+		const float h = scale * (float)data->height;
 
 		// Render title text
 		Tesselator& t = Tesselator::instance;

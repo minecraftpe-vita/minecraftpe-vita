@@ -43,22 +43,23 @@ bool createFolderIfNotExists( const char* name ) {
     return true;
 }
 
-int getRemainingFileSize( FILE* fp ) {
+size_t getRemainingFileSize( FILE* fp ) {
 	if (!fp) return 0;
-	int current = ftell(fp);
+	size_t current = ftell(fp);
 	fseek(fp, 0, SEEK_END);
-	int end = ftell(fp);
+	size_t end = ftell(fp);
 	fseek(fp, current, SEEK_SET);
 	return end - current;
 }
 
-int getFileSize( const char* filename ) {
+size_t getFileSize( const char* filename ) {
 	FILE* fp = fopen(filename, "rb");
-	if (!fp)
+	if (!fp) {
 		return -1;
+	}
 
 	fseek(fp, 0, SEEK_END);
-	int size = ftell(fp);
+	size_t size = ftell(fp);
 	fclose(fp);
 	return size;
 }

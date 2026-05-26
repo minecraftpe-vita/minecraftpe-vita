@@ -127,9 +127,11 @@ bool HangingEntity::isPickable() {
 	return true;
 }
 
-bool HangingEntity::interact(Player* player) {
+bool HangingEntity::interact(Entity* entity) {
+	Player* player = Player::asPlayer(entity);
+	if(!player) return false;
 	if(!removed && !level->isClientSide) {
-		if(player != NULL
+		if(entity != NULL
 			&& player->inventory != NULL
 			&& player->inventory->getSelected() != NULL
 			&& player->inventory->getSelected()->id == Item::bow->id)

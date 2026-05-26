@@ -71,7 +71,7 @@ TextureId Textures::loadTexture( const std::string& resourceName, bool inTexture
 	TextureData texdata = platform->loadTexture(resourceName, inTextureFolder);
 	if (texdata.data)
 		return assignTexture(resourceName, texdata);
-    else if (texdata.identifier != InvalidId) {
+    else if (texdata.identifier != (int)InvalidId) {
         //LOGI("Adding id: %d for %s\n", texdata.identifier, resourceName.c_str());
 		idMap.insert(std::make_pair(resourceName, texdata.identifier));
     }
@@ -117,7 +117,7 @@ TextureId Textures::assignTexture( const std::string& resourceName, const Textur
         {
 #if defined(__APPLE__) || defined(__VITA__)
             int fmt = img.transparent? GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG : GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
-            glCompressedTexImage2D(GL_TEXTURE_2D, 0, fmt, img.w, img.h, 0, img.numBytes, img.data);
+            glCompressedTexImage2D(GL_TEXTURE_2D, 0, fmt, img.width, img.height, 0, img.numBytes, img.data);
 #endif
             break;
         }
@@ -126,16 +126,16 @@ TextureId Textures::assignTexture( const std::string& resourceName, const Textur
             const GLint mode = img.transparent? GL_RGBA : GL_RGB;
 
             if (img.format == TEXF_UNCOMPRESSED_565) {
-                glTexImage2D2(GL_TEXTURE_2D, 0, mode, img.w, img.h, 0, mode, GL_UNSIGNED_SHORT_5_6_5, img.data);
+                glTexImage2D2(GL_TEXTURE_2D, 0, mode, img.width, img.height, 0, mode, GL_UNSIGNED_SHORT_5_6_5, img.data);
             }
             else if (img.format == TEXF_UNCOMPRESSED_4444) {
-                glTexImage2D2(GL_TEXTURE_2D, 0, mode, img.w, img.h, 0, mode, GL_UNSIGNED_SHORT_4_4_4_4, img.data);
+                glTexImage2D2(GL_TEXTURE_2D, 0, mode, img.width, img.height, 0, mode, GL_UNSIGNED_SHORT_4_4_4_4, img.data);
             }
             else if (img.format == TEXF_UNCOMPRESSED_5551) {
-                glTexImage2D2(GL_TEXTURE_2D, 0, mode, img.w, img.h, 0, mode, GL_UNSIGNED_SHORT_5_5_5_1, img.data);
+                glTexImage2D2(GL_TEXTURE_2D, 0, mode, img.width, img.height, 0, mode, GL_UNSIGNED_SHORT_5_5_5_1, img.data);
             }
             else {
-                glTexImage2D2(GL_TEXTURE_2D, 0, mode, img.w, img.h, 0, mode, GL_UNSIGNED_BYTE, img.data);
+                glTexImage2D2(GL_TEXTURE_2D, 0, mode, img.width, img.height, 0, mode, GL_UNSIGNED_BYTE, img.data);
             }
 			glCheck(glTexImage2D2);
             break;

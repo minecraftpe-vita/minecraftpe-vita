@@ -27,7 +27,9 @@ namespace DataStructures
 	template <class key_type>
 		int defaultMapKeyComparison(const key_type &a, const key_type &b)
 	{
-		if (a<b) return -1; if (a==b) return 0; return 1;
+		if (a<b) return -1;
+		if (a==b) return 0;
+		return 1;
 	}
 
 	/// \note IMPORTANT! If you use defaultMapKeyComparison then call IMPLEMENT_DEFAULT_COMPARISON or you will get an unresolved external linker error.

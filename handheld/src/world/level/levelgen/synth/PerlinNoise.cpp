@@ -57,12 +57,14 @@ float PerlinNoise::getValue( float x, float y, float z )
 
 float* PerlinNoise::getRegion( float* buffer, float x, float y, float z, int xSize, int ySize, int zSize, float xScale, float yScale, float zScale )
 {
-	const int size = xSize * ySize * zSize;
+	const size_t size = xSize * ySize * zSize;
+	const size_t size_limited = size > 1000000 ? 1000000 : size;
 	if (buffer == 0) {
-		buffer = new float[size];
+		buffer = new float[size_limited];
 	}
-	for (int i = 0; i < size; i++)
+	for (size_t i = 0; i < size_limited; i++) {
 		buffer[i] = 0;
+	}
 
 	float pow = 1;
 

@@ -135,7 +135,7 @@ void AdvancedChooseLevelScreen::buttonClicked(Button* button) {
         std::string levelName = bLevelName->text;
         std::string levelId = levelName;
 
-        for (int i = 0; i < sizeof(ILLEGAL_FILE_CHARACTERS) / sizeof(char); ++i)
+        for (size_t i = 0; i < sizeof(ILLEGAL_FILE_CHARACTERS) / sizeof(char); ++i)
             levelId = Util::stringReplace(levelId, std::string(1, ILLEGAL_FILE_CHARACTERS[i]), "");
                 if ((int)levelId.length() == 0) {
                     levelId = "no_name";

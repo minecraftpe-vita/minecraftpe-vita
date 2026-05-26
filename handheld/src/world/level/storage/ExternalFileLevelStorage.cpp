@@ -160,11 +160,12 @@ bool ExternalFileLevelStorage::readLevelData(const std::string& directory, Level
         file = fopen(datFilename.c_str(), "rb");
     }
 
-    if (!file)
+    if (!file) {
         return false;
+	}
 
 	int version = 0;
-	int size = 0;
+	size_t size = 0;
 	unsigned char* data = NULL;
 
 	do {
@@ -177,7 +178,7 @@ bool ExternalFileLevelStorage::readLevelData(const std::string& directory, Level
 			break;
 		}
 
-		int left = getRemainingFileSize(file);
+		size_t left = getRemainingFileSize(file);
 		if (size > left || size <= 0)
 			break;
 
@@ -262,7 +263,7 @@ bool ExternalFileLevelStorage::readPlayerData(const std::string& filename, Level
 		if (fread(&version, 4, 1, fp) != 1)
 			break;
 
-		int size;
+		size_t size;
 		if (fread(&size, 4, 1, fp) != 1)
 			break;
 
@@ -498,7 +499,7 @@ void ExternalFileLevelStorage::saveEntities( Level* level, LevelChunk* levelChun
 	RakNet::BitStream stream;
 	RakDataOutput dos(stream);
 	NbtIo::write(&base, &dos);
-	int numBytes = stream.GetNumberOfBytesUsed();
+	size_t numBytes = stream.GetNumberOfBytesUsed();
 
 	FILE* fp = fopen((levelPath + "/entities.dat").c_str(), "wb");
 	if (fp) {
@@ -513,26 +514,36 @@ void ExternalFileLevelStorage::saveEntities( Level* level, LevelChunk* levelChun
 	base.deleteChildren();
 
 	float tt = getTimeS() - st;
-	LOGI("Time to save %d entities: %f s. Size: %d bytes\n", count, tt, numBytes);
+	LOGI("Time to save %d entities: %f s. Size: %ld bytes\n", count, tt, numBytes);
 }
 
 void ExternalFileLevelStorage::loadEntities(Level* level, LevelChunk* chunk) {
 	lastSavedEntitiesTick = tickCount;
 	FILE* fp = fopen((levelPath + "/entities.dat").c_str(), "rb");
 	if (fp) {
-		char header[5];
-		int version, numBytes;
-		fread(header, 1, 4, fp);
-		fread(&version, sizeof(int), 1, fp);
-		fread(&numBytes, sizeof(int), 1, fp);
+		struct {
+			char header[4];
+			int version;
+			size_t numBytes;
+		} header;
+		if(fread(&header, sizeof(header), 1, fp) != 1) {
+			LOGE("Failed to read entity data from file.\n");
+			fclose(fp);
+			return;
+		}
 
-		int left = getRemainingFileSize(fp);
-		if (numBytes <= left && numBytes > 0) {
-			unsigned char* buf = new unsigned char[numBytes];
+		size_t left = getRemainingFileSize(fp);
+		if (header.numBytes <= left && header.numBytes > 0) {
+			unsigned char* buf = new unsigned char[header.numBytes];
 
-			fread(buf, 1, numBytes, fp);
+			if(fread(buf, 1, header.numBytes, fp) != header.numBytes) {
+				LOGE("Failed to read entity data from file.\n");
+				delete[] buf;
+				fclose(fp);
+				return;
+			}
 
-			RakNet::BitStream stream(buf, numBytes, false);
+			RakNet::BitStream stream(buf, header.numBytes, false);
 			RakDataInput dis(stream);
 
 			CompoundTag* tag = NbtIo::read(&dis);
@@ -587,7 +598,7 @@ void ExternalFileLevelStorage::loadEntities(Level* level, LevelChunk* chunk) {
 
 			delete[] buf;
 		}
-		LOGI("header: %s, version: %d, bytes: %d (remaining: %d)\n", header, version, numBytes, left);
+		LOGI("header: %s, version: %d, bytes: %lu (remaining: %lu)\n", header.header, header.version, header.numBytes, left);
 
 		//fread(stream.GetData(), 1, numBytes, fp);
 		fclose(fp);

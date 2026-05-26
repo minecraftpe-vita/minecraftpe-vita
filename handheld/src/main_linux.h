@@ -30,7 +30,6 @@ static unsigned char transformKey(int key) {
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    printf("key_callback(%d %d)\n", key, action);
     unsigned char transformed = transformKey(key);
     if(transformed == 0) return;
     if(action == GLFW_PRESS) Keyboard::feed(transformed, 1);
@@ -77,8 +76,6 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 }
 
 int main(int argc, char** argv) {
-    int ret;
-
     if (!glfwInit())
     {
         // Handle initialization failure

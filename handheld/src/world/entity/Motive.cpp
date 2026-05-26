@@ -75,7 +75,7 @@ const Motive* Motive::getMotiveByName( const std::string& name ) {
 }
 
 Motive::Motive( std::string name, int w, int h, int uo, int vo, bool isPublic /*= true*/ )
-:	name(name),
+:	name(std::move(name)),
 	w(w),
 	h(h),
 	uo(uo),

@@ -30,7 +30,7 @@ void OptionsPane::setupPositions() {
 }
 
 OptionsGroup& OptionsPane::createOptionsGroup( std::string label ) {
-	OptionsGroup* newGroup = new OptionsGroup(label);
+	OptionsGroup* newGroup = new OptionsGroup(std::move(label));
 	children.push_back(newGroup);
 	// create and return a new group index
 	return *newGroup;

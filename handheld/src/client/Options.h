@@ -323,10 +323,10 @@ public:
 	void load();
 	void save();
 	void setSettingsPath(const std::string& path) { optionsFile.setSettingsPath(path); }
-	void addOptionToSaveOutput(StringVector& stringVector, std::string name, bool boolValue);
-	void addOptionToSaveOutput(StringVector& stringVector, std::string name, float floatValue);
-	void addOptionToSaveOutput(StringVector& stringVector, std::string name, int intValue);
-	void addOptionToSaveOutput(StringVector& stringVector, std::string name, const std::string& strValue);
+	void addOptionToSaveOutput(StringVector& stringVector, const std::string& name, bool boolValue);
+	void addOptionToSaveOutput(StringVector& stringVector, const std::string& name, float floatValue);
+	void addOptionToSaveOutput(StringVector& stringVector, const std::string& name, int intValue);
+	void addOptionToSaveOutput(StringVector& stringVector, const std::string& name, const std::string& strValue);
 	void notifyOptionUpdate(const Option* option, bool value);
 	void notifyOptionUpdate(const Option* option, float value);
 	void notifyOptionUpdate(const Option* option, int value);

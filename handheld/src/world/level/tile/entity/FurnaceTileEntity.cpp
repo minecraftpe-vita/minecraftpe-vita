@@ -30,7 +30,7 @@ ItemInstance* FurnaceTileEntity::getItem(int slot) {// @todo @container @fix
 	return &items[slot];
 }
 
-ItemInstance FurnaceTileEntity::removeItem(int slot, int count) {
+ItemInstance FurnaceTileEntity::removeItemSlot(int slot, int count) {
 	if (!items[slot].isNull()) {
 		if (items[slot].count <= count) {
 			ItemInstance item = items[slot];
@@ -45,10 +45,9 @@ ItemInstance FurnaceTileEntity::removeItem(int slot, int count) {
 	return ItemInstance();
 }
 
-void FurnaceTileEntity::setItem(int slot, ItemInstance* item) {
-    items[slot] = *item;
-    if (item != NULL && item->count > getMaxStackSize())
-		items[slot].count = getMaxStackSize();
+void FurnaceTileEntity::setItem(int slot, const ItemInstance& item) {
+    items[slot] = item;
+    if (item.count > getMaxStackSize()) items[slot].count = getMaxStackSize();
 	//LOGI("Furnace: Setting slot %d : %s\n", slot, item->getDescriptionId().c_str());
 }
 

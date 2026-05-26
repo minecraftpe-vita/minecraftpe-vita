@@ -17,7 +17,7 @@ public:
 	// id == 0 -> not possible to create via serialization (yet)
 	int getEntityTypeId() const { return 0; }
 
-	bool interact(Player* player);
+	bool interact(Entity* entity) override;
 	bool interactPreventDefault();
 
     float getShadowHeightOffs();

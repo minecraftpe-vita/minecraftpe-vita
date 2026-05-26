@@ -21,6 +21,9 @@ public:
 	void updateShape(LevelSource* level, int x, int y, int z);
 	void updateDefaultShape();
 	void setShape(int data);
+	void setShape(float x0, float y0, float z0, float x1, float y1, float z1) override {
+		super::setShape(x0, y0, z0, x1, y1, z1);
+	}
 	void attack(Level* level, int x, int y, int z, Player* player);
 	bool use(Level* level, int x, int y, int z, Player* player);
 	void setOpen(Level* level, int x, int y, int z, bool shouldOpen);

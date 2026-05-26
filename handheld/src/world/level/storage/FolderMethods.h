@@ -14,8 +14,8 @@ int _errno();
 bool exists(const char* name);
 bool createFolderIfNotExists(const char* name);
 
-int getRemainingFileSize(FILE* fp);
-int getFileSize(const char* filename);
+size_t getRemainingFileSize(FILE* fp);
+size_t getFileSize(const char* filename);
 
 bool createTree(const char* base, const char* tree[], int treeLength);
 

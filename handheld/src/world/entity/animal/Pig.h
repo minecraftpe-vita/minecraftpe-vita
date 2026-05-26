@@ -27,7 +27,7 @@ public:
     //    setSaddle(tag->getBoolean("Saddle"));
     //}
 
-    bool interact(Player* player);
+    bool interact(Entity* entity) override;
 
 	int getMaxHealth();
 

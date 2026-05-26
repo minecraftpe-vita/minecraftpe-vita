@@ -2,6 +2,7 @@
 #define MOUSE_H__
 
 #include <vector>
+#include <cstdint>
 #include "../log.h"
 
 
@@ -9,31 +10,25 @@
 class MouseAction
 {
 public:
-	static const char ACTION_MOVE = 0;
-	static const char ACTION_LEFT = 1;
-	static const char ACTION_RIGHT = 2;
-	static const char ACTION_WHEEL = 3;
+	static const uint8_t ACTION_MOVE = 0;
+	static const uint8_t ACTION_LEFT = 1;
+	static const uint8_t ACTION_RIGHT = 2;
+	static const uint8_t ACTION_WHEEL = 3;
 
 	static const char DATA_UP = 0;
 	static const char DATA_DOWN = 1;
 
-	MouseAction(char actionButtonId, char buttonData, short x, short y, char pointerId);
-	MouseAction(char actionButtonId, char buttonData, short x, short y, short dx, short dy, char pointerId);
+	MouseAction(uint8_t actionButtonId, char buttonData, short x, short y, uint8_t pointerId);
+	MouseAction(uint8_t actionButtonId, char buttonData, short x, short y, short dx, short dy, uint8_t pointerId);
 
 	bool isButton() const;
 
 	short x, y;
 	short dx, dy;
-	char action;
+	uint8_t action;
 	char data;
-	char pointerId;
+	uint8_t pointerId;
 };
-
-/* Iterators */
-typedef std::vector<MouseAction> MouseActionVec;
-typedef MouseActionVec::iterator MouseActionIt;
-typedef MouseActionVec::const_iterator MouseActionCIt;
-
 
 class MouseDevice
 {
@@ -64,8 +59,8 @@ public:
 	char getEventButton();
 	const MouseAction& getEvent();
 
-	void feed(char actionButtonId, char buttonData, short x, short y);
-	void feed(char actionButtonId, char buttonData, short x, short y, short dx, short dy);
+	void feed(uint8_t actionButtonId, char buttonData, short x, short y);
+	void feed(uint8_t actionButtonId, char buttonData, short x, short y, short dx, short dy);
 
 private:
 	int _index;

@@ -20,6 +20,10 @@ public:
 		cube2.setModel(this);
     }
 
+    void render(Entity* e, float time, float r, float bob, float yRot, float xRot, float scale) override {
+        render();
+    }
+
     void render() {
         cube.render(1 / 16.0f);
         cube2.render(1 / 16.0f);

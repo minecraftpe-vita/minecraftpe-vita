@@ -702,10 +702,10 @@ int RakNetInstance::handleUnconnectedPong(const RakNet::RakString& data, const R
 	// This weird code is a result of RakString.Find being pretty useless
 	bool emptyNameOrLonger = data.GetLength() >= appIdentifier.GetLength();
 
-	if ( !emptyNameOrLonger || appIdentifier.StrCmp(data.SubStr(0, appIdentifier.GetLength())) != 0)
+	if ( !emptyNameOrLonger || appIdentifier.StrCmp(data.SubStr(0, appIdentifier.GetLength())) != 0) {
 		return -1;
+	}
 
-	bool found = false;
 	for (unsigned int i = 0; i < availableServers.size(); i++) {
 		if (availableServers[i].address == p->systemAddress) {
 			availableServers[i].pingTime = RakNet::GetTimeMS();

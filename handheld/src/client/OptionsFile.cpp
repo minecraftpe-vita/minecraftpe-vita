@@ -30,7 +30,7 @@ OptionsFile::OptionsFile() {
 }
 
 void OptionsFile::createDirectories(std::string& path) {
-	for(int i = 0; i < path.length(); i++){
+	for(size_t i = 0; i < path.length(); i++){
 		if(path[i] == '/' || path[i] == '\\') {
 
 			#ifdef _WIN32

@@ -390,10 +390,6 @@ bool SelectWorldScreen::isIndexValid( int index )
 	return worldsList && index >= 0 && index < worldsList->getNumberOfItems() - 1;
 }
 
-static char ILLEGAL_FILE_CHARACTERS[] = {
-	'/', '\n', '\r', '\t', '\0', '\f', '`', '?', '*', '\\', '<', '>', '|', '\"', ':'
-};
-
 void SelectWorldScreen::tick()
 {
 	if (_state == _STATE_CREATEWORLD) {
@@ -413,6 +409,10 @@ void SelectWorldScreen::tick()
 			minecraft->setScreen(new AdvancedChooseLevelScreen());
 			return;
 		#else
+			static const char ILLEGAL_FILE_CHARACTERS[] = {
+				'/', '\n', '\r', '\t', '\0', '\f', '`', '?', '*', '\\', '<', '>', '|', '\"', ':'
+			};
+
 			int status = minecraft->platform()->getUserInputStatus();
             //LOGI("Status is: %d\n", status);
 			if (status > -1) {
@@ -473,7 +473,7 @@ void SelectWorldScreen::tick()
 	worldsList->tick();
 
 	if (worldsList->hasPickedLevel) {
-		if (worldsList->pickedIndex == worldsList->levels.size()) {
+		if (worldsList->pickedIndex == (int)worldsList->levels.size()) {
 			worldsList->hasPickedLevel = false;
 			minecraft->platform()->createUserInput(DialogDefinitions::DIALOG_CREATE_NEW_WORLD);
 			_state = _STATE_CREATEWORLD;

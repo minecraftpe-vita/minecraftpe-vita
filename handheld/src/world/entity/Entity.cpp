@@ -486,12 +486,12 @@ void Entity::baseTick()
 		    for (int i = 0; i < 1 + bbWidth * 20; i++) {
 		        float xo = (sharedRandom.nextFloat() * 2 - 1) * bbWidth;
 		        float zo = (sharedRandom.nextFloat() * 2 - 1) * bbWidth;
-		        level->addParticle(PARTICLETYPE(bubble), x + xo, yt + 1, z + zo, xd, yd - sharedRandom.nextFloat() * 0.2f, zd);
+		        level->addParticle(ParticleType::bubble, x + xo, yt + 1, z + zo, xd, yd - sharedRandom.nextFloat() * 0.2f, zd);
 		    }
 		    //for (int i = 0; i < 1 + bbWidth * 20; i++) {
 		    //    float xo = (sharedRandom.nextFloat() * 2 - 1) * bbWidth;
 		    //    float zo = (sharedRandom.nextFloat() * 2 - 1) * bbWidth;
-		    //    level->addParticle(PARTICLETYPE(splash), x + xo, yt + 1, z + zo, xd, yd, zd);
+		    //    level->addParticle(ParticleType::splash, x + xo, yt + 1, z + zo, xd, yd, zd);
 		    //}
 		}
 		fallDistance = 0;
@@ -756,7 +756,7 @@ bool Entity::isAlive()
 	return !removed;
 }
 
-bool Entity::interact( Player* player )
+bool Entity::interact( Entity* entity )
 {
 	return false;
 }

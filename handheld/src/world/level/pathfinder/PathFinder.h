@@ -310,14 +310,14 @@ private:
 					if (tileId <= 0) continue;
                     if (tileId == Tile::door_iron->id || tileId == Tile::door_wood->id) {
 						//LOGI("canOpenDoors? %d : %d\n", canOpenDoors, DoorTile::isOpen(level->getData(xx, yy, zz)));
-						if (tileId == Tile::door_wood->id && canOpenDoors)
+						if (tileId == Tile::door_wood->id && canOpenDoors) {
 							continue;
-                        int data = level->getData(xx, yy, zz);
+						}
 						if (!DoorTile::isOpen(entity->level, xx, yy, zz)) {
 							return TYPE_BLOCKED;
-						}
-						else
+						} else {
 							continue;
+						}
                     }
 					else if (tileId == Tile::water->id || tileId == Tile::calmWater->id) {
 						if (avoidWater) {

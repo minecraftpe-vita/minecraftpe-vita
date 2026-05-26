@@ -242,7 +242,7 @@ public:
     void setTime(long time);
     long getSeed();
     Pos getSharedSpawnPos();
-    void setSpawnPos(Pos spawnPos);
+    void setSpawnPos(const Pos& spawnPos);
 	void setSpawnSettings(bool spawnEnemies, bool spawnFriendlies);
 
 	ChunkSource* getChunkSource();

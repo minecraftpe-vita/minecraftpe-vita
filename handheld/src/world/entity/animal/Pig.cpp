@@ -16,7 +16,7 @@ int Pig::getEntityTypeId() const
 	return MobTypes::Pig;
 }
 
-bool Pig::interact( Player* player )
+bool Pig::interact( Entity* entity )
 {
 	return false;
 }

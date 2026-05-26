@@ -3,7 +3,7 @@
 #include "../../../util/Mth.h"
 OptionsItem::OptionsItem( std::string label, GuiElement* element )
 : GuiElementContainer(false, true, 0, 0, 24, 12),
-  label(label) {
+  label(std::move(label)) {
 	  addChild(element);
 }
 

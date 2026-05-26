@@ -13,7 +13,7 @@ public:
 	virtual void tick();
 	virtual bool survives();
 	bool isPickable();
-	bool interact(Player* player);
+	bool interact(Entity* entity) override;
 	void move(float xa, float ya, float za);
 	void push(float xa, float ya, float za);
 	virtual void addAdditonalSaveData(CompoundTag* tag);

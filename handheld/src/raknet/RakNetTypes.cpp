@@ -349,9 +349,9 @@ void SystemAddress::ToString(bool writePort, char *dest, char portDelineator) co
 }
 SystemAddress::SystemAddress()
 {
-	address.addr4.sin_family=AF_INET;
 	// used for operator ==
-	memset(&address,0,sizeof(address)); address.addr4.sin_family=AF_INET;
+	memset(&address,0,sizeof(address));
+	address.addr4.sin_family=AF_INET;
 	systemIndex=(SystemIndex)-1;
 	debugPort=0;
 }

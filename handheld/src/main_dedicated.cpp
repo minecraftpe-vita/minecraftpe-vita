@@ -52,7 +52,7 @@ int main(int numArguments, char* pszArgs[]) {
 	((MAIN_CLASS*)g_app)->externalStoragePath = aSettings.getExternalPath();
 	((MAIN_CLASS*)g_app)->externalCacheStoragePath = aSettings.getCachePath();
 
-	g_app->init(appContext);
+	g_app->init_ctx(appContext);
 	LevelSettings settings(getEpochTimeS(), GameType::Creative);
 	float startTime = getTimeS();
 	((MAIN_CLASS*)g_app)->selectLevel(aSettings.getLevelDir(), aSettings.getLevelName(),  settings);

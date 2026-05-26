@@ -195,7 +195,7 @@ public:
                 float xx = x + random->nextFloat();
                 float yy = y + random->nextFloat() * 0.5f + 0.5f;
                 float zz = z + random->nextFloat();
-                level->addParticle(PARTICLETYPE(largesmoke), xx, yy, zz, 0, 0, 0);
+                level->addParticle(ParticleType::largesmoke, xx, yy, zz, 0, 0, 0);
             }
         } else {
             if (Tile::fire->canBurn(level, x - 1, y, z)) {
@@ -203,7 +203,7 @@ public:
                     float xx = x + random->nextFloat() * 0.1f;
                     float yy = y + random->nextFloat();
                     float zz = z + random->nextFloat();
-                    level->addParticle(PARTICLETYPE(largesmoke), xx, yy, zz, 0, 0, 0);
+                    level->addParticle(ParticleType::largesmoke, xx, yy, zz, 0, 0, 0);
                 }
             }
             if (Tile::fire->canBurn(level, x + 1, y, z)) {
@@ -211,7 +211,7 @@ public:
                     float xx = x + 1 - random->nextFloat() * 0.1f;
                     float yy = y + random->nextFloat();
                     float zz = z + random->nextFloat();
-                    level->addParticle(PARTICLETYPE(largesmoke), xx, yy, zz, 0, 0, 0);
+                    level->addParticle(ParticleType::largesmoke, xx, yy, zz, 0, 0, 0);
                 }
             }
             if (Tile::fire->canBurn(level, x, y, z - 1)) {
@@ -219,7 +219,7 @@ public:
                     float xx = x + random->nextFloat();
                     float yy = y + random->nextFloat();
                     float zz = z + random->nextFloat() * 0.1f;
-                    level->addParticle(PARTICLETYPE(largesmoke), xx, yy, zz, 0, 0, 0);
+                    level->addParticle(ParticleType::largesmoke, xx, yy, zz, 0, 0, 0);
                 }
             }
             if (Tile::fire->canBurn(level, x, y, z + 1)) {
@@ -227,7 +227,7 @@ public:
                     float xx = x + random->nextFloat();
                     float yy = y + random->nextFloat();
                     float zz = z + 1 - random->nextFloat() * 0.1f;
-                    level->addParticle(PARTICLETYPE(largesmoke), xx, yy, zz, 0, 0, 0);
+                    level->addParticle(ParticleType::largesmoke, xx, yy, zz, 0, 0, 0);
                 }
             }
             if (Tile::fire->canBurn(level, x, y + 1, z)) {
@@ -235,7 +235,7 @@ public:
                     float xx = x + random->nextFloat();
                     float yy = y + 1 - random->nextFloat() * 0.1f;
                     float zz = z + random->nextFloat();
-                    level->addParticle(PARTICLETYPE(largesmoke), xx, yy, zz, 0, 0, 0);
+                    level->addParticle(ParticleType::largesmoke, xx, yy, zz, 0, 0, 0);
                 }
             }
         }

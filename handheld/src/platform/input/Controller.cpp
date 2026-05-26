@@ -1,7 +1,5 @@
 #include "Controller.h"
-
-static int   _abs(int x)   { return x>=0? x:-x; }
-static float _abs(float x) { return x>=0? x:-x; }
+#include "../../util/Mth.h"
 
 /*static*/ float Controller::stickValuesX[NUM_STICKS] = {0};
 /*static*/ float Controller::stickValuesY[NUM_STICKS] = {0};
@@ -51,9 +49,9 @@ float Controller::getTransformedY( int stickIndex, float deadZone, float scale/*
 float Controller::linearTransform( float value, float deadZone, float scale/*=1.0f*/, bool limit1/*=false*/ )
 {
 	float deadSigned = value >= 0? deadZone : -deadZone;
-	if (_abs(deadSigned) >= _abs(value)) return 0;
+	if (Mth::abs(deadSigned) >= Mth::abs(value)) return 0;
 	float ret = (value - deadSigned) * scale;
-	if (limit1 && _abs(ret) > 1) ret = ret>0.0f? 1.0f : -1.0f;
+	if (limit1 && Mth::abs(ret) > 1) ret = ret>0.0f? 1.0f : -1.0f;
 	return ret;
 }
 

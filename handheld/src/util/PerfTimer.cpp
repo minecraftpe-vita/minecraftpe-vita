@@ -90,7 +90,7 @@ std::vector<PerfTimer::ResultField> PerfTimer::getLog(const std::string& rawPath
 	for (TimeMap::const_iterator cit = times.begin(); cit != times.end(); ++cit) {
 		const std::string& key = cit->first;
 		const float& time = cit->second;
-		if (key.length() > path.length() && Util::startsWith(key, path) && key.find(".", path.length() + 1) == std::string::npos) {
+		if (key.length() > path.length() && Util::startsWith(key, path) && key.find('.', path.length() + 1) == std::string::npos) {
 			totalTime += time;
 		}
 	}
@@ -102,7 +102,7 @@ std::vector<PerfTimer::ResultField> PerfTimer::getLog(const std::string& rawPath
 	for (TimeMap::const_iterator cit = times.begin(); cit != times.end(); ++cit) {
 		const std::string& key = cit->first;
 		//const float& time = cit->second;
-		if (key.length() > path.length() && Util::startsWith(key, path) && key.find(".", path.length() + 1) == std::string::npos) {
+		if (key.length() > path.length() && Util::startsWith(key, path) && key.find('.', path.length() + 1) == std::string::npos) {
 			float time = times.find(key)->second;
 			float timePercentage = time * 100.0f / totalTime;
 			float globalPercentage = time * 100.0f / globalTime;

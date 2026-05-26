@@ -78,9 +78,10 @@ void RenameMPLevelScreen::buttonClicked(Button* button) {
 		if (!levelId.empty()) {
 			// Read the level name.
 			// 1) Trim name 2) Remove all bad chars -) We don't have to getUniqueLevelName, since renameLevel will do that
-			for (int i = 0; i < sizeof(ILLEGAL_FILE_CHARACTERS) / sizeof(char); ++i)
+			for (size_t i = 0; i < sizeof(ILLEGAL_FILE_CHARACTERS) / sizeof(char); ++i) {
 				levelId = Util::stringReplace(levelId, std::string(1, ILLEGAL_FILE_CHARACTERS[i]), "");
-			if ((int)levelId.length() == 0) {
+			}
+			if (levelId.length() == 0) {
 				levelId = "saved_world";
 			}
 

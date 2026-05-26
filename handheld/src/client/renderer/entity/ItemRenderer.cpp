@@ -141,7 +141,7 @@ static const signed short _mapper[] = {-1, 7, 9, 8, 0, 5, -2, -1, -1, -1, -1, -1
 
 int ItemRenderer::getAtlasPos(const ItemInstance* item) {
 	int id = item->id;
-	if (id < 0 || id >= sizeof(_mapper) / sizeof(const signed short))
+	if (id < 0 || id >= (int)(sizeof(_mapper) / sizeof(const signed short)))
 		return -1;
 
 	int texId = _mapper[id];

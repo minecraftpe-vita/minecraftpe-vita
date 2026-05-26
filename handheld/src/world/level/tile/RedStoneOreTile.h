@@ -84,7 +84,7 @@ private:
             if (i == 4 && !level->isSolidBlockingTile(x + 1, y, z)) xx = x + 1 + r;
             if (i == 5 && !level->isSolidBlockingTile(x - 1, y, z)) xx = x + 0 - r;
             if (xx < x || xx > x + 1 || yy < 0 || yy > y + 1 || zz < z || zz > z + 1) {
-                level->addParticle(PARTICLETYPE(reddust), xx, yy, zz, 0, 0, 0);
+                level->addParticle(ParticleType::reddust, xx, yy, zz, 0, 0, 0);
             }
         }
     }

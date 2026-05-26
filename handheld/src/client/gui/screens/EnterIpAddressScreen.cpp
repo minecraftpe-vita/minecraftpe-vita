@@ -13,10 +13,6 @@
 #include "../components/TextBox.h"
 #include "../../../network/RakNetInstance.h"
 
-static char ILLEGAL_FILE_CHARACTERS[] = {
-	'/', '\n', '\r', '\t', '\0', '\f', '`', '?', '*', '\\', '<', '>', '|', '\"', ':'
-};
-
 EnterIpAddressScreen::EnterIpAddressScreen()
 :	bHeader(0),
 	bBack(0),

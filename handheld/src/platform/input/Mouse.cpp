@@ -3,7 +3,7 @@
 //
 // MouseAction
 //
-MouseAction::MouseAction(char actionButtonId, char buttonData, short x, short y, char pointerId)
+MouseAction::MouseAction(uint8_t actionButtonId, char buttonData, short x, short y, uint8_t pointerId)
 {
 	this->action = actionButtonId;
 	this->data = buttonData;
@@ -13,7 +13,7 @@ MouseAction::MouseAction(char actionButtonId, char buttonData, short x, short y,
 	this->pointerId = pointerId;
 }
 
-MouseAction::MouseAction(char actionButtonId, char buttonData, short x, short y, short dx, short dy, char pointerId)
+MouseAction::MouseAction(uint8_t actionButtonId, char buttonData, short x, short y, short dx, short dy, uint8_t pointerId)
 {
 	this->action = actionButtonId;
 	this->data = buttonData;
@@ -98,11 +98,11 @@ char MouseDevice::getEventButton() {
 
 const MouseAction& MouseDevice::getEvent() { return _inputs[_index]; }
 
-void MouseDevice::feed(char actionButtonId, char buttonData, short x, short y) {
+void MouseDevice::feed(uint8_t actionButtonId, char buttonData, short x, short y) {
 	feed(actionButtonId, buttonData, x, y, 0, 0);
 }
 
-void MouseDevice::feed(char actionButtonId, char buttonData, short x, short y, short dx, short dy) {
+void MouseDevice::feed(uint8_t actionButtonId, char buttonData, short x, short y, short dx, short dy) {
 
 	_inputs.push_back(MouseAction(actionButtonId, buttonData, x, y, dx, dy, 0));
 

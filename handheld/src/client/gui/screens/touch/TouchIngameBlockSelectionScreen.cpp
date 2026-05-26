@@ -227,17 +227,18 @@ void IngameBlockSelectionScreen::renderDemoOverlay() {
 }
 
 void IngameBlockSelectionScreen::buttonClicked(Button* button) {
-	if (button->id == bDone.id)
+	if (button->id == bDone.id) {
 		minecraft->setScreen(NULL);
-
-    if (button->id == bMenu.id)
+	}
+    if (button->id == bMenu.id) {
         minecraft->screenChooser.setScreen(SCREEN_PAUSE);
-
-	if (button->id == bCraft.id)
+	}
+	if (button->id == bCraft.id) {
 		minecraft->setScreen(new WorkbenchScreen(Recipe::SIZE_2X2));
-
-	if (button == &bArmor)
+	}
+	if (button == &bArmor) {
 		minecraft->setScreen(new ArmorScreen());
+	}
 }
 
 bool IngameBlockSelectionScreen::isAllowed( int slot )

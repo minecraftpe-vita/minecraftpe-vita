@@ -10,7 +10,7 @@ ContainerMenu::ContainerMenu( Container* container, int tileEntityId /* = -1 */ 
 {
 }
 
-void ContainerMenu::setSlot( int slot, ItemInstance* item )
+void ContainerMenu::setSlot( int slot, const ItemInstance& item )
 {
 	container->setItem(slot, item);
 }

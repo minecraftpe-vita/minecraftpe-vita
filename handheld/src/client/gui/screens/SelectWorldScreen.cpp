@@ -291,10 +291,6 @@ bool SelectWorldScreen::isIndexValid( int index )
 	return worldsList && index >= 0 && index < worldsList->getNumberOfItems();
 }
 
-static char ILLEGAL_FILE_CHARACTERS[] = {
-	'/', '\n', '\r', '\t', '\0', '\f', '`', '?', '*', '\\', '<', '>', '|', '\"', ':'
-};
-
 void SelectWorldScreen::tick()
 {
 	if (_state == _STATE_CREATEWORLD) {
@@ -312,6 +308,10 @@ void SelectWorldScreen::tick()
 			minecraft->setScreen(new AdvancedChooseLevelScreen());
 			return;
 		#else
+			static const char ILLEGAL_FILE_CHARACTERS[] = {
+				'/', '\n', '\r', '\t', '\0', '\f', '`', '?', '*', '\\', '<', '>', '|', '\"', ':'
+			};
+
 			int status = minecraft->platform()->getUserInputStatus();
 			if (status > -1) {
 				if (status == 1) {

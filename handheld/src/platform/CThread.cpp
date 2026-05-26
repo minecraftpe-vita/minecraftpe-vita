@@ -10,11 +10,7 @@
 #include "CThread.h"
 
 #if defined(__VITA__)
-#include <psp2/kernel/threadmgr.h>
-
-#include <cstddef>
-
-static int vita_thread_entry(size_t argc, void* argv) {
+static int vita_thread_entry(SceSize argc, void* argv) {
 	void** args = (void**)argv;
 	((void(*)(void*))args[0])(args[1]);
 	return 0;
@@ -22,76 +18,58 @@ static int vita_thread_entry(size_t argc, void* argv) {
 #endif
 
 
-	CThread::CThread( pthread_fn threadFunc, void* threadParam )
-	{
+CThread::CThread( pthread_fn threadFunc, void* threadParam )
+{
+#ifdef WIN32
+	m_threadHandle = CreateThread(
+		NULL,				// pointer to security attributes
+		NULL,               // initial thread stack size
+		(LPTHREAD_START_ROUTINE)threadFunc,		// pointer to thread function
+		threadParam,        // argument for new thread
+		NULL,               // creation flags
+		&m_threadID        // pointer to receive thread ID
+	);
+	m_started = (m_threadHandle != NULL);
+#elif defined(LINUX) || defined(ANDROID) || defined(__APPLE__) || defined(POSIX)
+	pthread_attr_t attributes;
+	pthread_attr_init(&attributes);
+	pthread_attr_setdetachstate(&attributes, PTHREAD_CREATE_JOINABLE);
+	int result = pthread_create(&m_thread, &attributes, (pthread_fn)threadFunc, threadParam);
+	pthread_attr_destroy(&attributes);
+	m_started = (result == 0);
+#elif defined(__VITA__)
+	m_thread = sceKernelCreateThread("CThread", vita_thread_entry, 0x10000100, 2 * 1024 * 1024, 0, 0, NULL);
+	void* args[2] = {(void*)threadFunc, threadParam};
+	sceKernelStartThread(m_thread, 8, args);
+	m_started = true;
+#endif
+}
+
+void CThread::sleep( const unsigned int millis )
+{
 	#ifdef WIN32
-		mp_threadFunc = (LPTHREAD_START_ROUTINE) threadFunc;
-		
-		m_threadHandle = CreateThread(
-			NULL,				// pointer to security attributes
-			NULL,               // initial thread stack size
-			mp_threadFunc,		// pointer to thread function
-			threadParam,        // argument for new thread
-			NULL,               // creation flags
-			&m_threadID        // pointer to receive thread ID
-		);
+		Sleep( millis );
 	#endif
 	#if defined(LINUX) || defined(ANDROID) || defined(__APPLE__) || defined(POSIX)
-		mp_threadFunc = (pthread_fn)threadFunc;
-
-		pthread_attr_init(&m_attributes);
-		pthread_attr_setdetachstate( &m_attributes, PTHREAD_CREATE_DETACHED );
-		/*int error =*/ pthread_create(&m_thread, &m_attributes, mp_threadFunc,threadParam);
-	#endif
-	#ifdef MACOSX
-		mp_threadFunc = (TaskProc) threadFunc;
-	
-		MPCreateTask(
-			mp_threadFunc,		// pointer to thread function
-			threadParam,		// argument for new thread
-			0,					// initial thread stack size
-			NULL,				// queue id
-			NULL,				// termination param 1
-			NULL,				// termination param 2
-			0,					// task options
-			&m_threadID			// pointer to receive task ID
-		);
-	#endif
-	#ifdef __VITA__
-		m_thread = sceKernelCreateThread("CThread", vita_thread_entry, 0x10000100, 2 * 1024 * 1024, 0, 0, NULL);
-		void* args[2] = {
-			(void*)threadFunc,
-			threadParam
-		};
-		sceKernelStartThread(m_thread, 8, args);
-	#endif
-	}
-	
-	void CThread::sleep( const unsigned int millis )
-	{
-		#ifdef WIN32
-			Sleep( millis );
-		#endif
-		#if defined(LINUX) || defined(ANDROID) || defined(__APPLE__) || defined(POSIX)
-			usleep(millis * 1000);
-		#endif
-		#if defined(__VITA__)
-			sceKernelDelayThread(millis * 1000);
-		#endif
-	}
-
-	CThread::~CThread()
-	{
-	#ifdef WIN32
-		TerminateThread(m_threadHandle, 0);
-	#endif
-	#if defined(LINUX) || defined(ANDROID) || defined(__APPLE__) || defined(POSIX)
-		pthread_join(m_thread, NULL);
-		pthread_attr_destroy(&m_attributes);
+		usleep(millis * 1000);
 	#endif
 	#if defined(__VITA__)
-		// this is impossible on vita, oh well
+		sceKernelDelayThread(millis * 1000);
 	#endif
-	}
+}
+
+CThread::~CThread()
+{
+	if (!m_started) return;
+#ifdef WIN32
+	TerminateThread(m_threadHandle, 0); 
+	CloseHandle(m_threadHandle);
+#elif defined(__VITA__)
+	// nothind to do
+#elif defined(LINUX) || defined(ANDROID) || defined(__APPLE__) || defined(POSIX)
+	void* retval = nullptr;   
+	pthread_join(m_thread, &retval);
+#endif
+}
 
 

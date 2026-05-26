@@ -117,7 +117,7 @@ void PigZombie::dropDeathLoot() {
 	}
 }
 
-bool PigZombie::interact( Player* player ) {
+bool PigZombie::interact( Entity* entity ) {
 	return false;
 }
 

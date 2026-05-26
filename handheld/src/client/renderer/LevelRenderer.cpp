@@ -49,9 +49,6 @@ LevelRenderer::LevelRenderer( Minecraft* mc)
 	lastViewDistance(-1),
 
 	noEntityRenderFrames(2),
-	totalEntities(0),
-	renderedEntities(0),
-	culledEntities(0),
 
 	occlusionCheck(false),
 	totalChunks(0), offscreenChunks(0), renderedChunks(0), occludedChunks(0), emptyChunks(0),
@@ -917,25 +914,22 @@ void LevelRenderer::renderEntities(Vec3 cam, Culler* culler, float a) {
 	TIMER_PUSH("prepare");
     TileEntityRenderDispatcher::getInstance()->prepare(level, textures, mc->font, mc->cameraTargetPlayer, a);
     EntityRenderDispatcher::getInstance()->prepare(level, mc->font, mc->cameraTargetPlayer, &mc->options, a);
-
-    totalEntities = 0;
-    renderedEntities = 0;
-    culledEntities = 0;
-
+	
 	Entity* player = mc->cameraTargetPlayer;
     EntityRenderDispatcher::xOff = TileEntityRenderDispatcher::xOff = (player->xOld + (player->x - player->xOld) * a);
     EntityRenderDispatcher::yOff = TileEntityRenderDispatcher::yOff = (player->yOld + (player->y - player->yOld) * a);
     EntityRenderDispatcher::zOff = TileEntityRenderDispatcher::zOff = (player->zOld + (player->z - player->zOld) * a);
-
+	
 	glEnableClientState2(GL_VERTEX_ARRAY);
 	glEnableClientState2(GL_TEXTURE_COORD_ARRAY);
-
+	
 	TIMER_POP_PUSH("entities");
 	const EntityList& entities = level->getAllEntities();
-	totalEntities = entities.size();
+	size_t totalEntities = entities.size();
+    size_t renderedEntities = 0;
 	if (totalEntities > 0) {
-		Entity** toRender = new Entity*[totalEntities];
-		for (int i = 0; i < totalEntities; i++) {
+		Entity** toRender = new Entity*[totalEntities > 1000000 ? 1000000 : totalEntities];
+		for (size_t i = 0; i < totalEntities; i++) {
 			Entity* entity = entities[i];
 
 			if (entity->shouldRender(cam) && culler->isVisible(entity->bb))
@@ -953,7 +947,7 @@ void LevelRenderer::renderEntities(Vec3 cam, Culler* culler, float a) {
 
 		if (renderedEntities > 0) {
 			std::sort(&toRender[0], &toRender[renderedEntities], entityRenderPredicate);
-			for (int i = 0; i < renderedEntities; ++i) {
+			for (size_t i = 0; i < renderedEntities; ++i) {
 				EntityRenderDispatcher* disp = EntityRenderDispatcher::getInstance();
 				disp->render(toRender[i], a);
 			}
@@ -978,14 +972,6 @@ std::string LevelRenderer::gatherStats1() {
 	ss << "C: " << renderedChunks << "/" << totalChunks << ". F: " << offscreenChunks << ", O: " << occludedChunks << ", E: " << emptyChunks << "\n";
     return ss.str();
 }
-
-//
-//    /*public*/ std::string gatherStats2() {
-//        return "E: " + renderedEntities + "/" + totalEntities + ". B: " + culledEntities + ", I: " + ((totalEntities - culledEntities) - renderedEntities);
-//    }
-//
-//    int[] toRender = new int[50000];
-//    IntBuffer resultBuffer = MemoryTracker.createIntBuffer(64);
 
 void LevelRenderer::renderSky(float alpha) {
     if (mc->level->dimension->foggy) return;

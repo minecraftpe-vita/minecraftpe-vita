@@ -134,20 +134,20 @@ public:
         float h = 0.22f;
         float r = 0.27f;
         if (dir == 1) {
-            level->addParticle(PARTICLETYPE(smoke), x - r, y + h, z, 0, 0, 0);
-            level->addParticle(PARTICLETYPE(flame), x - r, y + h, z, 0, 0, 0);
+            level->addParticle(ParticleType::smoke, x - r, y + h, z, 0, 0, 0);
+            level->addParticle(ParticleType::flame, x - r, y + h, z, 0, 0, 0);
         } else if (dir == 2) {
-            level->addParticle(PARTICLETYPE(smoke), x + r, y + h, z, 0, 0, 0);
-            level->addParticle(PARTICLETYPE(flame), x + r, y + h, z, 0, 0, 0);
+            level->addParticle(ParticleType::smoke, x + r, y + h, z, 0, 0, 0);
+            level->addParticle(ParticleType::flame, x + r, y + h, z, 0, 0, 0);
         } else if (dir == 3) {
-            level->addParticle(PARTICLETYPE(smoke), x, y + h, z - r, 0, 0, 0);
-            level->addParticle(PARTICLETYPE(flame), x, y + h, z - r, 0, 0, 0);
+            level->addParticle(ParticleType::smoke, x, y + h, z - r, 0, 0, 0);
+            level->addParticle(ParticleType::flame, x, y + h, z - r, 0, 0, 0);
         } else if (dir == 4) {
-            level->addParticle(PARTICLETYPE(smoke), x, y + h, z + r, 0, 0, 0);
-            level->addParticle(PARTICLETYPE(flame), x, y + h, z + r, 0, 0, 0);
+            level->addParticle(ParticleType::smoke, x, y + h, z + r, 0, 0, 0);
+            level->addParticle(ParticleType::flame, x, y + h, z + r, 0, 0, 0);
         } else {
-            level->addParticle(PARTICLETYPE(smoke), x, y, z, 0, 0, 0);
-            level->addParticle(PARTICLETYPE(flame), x, y, z, 0, 0, 0);
+            level->addParticle(ParticleType::smoke, x, y, z, 0, 0, 0);
+            level->addParticle(ParticleType::flame, x, y, z, 0, 0, 0);
         }
     }
 private:

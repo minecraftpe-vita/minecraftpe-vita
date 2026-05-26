@@ -33,8 +33,8 @@ public:
 	virtual ~Container() {}
 
     virtual ItemInstance* getItem(int slot) = 0;
-    virtual void setItem(int slot, ItemInstance* item) = 0;
-    virtual ItemInstance removeItem(int slot, int i) = 0;
+    virtual void setItem(int slot, const ItemInstance& item) = 0;
+    virtual ItemInstance removeItemSlot(int slot, int count) = 0;
 
     virtual std::string getName() const = 0;
     virtual int getContainerSize() const = 0;

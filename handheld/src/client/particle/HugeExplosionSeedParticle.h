@@ -23,7 +23,7 @@ public:
 			float xx = x + (sharedRandom.nextFloat() - sharedRandom.nextFloat()) * 4;
 			float yy = y + (sharedRandom.nextFloat() - sharedRandom.nextFloat()) * 4;
 			float zz = z + (sharedRandom.nextFloat() - sharedRandom.nextFloat()) * 4;
-			level->addParticle(PARTICLETYPE(largeexplode), xx, yy, zz, life / (float) lifeTime, 0, 0);
+			level->addParticle(ParticleType::largeexplode, xx, yy, zz, life / (float) lifeTime, 0, 0);
 		}
 		life++;
 		if (life == lifeTime) remove();

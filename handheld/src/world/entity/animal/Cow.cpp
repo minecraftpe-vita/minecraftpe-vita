@@ -28,13 +28,13 @@ void Cow::readAdditionalSaveData( CompoundTag* tag ) {
 	super::readAdditionalSaveData(tag);
 }
 
-bool Cow::interact( Player* player ) {
+bool Cow::interact( Entity* entity ) {
 	//ItemInstance item = player->inventory.getSelected();
 	//if (item != NULL && item.id == Item::bucket_empty->id) {
 	//    player->inventory.setItem(player->inventory.selected, /*new*/ ItemInstance(Item::milk));
 	//    return true;
 	//}
-	return super::interact(player);
+	return super::interact(entity);
 }
 
 const char* Cow::getAmbientSound() {

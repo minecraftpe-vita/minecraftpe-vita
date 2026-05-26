@@ -118,7 +118,7 @@ public:
 		return _inputs[_index];
 	}
 
-	static void feed(char actionButtonId, char buttonData, short x, short y, char pointerId) {
+	static void feed(char actionButtonId, char buttonData, short x, short y, int pointerId) {
 		pointerId = _clampPointerId(pointerId);
 
 		_inputs.push_back(MouseAction(actionButtonId, buttonData, x, y, pointerId));

@@ -159,9 +159,9 @@ void StartMenuScreen::render( int xm, int ym, float a )
 		const float x = (float)width / 2;
 		const float y = 4;
 		//const float scale = Mth::Min(
-		const float wh = Mth::Min((float)width/2.0f, (float)data->w / 2);
-		const float scale = 2.0f * wh / (float)data->w;
-		const float h = scale * (float)data->h;
+		const float wh = Mth::Min((float)width/2.0f, (float)data->width / 2);
+		const float scale = 2.0f * wh / (float)data->width;
+		const float h = scale * (float)data->height;
 
 		// Render title text
 		Tesselator& t = Tesselator::instance;

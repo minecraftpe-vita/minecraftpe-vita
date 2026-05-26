@@ -81,9 +81,6 @@ private:
 		return (z * yChunks + y) * xChunks + x;
 	}
 	int noEntityRenderFrames;
-    int totalEntities;
-    int renderedEntities;
-    int culledEntities;
 
 	std::vector<Chunk*> _renderChunks;
 

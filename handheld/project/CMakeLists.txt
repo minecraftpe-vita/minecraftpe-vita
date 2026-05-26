@@ -13,13 +13,13 @@ else()
   message(FATAL_ERROR "unknown platform: ${PLATFORM}")
 endif()
 
+option(BUILD_SERVER "build mcpe_server" LINUX)
+
 if(VITA)
-  if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-    if(DEFINED ENV{VITASDK})
+  if(DEFINED ENV{VITASDK})
       set(CMAKE_TOOLCHAIN_FILE "$ENV{VITASDK}/share/vita.toolchain.cmake" CACHE PATH "toolchain file")
-    else()
+  else()
       message(FATAL_ERROR "Please define VITASDK to point to your SDK path!")
-    endif()
   endif()
 endif()
 
@@ -29,11 +29,23 @@ set(CMAKE_COLOR_DIAGNOSTICS ON)
 
 project(minecraftcpp)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -std=gnu99")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
-
 set(HANDHELD "${CMAKE_CURRENT_LIST_DIR}/../src/")
 set(ASSETS_DIR "${CMAKE_CURRENT_LIST_DIR}/../data")
+
+add_compile_options(
+  $<$<COMPILE_LANGUAGE:C>:-std=gnu11>
+  $<$<COMPILE_LANGUAGE:CXX>:-std=gnu++20>
+
+  $<$<COMPILE_LANGUAGE:CXX>:-fno-exceptions>
+  $<$<COMPILE_LANGUAGE:CXX>:-fno-rtti>
+
+  -Wall
+  $<$<COMPILE_LANGUAGE:CXX>:-Wno-reorder>
+  $<$<COMPILE_LANGUAGE:CXX>:-Wno-deprecated-enum-enum-conversion>
+  -Wno-unused-but-set-variable
+  -O3
+  -g
+)
 
 if(DEMO)
   add_compile_definitions(DEMO_MODE)
@@ -42,8 +54,6 @@ endif()
 if(PUBLISH)
   add_compile_definitions(PUBLISH)
 endif()
-
-add_compile_options(-O3 -g)
 
 add_library(raknet
   ${HANDHELD}/raknet/DS_Table.cpp
@@ -173,10 +183,8 @@ target_compile_definitions(raknet PRIVATE
   _RAKNET_SUPPORT_TwoWayAuthentication=0
 )
 
-add_executable(${PROJECT_NAME}
-  ${HANDHELD}/main.cpp
-  ${HANDHELD}/SharedConstants.cpp
-  ${HANDHELD}/nbt/Tag.cpp
+add_library(mcpe STATIC
+  ${HANDHELD}/NinecraftApp.cpp
   ${HANDHELD}/network/ClientSideNetworkHandler.cpp
   ${HANDHELD}/network/Packet.cpp
   ${HANDHELD}/network/command/CommandServer.cpp
@@ -185,14 +193,20 @@ add_executable(${PROJECT_NAME}
   ${HANDHELD}/network/NetEventCallback.cpp
   ${HANDHELD}/network/NATPunchHandler.cpp
   ${HANDHELD}/network/ServerSideNetworkHandler.cpp
-  #${HANDHELD}/platform/audio/SoundSystemSL.cpp
-  #${HANDHELD}/platform/audio/SoundSystemAL.cpp
+  ${HANDHELD}/server/ServerPlayer.cpp
+  ${HANDHELD}/server/CreatorLevel.cpp
+  ${HANDHELD}/server/ArgumentsSettings.cpp
+  ${HANDHELD}/server/ServerLevel.cpp
   ${HANDHELD}/platform/CThread.cpp
-  ${HANDHELD}/platform/input/Keyboard.cpp
-  ${HANDHELD}/platform/input/Mouse.cpp
-  ${HANDHELD}/platform/input/Multitouch.cpp
-  ${HANDHELD}/platform/input/Controller.cpp
   ${HANDHELD}/platform/CTime.cpp
+  ${HANDHELD}/util/DataIO.cpp
+  ${HANDHELD}/util/PerfTimer.cpp
+  ${HANDHELD}/util/StringUtils.cpp
+  ${HANDHELD}/util/Mth.cpp
+  ${HANDHELD}/SharedConstants.cpp
+  ${HANDHELD}/Performance.cpp
+  ${HANDHELD}/nbt/Tag.cpp
+  ${HANDHELD}/locale/I18n.cpp
   ${HANDHELD}/world/food/SimpleFoodData.cpp
   ${HANDHELD}/world/phys/HitResult.cpp
   ${HANDHELD}/world/inventory/ContainerMenu.cpp
@@ -303,19 +317,27 @@ add_executable(${PROJECT_NAME}
   ${HANDHELD}/world/item/HatchetItem.cpp
   ${HANDHELD}/world/item/HoeItem.cpp
   ${HANDHELD}/world/Direction.cpp
-  ${HANDHELD}/NinecraftApp.cpp
-  ${HANDHELD}/util/DataIO.cpp
-  ${HANDHELD}/util/PerfTimer.cpp
-  ${HANDHELD}/util/StringUtils.cpp
-  ${HANDHELD}/util/Mth.cpp
-  ${HANDHELD}/util/PerfRenderer.cpp
-  ${HANDHELD}/server/ServerPlayer.cpp
-  ${HANDHELD}/server/CreatorLevel.cpp
-  ${HANDHELD}/server/ArgumentsSettings.cpp
-  ${HANDHELD}/server/ServerLevel.cpp
-  ${HANDHELD}/Performance.cpp
-  ${HANDHELD}/client/Options.cpp
   ${HANDHELD}/client/Minecraft.cpp
+  ${HANDHELD}/client/player/RemotePlayer.cpp
+  ${HANDHELD}/client/player/LocalPlayer.cpp
+  ${HANDHELD}/client/Options.cpp
+  ${HANDHELD}/client/OptionsFile.cpp
+  ${HANDHELD}/client/OptionStrings.cpp
+  ${HANDHELD}/client/IConfigListener.cpp
+  ${HANDHELD}/client/gamemode/CreativeMode.cpp
+  ${HANDHELD}/client/gamemode/SurvivalMode.cpp
+  ${HANDHELD}/client/gamemode/GameMode.cpp
+)
+
+add_executable(mcpe_client
+  ${HANDHELD}/main.cpp
+  #${HANDHELD}/platform/audio/SoundSystemSL.cpp
+  #${HANDHELD}/platform/audio/SoundSystemAL.cpp
+  ${HANDHELD}/platform/input/Keyboard.cpp
+  ${HANDHELD}/platform/input/Mouse.cpp
+  ${HANDHELD}/platform/input/Multitouch.cpp
+  ${HANDHELD}/platform/input/Controller.cpp
+  ${HANDHELD}/util/PerfRenderer.cpp
   ${HANDHELD}/client/model/PigModel.cpp
   ${HANDHELD}/client/model/ChickenModel.cpp
   ${HANDHELD}/client/model/HumanoidModel.cpp
@@ -360,15 +382,8 @@ add_executable(${PROJECT_NAME}
   ${HANDHELD}/client/MouseHandler.cpp
   ${HANDHELD}/client/player/input/KeyboardInput.cpp
   ${HANDHELD}/client/player/input/touchscreen/TouchscreenInput.cpp
-  ${HANDHELD}/client/player/RemotePlayer.cpp
-  ${HANDHELD}/client/player/LocalPlayer.cpp
-  ${HANDHELD}/client/OptionsFile.cpp
-  ${HANDHELD}/client/OptionStrings.cpp
   ${HANDHELD}/client/sound/SoundEngine.cpp
   ${HANDHELD}/client/sound/Sound.cpp
-  ${HANDHELD}/client/gamemode/CreativeMode.cpp
-  ${HANDHELD}/client/gamemode/SurvivalMode.cpp
-  ${HANDHELD}/client/gamemode/GameMode.cpp
   ${HANDHELD}/client/gamemode/CreatorMode.cpp
   ${HANDHELD}/client/particle/ParticleEngine.cpp
   ${HANDHELD}/client/particle/Particle.cpp
@@ -425,15 +440,25 @@ add_executable(${PROJECT_NAME}
   ${HANDHELD}/client/gui/screens/JoinGameScreen.cpp
   ${HANDHELD}/client/gui/screens/PauseScreen.cpp
   ${HANDHELD}/client/gui/screens/EnterIpAddressScreen.cpp
-  ${HANDHELD}/client/IConfigListener.cpp
-  ${HANDHELD}/locale/I18n.cpp
 )
 
-target_link_libraries(${PROJECT_NAME} PUBLIC
+target_link_libraries(mcpe_client PUBLIC
+  mcpe
   raknet
   png
   z
 )
+
+if(BUILD_SERVER)
+  add_executable(mcpe_server
+    ${HANDHELD}/main_dedicated.cpp
+  )
+
+  target_link_libraries(mcpe_server PUBLIC
+    mcpe
+    raknet
+  )
+endif()
 
 if(VITA)
   include("vita/vita.cmake" REQUIRED)

@@ -4,6 +4,7 @@
 //package net.minecraft.world.level;
 
 #include "LevelSource.h"
+#include <cstddef>
 
 class Level;
 class Material;
@@ -32,8 +33,8 @@ private:
     LevelChunk*** chunks;
     Level* level;
 
-	int size_x;
-	int size_z;
+	size_t size_x;
+	size_t size_z;
 };
 
 #endif /*NET_MINECRAFT_WORLD_LEVEL__Region_H__*/

@@ -11,9 +11,9 @@
 	#define TIMER_POP()			PerfTimer::pop()
 	#define TIMER_POP_PUSH(x)	PerfTimer::popPush(x)
 #else
-	#define TIMER_PUSH(x)		((void*)0)
-	#define TIMER_POP()			((void*)0)
-	#define TIMER_POP_PUSH(x)	((void*)0)
+	#define TIMER_PUSH(x)
+	#define TIMER_POP()
+	#define TIMER_POP_PUSH(x)
 #endif
 
 class PerfTimer

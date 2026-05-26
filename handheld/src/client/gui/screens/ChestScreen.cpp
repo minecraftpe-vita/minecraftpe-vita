@@ -36,7 +36,7 @@ static const int MinChargeMs = 200;
 
 class ItemDiffer {
 public:
-	ItemDiffer(int size)
+	ItemDiffer(size_t size)
 	:	size(size),
 		count(0)
 	{
@@ -46,7 +46,7 @@ public:
 	:	size(v.size()),
 		count(0)
 	{
-		base = new ItemInstance[size];
+		base = new ItemInstance[size > 1000000 ? 1000000 : size /* make gcc happy */];
 		init(v);
 	}
 

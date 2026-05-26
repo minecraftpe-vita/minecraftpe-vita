@@ -54,9 +54,9 @@ private:
 
 	Options* options;
 
-	int _x, _y;
-	int _cols;
-	int _rows;
+	size_t _x, _y;
+	size_t _cols;
+	size_t _rows;
 	unsigned char _charOffset;
 };
 

@@ -21,8 +21,8 @@ void Explosion::explode()
 	float org = r;
 
 	int size = 16;
-	for (int xx = 0; xx < size; xx++)
-		for (int yy = 0; yy < size; yy++)
+	for (int xx = 0; xx < size; xx++) {
+		for (int yy = 0; yy < size; yy++) {
 			for (int zz = 0; zz < size; zz++) {
 				if ((xx != 0 && xx != size - 1) && (yy != 0 && yy != size - 1) && (zz != 0 && zz != size - 1)) continue;
 
@@ -59,64 +59,66 @@ void Explosion::explode()
 					remainingPower -= stepSize * 0.75f;
 				}
 			}
+		}
+	}
 
-			r += r;
-			int x0 = Mth::floor(x - r - 1);
-			int x1 = Mth::floor(x + r + 1);
-			int y0 = Mth::floor(y - r - 1);
-			int y1 = Mth::floor(y + r + 1);
-			int z0 = Mth::floor(z - r - 1);
-			int z1 = Mth::floor(z + r + 1);
-			EntityList& entities = level->getEntities(source, AABB((float)x0, (float)y0, (float)z0, (float)x1, (float)y1, (float)z1));
-			Vec3 center(x, y, z);
-			for (unsigned int i = 0; i < entities.size(); i++) {
-				Entity* e = entities[i];
-				float dist = e->distanceTo(x, y, z) / r;
-				if (dist <= 1) {
-					float xa = e->x - x;
-					float ya = e->y - y;
-					float za = e->z - z;
+	r += r;
+	int x0 = Mth::floor(x - r - 1);
+	int x1 = Mth::floor(x + r + 1);
+	int y0 = Mth::floor(y - r - 1);
+	int y1 = Mth::floor(y + r + 1);
+	int z0 = Mth::floor(z - r - 1);
+	int z1 = Mth::floor(z + r + 1);
+	EntityList& entities = level->getEntities(source, AABB((float)x0, (float)y0, (float)z0, (float)x1, (float)y1, (float)z1));
+	Vec3 center(x, y, z);
+	for (unsigned int i = 0; i < entities.size(); i++) {
+		Entity* e = entities[i];
+		float dist = e->distanceTo(x, y, z) / r;
+		if (dist <= 1) {
+			float xa = e->x - x;
+			float ya = e->y - y;
+			float za = e->z - z;
 
-					float ida = Mth::invSqrt(xa * xa + ya * ya + za * za);
+			float ida = Mth::invSqrt(xa * xa + ya * ya + za * za);
 
-					xa *= ida;
-					ya *= ida;
-					za *= ida;
+			xa *= ida;
+			ya *= ida;
+			za *= ida;
 
-					float sp = level->getSeenPercent(center, e->bb);
-					float pow = (1 - dist) * sp;
-					e->hurt(source, (int) ((pow * pow + pow) / 2 * 8 * r + 1));
+			float sp = level->getSeenPercent(center, e->bb);
+			float pow = (1 - dist) * sp;
+			e->hurt(source, (int) ((pow * pow + pow) / 2 * 8 * r + 1));
 
-					float push = pow;
-					e->xd += xa * push;
-					e->yd += ya * push;
-					e->zd += za * push;
-				}
+			float push = pow;
+			e->xd += xa * push;
+			e->yd += ya * push;
+			e->zd += za * push;
+		}
+	}
+	r = org;
+
+	std::vector<TilePos> toBlowArray;
+	toBlowArray.insert(toBlowArray.end(), toBlow.begin(), toBlow.end());
+
+	if (fire) {
+		for (int j = (int)toBlowArray.size() - 1; j >= 0; j--) {
+			const TilePos& tp = toBlowArray[j];
+			int xt = tp.x;
+			int yt = tp.y;
+			int zt = tp.z;
+			int t = level->getTile(xt, yt, zt);
+			int b = level->getTile(xt, yt - 1, zt);
+			if (t == 0 && Tile::solid[b] && random.nextInt(3) == 0) {
+				level->setTileNoUpdate(xt, yt, zt, ((Tile*)Tile::fire)->id);
 			}
-			r = org;
-
-			std::vector<TilePos> toBlowArray;
-			toBlowArray.insert(toBlowArray.end(), toBlow.begin(), toBlow.end());
-
-			if (fire) {
-				for (int j = (int)toBlowArray.size() - 1; j >= 0; j--) {
-					const TilePos& tp = toBlowArray[j];
-					int xt = tp.x;
-					int yt = tp.y;
-					int zt = tp.z;
-					int t = level->getTile(xt, yt, zt);
-					int b = level->getTile(xt, yt - 1, zt);
-					if (t == 0 && Tile::solid[b] && random.nextInt(3) == 0) {
-						level->setTileNoUpdate(xt, yt, zt, ((Tile*)Tile::fire)->id);
-					}
-				}
-			}
+		}
+	}
 }
 
 void Explosion::finalizeExplosion()
 {
 	level->playSound(x, y, z, "random.explode", 4, (1 + (level->random.nextFloat() - level->random.nextFloat()) * 0.2f) * 0.7f);
-	//level->addParticle(PARTICLETYPE(hugeexplosion), x, y, z, 0, 0, 0);
+	//level->addParticle(ParticleType::hugeexplosion, x, y, z, 0, 0, 0);
 
 	int j = 0;
 	for (TilePosSet::const_iterator cit = toBlow.begin(); cit != toBlow.end(); ++cit, ++j) {
@@ -149,8 +151,8 @@ void Explosion::finalizeExplosion()
 			yd *= speed;
 			zd *= speed;
 
-			level->addParticle(PARTICLETYPE(explode), (xa + x * 1) / 2, (ya + y * 1) / 2, (za + z * 1) / 2, xd, yd, zd);
-			level->addParticle(PARTICLETYPE(smoke), xa, ya, za, xd, yd, zd);
+			level->addParticle(ParticleType::explode, (xa + x * 1) / 2, (ya + y * 1) / 2, (za + z * 1) / 2, xd, yd, zd);
+			level->addParticle(ParticleType::smoke, xa, ya, za, xd, yd, zd);
 		} while (0);
 
 		if (t > 0) {

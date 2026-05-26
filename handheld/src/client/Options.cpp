@@ -345,22 +345,22 @@ void Options::save() {
 	optionsFile.save(stringVec);
 }
 
-void Options::addOptionToSaveOutput(StringVector& stringVector, std::string name, bool boolValue) {
+void Options::addOptionToSaveOutput(StringVector& stringVector, const std::string& name, bool boolValue) {
 	std::stringstream ss;
 	ss << name << ":" << boolValue;
 	stringVector.push_back(ss.str());
 }
-void Options::addOptionToSaveOutput(StringVector& stringVector, std::string name, float floatValue) {
+void Options::addOptionToSaveOutput(StringVector& stringVector, const std::string& name, float floatValue) {
 	std::stringstream ss;
 	ss << name << ":" << floatValue;
 	stringVector.push_back(ss.str());
 }
-void Options::addOptionToSaveOutput(StringVector& stringVector, std::string name, int intValue) {
+void Options::addOptionToSaveOutput(StringVector& stringVector, const std::string& name, int intValue) {
 	std::stringstream ss;
 	ss << name << ":" << intValue;
 	stringVector.push_back(ss.str());
 }
-void Options::addOptionToSaveOutput(StringVector& stringVector, std::string name, const std::string& strValue) {
+void Options::addOptionToSaveOutput(StringVector& stringVector, const std::string& name, const std::string& strValue) {
 	std::stringstream ss;
 	ss << name << ":" << strValue;
 	stringVector.push_back(ss.str());

@@ -875,17 +875,10 @@ ConnectionAttemptResult RakPeer::Connect( const char* host, unsigned short remot
 
 ConnectionAttemptResult RakPeer::ConnectWithSocket(const char* host, unsigned short remotePort, const char *passwordData, int passwordDataLength, RakNetSmartPtr<RakNetSocket> socket, PublicKey *publicKey, unsigned sendConnectionAttemptCount, unsigned timeBetweenSendConnectionAttemptsMS, RakNet::TimeMS timeoutTime)
 {
-	if ( host == 0 || endThreads || socket.IsNull() )
-		return INVALID_PARAMETER;
-
-	if (passwordDataLength>255)
-		passwordDataLength=255;
-
-	if (passwordData==0)
-		passwordDataLength=0;
-
-		return SendConnectionRequest( host, remotePort, passwordData, passwordDataLength, publicKey, 0, 0, sendConnectionAttemptCount, timeBetweenSendConnectionAttemptsMS, timeoutTime, socket );
-
+	if ( host == 0 || endThreads || socket.IsNull() ) return INVALID_PARAMETER;
+	if (passwordDataLength>255) passwordDataLength=255;
+	if (passwordData==0) passwordDataLength=0;
+	return SendConnectionRequest( host, remotePort, passwordData, passwordDataLength, publicKey, 0, 0, sendConnectionAttemptCount, timeBetweenSendConnectionAttemptsMS, timeoutTime, socket );
 }
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -87,7 +87,7 @@ structureType *ThreadsafeAllocatingQueue<structureType>::Allocate(const char *fi
 	s=memoryPool.Allocate(file, line);
 	memoryPoolMutex.Unlock();
 	// Call new operator, memoryPool doesn't do this
-	s = new ((void*)s) structureType;
+	if(s) s = new ((void*)s) structureType;
 	return s;
 }
 template <class structureType>

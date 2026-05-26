@@ -210,8 +210,8 @@ ScrollingPane::GridItem ScrollingPane::getItemForPos( float x, float y, bool isS
 	y += fpy;
 
 	// Does the grid SF_Wrap around?
-	if (isSet(SF_WrapX)) x = fmod(x, (float)(itemBbox.w * columns));
-	if (isSet(SF_WrapY)) y = fmod(y, (float)(itemBbox.h * rows));
+	if (isSet(SF_WrapX)) x = fmodf(x, (float)(itemBbox.w * columns));
+	if (isSet(SF_WrapY)) y = fmodf(y, (float)(itemBbox.h * rows));
 
 	GridItem out;
 	out.xf = x / itemBbox.w;

@@ -53,7 +53,7 @@ protected:
         }
 
         for (int i = 0; i < 6; i++)
-            level->addParticle(PARTICLETYPE(snowballpoof), x, y, z, 0, 0, 0);
+            level->addParticle(ParticleType::snowballpoof, x, y, z, 0, 0, 0);
 
         if (!level->isClientSide)
             remove();

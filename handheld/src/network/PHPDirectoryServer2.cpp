@@ -31,7 +31,7 @@ static const char *GAME_NAME_COMMAND="__GAME_NAME";
 // Column with this header contains the port of the game, passed to UploadTable()
 static const char *GAME_PORT_COMMAND="__GAME_PORT";
 // Column with this header contains the IP address of the game, passed to UploadTable()
-static const char *SYSTEM_ADDRESS_COMMAND="_System_Address";
+//static const char *SYSTEM_ADDRESS_COMMAND="_System_Address";
 // Returned from the PHP server indicating when this row was last updated.
 static const char *LAST_UPDATE_COMMAND="__SEC_AFTER_EPOCH_SINCE_LAST_UPDATE";
 

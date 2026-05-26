@@ -32,7 +32,7 @@ public:
 	void			dropSlot(int slot, bool onlyClearContainer, bool randomly=false);
 	void			dropAll(bool onlyClearContainer);
 	// @itodo: keep return by value?
-	ItemInstance	removeItem(int slot, int count);
+	ItemInstance	removeItemSlot(int slot, int count);
 
 	void			clearSlot( int slot );
 	void			clearInventory();
@@ -43,7 +43,7 @@ public:
 	void			replace( std::vector<ItemInstance> newItems, int count = -1 );
 	void			replaceSlot(int slotId, ItemInstance* ins);
 
-	void			setItem(int slot, ItemInstance* item);
+	void			setItem(int slot, const ItemInstance& item);
 	ItemInstance*	getItem(int slot);
 
 	std::string		getName() const;

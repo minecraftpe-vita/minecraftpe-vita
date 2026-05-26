@@ -707,18 +707,18 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID& source, PlayerAr
 
 void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID& source, InteractPacket* packet)
 {
-	if (!level)
-		return;
+	if (!level) return;
 
 	Entity* src = level->getEntity(packet->sourceId);
 	Entity* entity = level->getEntity(packet->targetId);
-	if (src && entity && src->isPlayer())
-	{
+	if (src && entity && src->isPlayer()) {
 		Player* player = (Player*) src;
-		if (InteractPacket::Attack == packet->action)
+		if (InteractPacket::Attack == packet->action) {
 			minecraft->gameMode->attack(player, entity);
-		if (InteractPacket::Interact == packet->action)
+		}
+		if (InteractPacket::Interact == packet->action) {
 			minecraft->gameMode->interact(player, entity);
+		}
 	}
 }
 
@@ -851,11 +851,11 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID& source, Containe
 
     if (packet->containerId == 0) {
         for (unsigned int i = 0; i < packet->items.size(); ++i) {
-            minecraft->player->inventory->setItem(Inventory::MAX_SELECTION_SIZE + i, &packet->items[i]);
+            minecraft->player->inventory->setItem(Inventory::MAX_SELECTION_SIZE + i, packet->items[i]);
         }
     } else if (minecraft->player->containerMenu && minecraft->player->containerMenu->containerId == packet->containerId) {
         for (unsigned int i = 0; i < packet->items.size(); ++i) {
-            minecraft->player->containerMenu->setSlot(i, &packet->items[i]);
+            minecraft->player->containerMenu->setSlot(i, packet->items[i]);
         }
     }
 }
@@ -870,7 +870,7 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID& source, Containe
 	  return;
 
 	//minecraft->player->containerMenu->setSlot(packet->slot, packet->item.isNull()? NULL : &packet->item);
-	minecraft->player->containerMenu->setSlot(packet->slot, &packet->item);
+	minecraft->player->containerMenu->setSlot(packet->slot, packet->item);
 }
 
 void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID& source, ContainerSetDataPacket* packet)

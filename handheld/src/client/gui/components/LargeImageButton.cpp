@@ -71,10 +71,10 @@ void LargeImageButton::render(Minecraft* minecraft, int xm, int ym) {
 			if (src) {
 				const TextureData* d = minecraft->textures->getTemporaryTextureData(texId);
 				if (d != NULL) {
-					float u0 = (src->x+(hovered?src->w:0)) / (float)d->w;
-					float u1 = (src->x+(hovered?2*src->w:src->w)) / (float)d->w;
-					float v0 =  src->y / (float)d->h;
-					float v1 = (src->y+src->h) / (float)d->h;
+					float u0 = (src->x+(hovered?src->w:0)) / (float)d->width;
+					float u1 = (src->x+(hovered?2*src->w:src->w)) / (float)d->width;
+					float v0 =  src->y / (float)d->height;
+					float v1 = (src->y+src->h) / (float)d->height;
 					t.vertexUV(cx-hx, cy-hy, blitOffset, u0, v0);
 					t.vertexUV(cx-hx, cy+hy, blitOffset, u0, v1);
 					t.vertexUV(cx+hx, cy+hy, blitOffset, u1, v1);

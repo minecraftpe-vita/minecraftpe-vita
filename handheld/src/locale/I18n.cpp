@@ -46,7 +46,7 @@ void I18n::fillTranslations( AppPlatform* platform, const std::string& filename,
 
 	std::string line;
 	while( std::getline(fin, line) ) {
-		int spos = line.find('=');
+		size_t spos = line.find('=');
 		if (spos == std::string::npos)
 			continue;
 

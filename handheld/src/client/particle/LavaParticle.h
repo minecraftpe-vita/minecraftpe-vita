@@ -45,7 +45,7 @@ public:
 
         if (age++ >= lifetime) remove();
         float odds = age / (float) lifetime;
-        if (sharedRandom.nextFloat() > odds) level->addParticle(PARTICLETYPE(smoke), x, y, z, xd, yd, zd);
+        if (sharedRandom.nextFloat() > odds) level->addParticle(ParticleType::smoke, x, y, z, xd, yd, zd);
 
         yd -= 0.03f;
         move(xd, yd, zd);

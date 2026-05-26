@@ -85,8 +85,11 @@ float Sheep::getHeadEatAngleScale( float a )
 	return ((xRot / (float) (180 / Mth::PI)));
 }
 
-bool Sheep::interact( Player* player )
+bool Sheep::interact( Entity* entity )
 {
+	Player* player = Player::asPlayer(entity);
+	if (!player) return super::interact(entity);
+
 	ItemInstance* item = player->inventory->getSelected();
 	if (item && item->id == ((Item*)Item::shears)->id && !isSheared() && !isBaby()) {
 		if (!level->isClientSide) {
@@ -102,7 +105,7 @@ bool Sheep::interact( Player* player )
 		item->hurt(1);
 	}
 
-	return super::interact(player);
+	return super::interact(entity);
 }
 
 void Sheep::addAdditonalSaveData( CompoundTag* tag )
@@ -148,18 +151,11 @@ void Sheep::setSheared( bool value )
 int Sheep::getSheepColor( Random* random )
 {
     int nextInt = random->nextInt(100);
-    if (nextInt < 5)
-        return 15 - DyePowderItem::BLACK;
-    if (nextInt < 10)
-        return 15 - DyePowderItem::GRAY;
-    if (nextInt < 15)
-        return 15 - DyePowderItem::SILVER;
-    if (nextInt < 18)
-        return 15 - DyePowderItem::BROWN;
-
-	if (random->nextInt(500) == 0)
-		return 15 - DyePowderItem::PINK;
-
+    if (nextInt < 5) return 15 - DyePowderItem::BLACK;
+    if (nextInt < 10) return 15 - DyePowderItem::GRAY;
+    if (nextInt < 15) return 15 - DyePowderItem::SILVER;
+    if (nextInt < 18) return 15 - DyePowderItem::BROWN;
+	if (random->nextInt(500) == 0) return 15 - DyePowderItem::PINK;
 	return 0; // white
 }
 

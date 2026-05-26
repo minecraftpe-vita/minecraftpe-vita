@@ -207,13 +207,16 @@ void Table::Cell::SetByType(double numericValue, char *charValue, void *ptr, Col
 }
 Table::ColumnType Table::Cell::EstimateColumnType(void) const
 {
-	if (c)
-		if (i!=0.0f)
+	if (c) {
+		if (i!=0.0f) {
 			return BINARY;
-		else
+		} else {
 			return STRING;
-	if (ptr)
+		}
+	}
+	if (ptr) {
 		return POINTER;
+	}
 	return NUMERIC;
 }
 void Table::Cell::Clear(void)

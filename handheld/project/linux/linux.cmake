@@ -1,28 +1,31 @@
-add_definitions(-DLINUX)
+add_compile_definitions(LINUX)
 
 if(ASAN)
-  add_compile_options(-fsanitize=address,undefined)
-  add_link_options(-fsanitize=address,undefined)
-  add_compile_options(-g -fno-omit-frame-pointer)
+  target_compile_options(mcpe PUBLIC -fsanitize=address,undefined)
+  target_link_options(mcpe PUBLIC -fsanitize=address,undefined)
+  target_compile_options(mcpe PUBLIC -g -fno-omit-frame-pointer)
 endif()
 
+#target_compile_options(mcpe PUBLIC -Wl,--wrap=malloc -Wl,--wrap=free)
+#target_link_options(mcpe PUBLIC -Wl,--wrap=malloc -Wl,--wrap=free)
+
 set(GLEW_USE_STATIC_LIBS TRUE)
-find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED COMPONENTS OpenGL EGL)
 find_package(OpenAL REQUIRED)
 find_package(glfw3 REQUIRED)
 
-target_sources(${PROJECT_NAME} PRIVATE
-  ${CMAKE_CURRENT_LIST_DIR}/src/gl.c
+target_sources(mcpe_client PRIVATE
   ${HANDHELD}/platform/audio/SoundSystemAL.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/src/gl.c
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE
-  ${CMAKE_CURRENT_LIST_DIR}/../linux/include
+message(CMAKE_CURRENT_LIST_DIR "a ${CMAKE_CURRENT_LIST_DIR}")
+
+target_include_directories(mcpe PUBLIC
+  ${CMAKE_CURRENT_LIST_DIR}/include
 )
 
-target_link_libraries(${PROJECT_NAME} PUBLIC
-  GLEW::GLEW
+target_link_libraries(mcpe_client PUBLIC
   OpenGL::GL
   OpenGL::EGL
   OpenAL::OpenAL

@@ -36,7 +36,7 @@ bool TripodCamera::interactPreventDefault()
 	return true;
 }
 
-bool TripodCamera::interact( Player* player )
+bool TripodCamera::interact( Entity* entity )
 {
 	activated = true;
 	return true;
@@ -67,11 +67,11 @@ void TripodCamera::tick()
 			remove();
 		} else if (life == 8) {
 			level->takePicture(this, owner);
-			level->addParticle(PARTICLETYPE(explode), x, y + 0.6f, z, 0, 0, 0);
-			level->addParticle(PARTICLETYPE(explode), x, y + 0.8f, z, 0, 0, 0);
-			level->addParticle(PARTICLETYPE(explode), x, y + 1.0f, z, 0, 0, 0);
+			level->addParticle(ParticleType::explode, x, y + 0.6f, z, 0, 0, 0);
+			level->addParticle(ParticleType::explode, x, y + 0.8f, z, 0, 0, 0);
+			level->addParticle(ParticleType::explode, x, y + 1.0f, z, 0, 0, 0);
 		} else if (life > 8) {
-			level->addParticle(PARTICLETYPE(smoke), x, y + 1.0f, z, 0, 0, 0);
+			level->addParticle(ParticleType::smoke, x, y + 1.0f, z, 0, 0, 0);
 		}
 	}
 }

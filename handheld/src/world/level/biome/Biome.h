@@ -34,8 +34,7 @@ public:
         int minCount;
         int maxCount;
 
-		MobSpawnerData()
-		{}
+		MobSpawnerData() : super(0), mobClassId(0), minCount(0), maxCount(0) {}
 
         MobSpawnerData(int mobClassId, int probabilityWeight, int minCount, int maxCount)
 		:	super(probabilityWeight),

@@ -171,7 +171,7 @@ void Mob::baseTick()
 				float xo = random.nextFloat() - random.nextFloat();
 				float yo = random.nextFloat() - random.nextFloat();
 				float zo = random.nextFloat() - random.nextFloat();
-				level->addParticle(PARTICLETYPE(bubble), x + xo, y + yo, z + zo, xd, yd, zd);
+				level->addParticle(ParticleType::bubble, x + xo, y + yo, z + zo, xd, yd, zd);
 			}
 			hurt(NULL, 2);
 		}
@@ -194,7 +194,7 @@ void Mob::baseTick()
 	            float xa = (2.0f * random.nextFloat() - 1.0f) * (2.0f * random.nextFloat() - 1.0f) * 0.02f;
 				float ya = (2.0f * random.nextFloat() - 1.0f) * (2.0f * random.nextFloat() - 1.0f) * 0.02f;
 				float za = (2.0f * random.nextFloat() - 1.0f) * (2.0f * random.nextFloat() - 1.0f) * 0.02f;
-	            level->addParticle(PARTICLETYPE(explode), x + random.nextFloat() * bbWidth * 2 - bbWidth, y + random.nextFloat() * bbHeight, z + random.nextFloat() * bbWidth * 2 - bbWidth, xa, ya, za);
+	            level->addParticle(ParticleType::explode, x + random.nextFloat() * bbWidth * 2 - bbWidth, y + random.nextFloat() * bbHeight, z + random.nextFloat() * bbWidth * 2 - bbWidth, xa, ya, za);
 	        }
 	    }
 	}
@@ -244,7 +244,7 @@ void Mob::spawnAnim()
 	float ya = random.nextGaussian() * 0.02;
 	float za = random.nextGaussian() * 0.02;
 	float dd = 10;
-	level.addParticle(PARTICLETYPE(explode), x + random.nextFloat() * bbWidth * 2 - bbWidth - xa * dd, y + random.nextFloat() * bbHeight - ya * dd, z + random.nextFloat() * bbWidth * 2 - bbWidth - za
+	level.addParticle(ParticleType::explode, x + random.nextFloat() * bbWidth * 2 - bbWidth - xa * dd, y + random.nextFloat() * bbHeight - ya * dd, z + random.nextFloat() * bbWidth * 2 - bbWidth - za
 	* dd, xa, ya, za);
 	}
 	*/
@@ -1120,10 +1120,6 @@ int Mob::getDamageAfterArmorAbsorb(int damage) {
     damage = v / 25;
     dmgSpill = v % 25;
     return damage;
-}
-
-static std::vector<ItemInstance*> getEquipmentSlots() {
-	return std::vector<ItemInstance*>();
 }
 
 int Mob::getArmorValue() {

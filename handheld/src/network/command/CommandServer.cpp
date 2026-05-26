@@ -45,7 +45,7 @@ public:
 		followEntityId = entityId;
 	}
 
-	void tick() {
+	void tick() override {
 		if (followEntityId < 0) return;
 
 		xOld = xo = x;
@@ -59,7 +59,7 @@ public:
 		setPos(e->x, e->y + 6, e->z);
 	}
 
-	int getEntityTypeId() const { return 0; }
+	int getEntityTypeId() const override { return 0; }
 
 private:
 	int followEntityId;
@@ -166,18 +166,18 @@ bool CommandServer::init(short port) {
 }
 
 std::string CommandServer::parse(ConnectedClient& client, const std::string& s) {
-	int b = s.find("(");
-	if (b == std::string::npos) {
+	size_t begin = s.find('(');
+	if (begin == std::string::npos) {
 		return Fail;
 	}
 
-	int e = s.rfind(")");
-	if (b == std::string::npos) {
+	size_t end = s.rfind(')');
+	if (end == std::string::npos) {
 		return Fail;
 	}
 
-	std::string cmd = s.substr(0, b);
-	std::string rest = s.substr(b+1, e-b-1);
+	std::string cmd = s.substr(0, begin);
+	std::string rest = s.substr(begin+1, end-begin-1);
 
 	//
 	// Block related get, set and query
@@ -240,13 +240,16 @@ std::string CommandServer::parse(ConnectedClient& client, const std::string& s) 
 		if (y1 >= LEVEL_HEIGHT) y1 = LEVEL_HEIGHT - 1;
 		if (z1 >= LEVEL_DEPTH ) z1 = LEVEL_DEPTH  - 1;
 
-		for (int y = y0; y <= y1; ++y)
-		for (int z = z0; z <= z1; ++z)
-		for (int x = x0; x <= x1; ++x) {
-			if (hasData)
-				mc->level->setTileAndData(x, y, z, id, data & 15);
-			else
-				mc->level->setTile(x, y, z, id);
+		for (int y = y0; y <= y1; ++y) {
+			for (int z = z0; z <= z1; ++z) {
+				for (int x = x0; x <= x1; ++x) {
+					if (hasData) {
+						mc->level->setTileAndData(x, y, z, id, data & 15);
+					} else {
+						mc->level->setTile(x, y, z, id);
+					}
+				}
+			}
 		}
 		return NullString;
 	}
@@ -266,8 +269,9 @@ std::string CommandServer::parse(ConnectedClient& client, const std::string& s) 
 	// Player related get, set and query
 	//
 	if (cmd == "player.setTile") {
-		if (!mc->player)
+		if (!mc->player) {
 			return Fail;
+		}
 
 		int x, y, z;
 		if (3 != sscanf(rest.c_str(), "%d,%d,%d", &x, &y, &z)) {
@@ -281,8 +285,9 @@ std::string CommandServer::parse(ConnectedClient& client, const std::string& s) 
 	}
 
 	if (cmd == "player.getTile") {
-		if (!mc->player)
+		if (!mc->player) {
 			return Fail;
+		}
 
 		Entity* e = (Entity*) mc->player;
 
@@ -292,8 +297,9 @@ std::string CommandServer::parse(ConnectedClient& client, const std::string& s) 
 	}
 
 	if (cmd == "player.setPos") {
-		if (!mc->player)
+		if (!mc->player) {
 			return Fail;
+		}
 
 		float x, y, z;
 		if (3 != sscanf(rest.c_str(), "%f,%f,%f", &x, &y, &z)) {
@@ -307,8 +313,9 @@ std::string CommandServer::parse(ConnectedClient& client, const std::string& s) 
 	}
 
 	if (cmd == "player.getPos") {
-		if (!mc->player)
+		if (!mc->player) {
 			return Fail;
+		}
 
 		Entity* e = (Entity*) mc->player;
 
@@ -335,8 +342,9 @@ std::string CommandServer::parse(ConnectedClient& client, const std::string& s) 
 
 	if (cmd == "entity.getTile") {
 		int id;
-		if (1 != sscanf(rest.c_str(), "%d", &id))
+		if (1 != sscanf(rest.c_str(), "%d", &id)) {
 			return Fail;
+		}
 
 		Entity* e = mc->level->getEntity(id);
 		if (!e) return Fail;
@@ -362,8 +370,9 @@ std::string CommandServer::parse(ConnectedClient& client, const std::string& s) 
 
 	if (cmd == "entity.getPos") {
 		int id;
-		if (1 != sscanf(rest.c_str(), "%d", &id))
+		if (1 != sscanf(rest.c_str(), "%d", &id)) {
 			return Fail;
+		}
 
 		Entity* e = mc->level->getEntity(id);
 		if (!e) return Fail;
@@ -394,13 +403,15 @@ std::string CommandServer::parse(ConnectedClient& client, const std::string& s) 
 		return NullString;
 	}
 	if (cmd == "camera.mode.setNormal") {
-                int entityId = -1;
-                if (!rest.empty()) {
-                        if (1 != sscanf(rest.c_str(), "%d", &entityId)) return Fail;
+		int entityId = -1;
+		if (!rest.empty()) {
+			if (1 != sscanf(rest.c_str(), "%d", &entityId)) return Fail;
 		}
-	        if (entityId > 0) {
-			Entity* e = mc->level->getEntity(entityId);
-			if (e && e->isMob()) mc->cameraTargetPlayer = (Mob*)e;
+	    if (entityId > 0) {
+			Entity* entity = mc->level->getEntity(entityId);
+			if (entity && entity->isMob()) {
+				mc->cameraTargetPlayer = (Mob*)entity;
+			}
 		} else {
 			mc->cameraTargetPlayer = (Mob*)mc->player;
 		}
@@ -410,9 +421,13 @@ std::string CommandServer::parse(ConnectedClient& client, const std::string& s) 
 	if (cmd == "camera.mode.setFollow") {
 		int entityId = -1;
 		if (!rest.empty()) {
-			if (1 != sscanf(rest.c_str(), "%d", &entityId)) return Fail;
+			if (1 != sscanf(rest.c_str(), "%d", &entityId)) {
+				return Fail;
+			}
 		}
-		if (entityId < 0) entityId = mc->player->entityId;
+		if (entityId < 0) {
+			entityId = mc->player->entityId;
+		}
 
 		camera->follow(entityId);
 		mc->cameraTargetPlayer = camera;
@@ -473,8 +488,10 @@ std::string CommandServer::parse(ConnectedClient& client, const std::string& s) 
 		if (success) {
 			int xx = 16 * (restorePos.x - 2);
 			int zz = 16 * (restorePos.z - 2);
-			mc->level->setTilesDirty(xx, restorePos.y, zz,
-				xx + 5 * 16, restorePos.y + RestoreHeight, zz + 5 * 16);
+			mc->level->setTilesDirty(
+				xx, restorePos.y, zz,
+				xx + 5 * 16, restorePos.y + RestoreHeight, zz + 5 * 16
+			);
 		}
 		return success? NullString : Fail;
 	}
@@ -491,7 +508,7 @@ std::string CommandServer::parse(ConnectedClient& client, const std::string& s) 
 	||  cmd.find("world.setting") == 0) {
 		int value;
 		static char name[1024];
-		if (rest.find(",") >= 100) return Fail;
+		if (rest.find(',') >= 100) return Fail;
 		if (2 != sscanf(rest.c_str(), "%[^,],%d", name, &value)) return Fail;
 		return handleSetSetting(name, value);
 	}
@@ -588,7 +605,6 @@ bool CommandServer::_updateClient(ConnectedClient& client) {
 
 void CommandServer::dispatchPacket( Packet& p ) {
 	if (!mc->netCallback || !mc->player) return;
-	const RakNet::RakNetGUID& guid = ((Player*)mc->player)->owner;
 	mc->raknetInstance->send(p);
 	//p.handle(guid, mc->netCallback);
 }

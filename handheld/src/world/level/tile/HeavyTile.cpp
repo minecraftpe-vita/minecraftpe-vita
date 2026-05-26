@@ -16,11 +16,11 @@ HeavyTile::HeavyTile( int id, int tex, const Material* material )
 }
 
 void HeavyTile::onPlace( Level* level, int x, int y, int z ) {
-    level->addToTickNextTick(x, y, z, id, getTickDelay(level));
+    level->addToTickNextTick(x, y, z, id, getTickDelay());
 }
 
 void HeavyTile::neighborChanged( Level* level, int x, int y, int z, int type ) {
-    level->addToTickNextTick(x, y, z, id, getTickDelay(level));
+    level->addToTickNextTick(x, y, z, id, getTickDelay());
 }
 
 void HeavyTile::tick( Level* level, int x, int y, int z, Random* random ) {
@@ -29,7 +29,7 @@ void HeavyTile::tick( Level* level, int x, int y, int z, Random* random ) {
     }
 }
 
-int HeavyTile::getTickDelay( Level* level ) {
+int HeavyTile::getTickDelay() {
     return 2;
 }
 

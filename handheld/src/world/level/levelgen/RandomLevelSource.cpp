@@ -457,7 +457,7 @@ void RandomLevelSource::postProcess(ChunkSource* parent, int xt, int zt) {
 
 	//LOGI("Reading temp: 1\n");
     float* temperatures = level->getBiomeSource()->getTemperatureBlock(/*NULL,*/ xo + 8, zo + 8, 16, 16);
-    for (int x = xo + 8; x < xo + 8 + 16; x++)
+    for (int x = xo + 8; x < xo + 8 + 16; x++) {
         for (int z = zo + 8; z < zo + 8 + 16; z++) {
             int xp = x - (xo + 8);
             int zp = z - (zo + 8); 
@@ -469,6 +469,7 @@ void RandomLevelSource::postProcess(ChunkSource* parent, int xt, int zt) {
                 }
             }
         }
+    }
 	//LOGI("Reading temp: 0 END\n");
 
 	const float et = getTimeS();

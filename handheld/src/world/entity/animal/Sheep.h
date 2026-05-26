@@ -43,7 +43,7 @@ public:
     float getHeadEatAngleScale(float a);
 
     /*@Override*/
-    bool interact(Player* player);
+    bool interact(Entity* entity) override;
 
     void addAdditonalSaveData(CompoundTag* tag);
     void readAdditionalSaveData(CompoundTag* tag);

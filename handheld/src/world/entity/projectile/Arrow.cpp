@@ -250,7 +250,7 @@ void Arrow::tick()
 
 	if (critArrow) {
 		for (int i = 0; i < 4; i++) {
-			level->addParticle(PARTICLETYPE(crit), x + xd * i / 4.0f, y + yd * i / 4.0f, z + zd * i / 4.0f, -xd, -yd + 0.2f, -zd);
+			level->addParticle(ParticleType::crit, x + xd * i / 4.0f, y + yd * i / 4.0f, z + zd * i / 4.0f, -xd, -yd + 0.2f, -zd);
 		}
 	}
 
@@ -282,7 +282,7 @@ void Arrow::tick()
 	if (isInWater()) {
 		for (int i = 0; i < 4; i++) {
 			float s = 1 / 4.0f;
-			level->addParticle(PARTICLETYPE(bubble), x - xd * s, y - yd * s, z - zd * s, xd, yd, zd);
+			level->addParticle(ParticleType::bubble, x - xd * s, y - yd * s, z - zd * s, xd, yd, zd);
 		}
 		inertia = 0.80f;
 	}

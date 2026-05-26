@@ -38,6 +38,6 @@ void NetherReactorPattern::setTileAt( int level, int x, int z, int tile) {
 	pattern[level][x][z] = tile;
 }
 
-unsigned int NetherReactorPattern::getTileAt( int level, int x, int z ) {
+int NetherReactorPattern::getTileAt( int level, int x, int z ) {
 	return pattern[level][x][z];
 }

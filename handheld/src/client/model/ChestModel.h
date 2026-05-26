@@ -36,6 +36,10 @@ public:
         bottom.z = 1;
     }
 
+    void render(Entity* e, float time, float r, float bob, float yRot, float xRot, float scale) override {
+        render();
+    }
+
     void render() {
         lock.xRot = lid.xRot;
 

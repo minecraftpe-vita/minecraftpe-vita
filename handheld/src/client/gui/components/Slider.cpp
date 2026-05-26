@@ -25,8 +25,6 @@ Slider::Slider(Minecraft* minecraft, const Options::Option* option, const std::v
 	assert(stepVec.size() > 1);
 	numSteps = sliderSteps.size();
 	if(option != NULL) {
-		curStepValue;
-		int curStep;
 		curStepValue = minecraft->options.getIntValue(option);
 		std::vector<int>::iterator currentItem = std::find(sliderSteps.begin(), sliderSteps.end(), curStepValue);
 		if(currentItem != sliderSteps.end()) {

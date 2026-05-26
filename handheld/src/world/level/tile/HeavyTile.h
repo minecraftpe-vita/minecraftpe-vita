@@ -19,7 +19,7 @@ public:
     void neighborChanged(Level* level, int x, int y, int z, int type);
 
     void tick(Level* level, int x, int y, int z, Random* random);
-    int getTickDelay(Level* level);
+    int getTickDelay();
 
     static bool isFree(Level* level, int x, int y, int z);
 

@@ -65,13 +65,16 @@ void HTTPConnection::Get(const char *path)
 
 bool HTTPConnection::HasBadResponse(int *code, RakNet::RakString *data)
 {
-    if(badResponses.IsEmpty())
+    if(badResponses.IsEmpty()) {
         return false;
+	}
 
-	if (code)
+	if (code) {
 		*code = badResponses.Peek().code;
-	if (data)
+	}
+	if (data) {
 		*data = badResponses.Pop().data;
+	}
    return true;
 }
 void HTTPConnection::CloseConnection()

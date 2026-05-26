@@ -27,7 +27,7 @@ ItemInstance* ChestTileEntity::getItem( int slot )
 }
 
 /*
-ItemInstance ChestTileEntity::removeItem( int slot, int count )
+ItemInstance ChestTileEntity::removeItemSlot( int slot, int count )
 {
 	if (!items[slot].isNull()) {
 		if (items[slot].count <= count) {

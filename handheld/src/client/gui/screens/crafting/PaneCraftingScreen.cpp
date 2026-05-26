@@ -36,7 +36,7 @@ public:
 		statePressed(statePressed)
 	{}
 
-	void renderBg(Minecraft* minecraft, int xm, int ym) {
+	void renderBg(Minecraft* minecraft, int xm, int ym) override {
 		//fill(x+1, y+1, x+w-1, y+h-1, 0xff999999);
 		
 		bool hovered = active && (minecraft->useTouchscreen()?
@@ -47,7 +47,7 @@ public:
 		else
 			stateNormal->draw(Tesselator::instance, (float)x, (float)y);
 	}
-	bool isSecondImage(bool hovered) { return false; }
+	bool isSecondImage(bool hovered) override { return false; }
 
 private:
 	const ImageButton* const* selectedPtr;
@@ -430,10 +430,8 @@ void PaneCraftingScreen::keyPressed( int eventKey )
 
 void PaneCraftingScreen::craftSelectedItem()
 {
-	if (!currentItem)
-		return;
-    if (!currentItem->canCraft())
-        return;
+	if (!currentItem) return;
+    if (!currentItem->canCraft()) return;
 
 	ItemInstance resultItem = currentItem->item;
 

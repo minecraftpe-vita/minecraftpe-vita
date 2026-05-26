@@ -17,7 +17,7 @@ public:
 
     virtual ~ContainerMenu() {}
 
-    virtual void setSlot(int slot, ItemInstance* item);
+    virtual void setSlot(int slot, const ItemInstance& item);
 	virtual std::vector<ItemInstance> getItems();
 
 	virtual bool tileEntityDestroyedIsInvalid( int tileEntityId );

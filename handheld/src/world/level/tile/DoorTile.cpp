@@ -226,5 +226,5 @@ int DoorTile::getCompositeData( LevelSource* level, int x, int y, int z ) {
 
 	// bits: dir, dir, open/closed, isUpper, isRightHinge
 	bool isRightHinge = (upperData & 1) != 0;
-	return lowerData & C_LOWER_DATA_MASK | (isUpper ? 8 : 0) | (isRightHinge ? 16 : 0);
+	return (lowerData & C_LOWER_DATA_MASK) | (isUpper ? 8 : 0) | (isRightHinge ? 16 : 0);
 }

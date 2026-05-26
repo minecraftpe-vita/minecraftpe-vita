@@ -951,35 +951,27 @@ namespace DataStructures
 	template <class CircularLinkedListType>
 		void CircularLinkedList<CircularLinkedListType>::Clear( void )
 	{
-		if ( this->list_size == 0 )
+		if ( this->list_size == 0 ) {
 			return ;
-		else
-			if ( this->list_size == 1 )  // {RakNet::OP_DELETE(root->item); RakNet::OP_DELETE(root, _FILE_AND_LINE_);}
-			{
-				RakNet::OP_DELETE(this->root, _FILE_AND_LINE_);
-			}
+		} else if ( this->list_size == 1 ) { // {RakNet::OP_DELETE(root->item); RakNet::OP_DELETE(root, _FILE_AND_LINE_);}
+			RakNet::OP_DELETE(this->root, _FILE_AND_LINE_);
+		} else {
+			node* current;
+			node* temp;
 
-			else
-			{
-				node* current;
-				node* temp;
+			current = this->root;
 
-				current = this->root;
+			do {
+				temp = current;
+				current = current->next;
+				// RakNet::OP_DELETE(temp->item, _FILE_AND_LINE_);
+				RakNet::OP_DELETE(temp, _FILE_AND_LINE_);
+			} while ( current != this->root );
+		}
 
-				do
-				{
-					temp = current;
-					current = current->next;
-					// RakNet::OP_DELETE(temp->item, _FILE_AND_LINE_);
-					RakNet::OP_DELETE(temp, _FILE_AND_LINE_);
-				}
-
-				while ( current != this->root );
-			}
-
-			this->list_size = 0;
-			this->root = 0;
-			this->position = 0;
+		this->list_size = 0;
+		this->root = 0;
+		this->position = 0;
 	}
 
 	template <class CircularLinkedListType>

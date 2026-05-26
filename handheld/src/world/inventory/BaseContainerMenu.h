@@ -27,7 +27,7 @@ public:
 
     virtual ItemList getItems() = 0;
 
-	virtual void setSlot(int slot, ItemInstance* item) = 0;
+	virtual void setSlot(int slot, const ItemInstance& item) = 0;
 	virtual void setData( int id, int value ) {}
 
 	virtual void setListener(IContainerListener* listener);

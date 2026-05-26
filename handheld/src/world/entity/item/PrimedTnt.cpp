@@ -63,7 +63,7 @@ void PrimedTnt::tick()
 		remove();
 		explode();
 	} else {
-		level->addParticle(PARTICLETYPE(smoke), x, y + 0.5f, z, 0, 0, 0);
+		level->addParticle(ParticleType::smoke, x, y + 0.5f, z, 0, 0, 0);
 	}
 }
 

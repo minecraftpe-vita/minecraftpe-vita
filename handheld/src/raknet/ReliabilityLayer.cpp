@@ -371,10 +371,10 @@ RakNet::TimeMS ReliabilityLayer::GetTimeoutTime(void)
 //-------------------------------------------------------------------------------------------------------
 void ReliabilityLayer::InitializeVariables( void )
 {
-	memset( orderedWriteIndex, 0, NUMBER_OF_ORDERED_STREAMS * sizeof(OrderingIndexType));
-	memset( sequencedWriteIndex, 0, NUMBER_OF_ORDERED_STREAMS * sizeof(OrderingIndexType) );
-	memset( orderedReadIndex, 0, NUMBER_OF_ORDERED_STREAMS * sizeof(OrderingIndexType) );
-	memset( highestSequencedReadIndex, 0, NUMBER_OF_ORDERED_STREAMS * sizeof(OrderingIndexType) );
+	memset( (void*)orderedWriteIndex, 0, NUMBER_OF_ORDERED_STREAMS * sizeof(OrderingIndexType));
+	memset( (void*)sequencedWriteIndex, 0, NUMBER_OF_ORDERED_STREAMS * sizeof(OrderingIndexType) );
+	memset( (void*)orderedReadIndex, 0, NUMBER_OF_ORDERED_STREAMS * sizeof(OrderingIndexType) );
+	memset( (void*)highestSequencedReadIndex, 0, NUMBER_OF_ORDERED_STREAMS * sizeof(OrderingIndexType) );
 	memset( &statistics, 0, sizeof( statistics ) );
 	memset( &heapIndexOffsets, 0, sizeof( heapIndexOffsets ) );
 	
@@ -2785,17 +2785,16 @@ bool ReliabilityLayer::IsOlderOrderedPacket( OrderingIndexType newPacketOrdering
 		{
 			return true;
 		}
-	}
-
-	else
+	} else {
 		if ( newPacketOrderingIndex >= ( OrderingIndexType ) ( waitingForPacketOrderingIndex - (( OrderingIndexType ) maxRange/(OrderingIndexType)2+(OrderingIndexType)1) ) ||
 			newPacketOrderingIndex < waitingForPacketOrderingIndex )
 		{
 			return true;
 		}
+	}
 
-		// Old packet
-		return false;
+	// Old packet
+	return false;
 }
 
 //-------------------------------------------------------------------------------------------------------

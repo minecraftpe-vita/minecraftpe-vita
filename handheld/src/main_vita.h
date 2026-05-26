@@ -151,7 +151,6 @@ void handleTouch() {
 	int ret;
 	static SceTouchData prevTouchData = {};
 	static SceTouchData currTouchData = {};
-	static int firstFinger = -1;
 	static int fingerSlots[12] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 
 	auto allocSlot = [&](int id) -> int {
@@ -177,11 +176,15 @@ void handleTouch() {
 	}
 
 	// touchDown
-    for (int i = 0; i < currTouchData.reportNum; i++) {
+    for (size_t i = 0; i < currTouchData.reportNum; i++) {
         SceTouchReport* curr = &currTouchData.report[i];
         bool found = false;
-        for (int j = 0; j < prevTouchData.reportNum; j++)
-            if (prevTouchData.report[j].id == curr->id) { found = true; break; }
+        for (size_t j = 0; j < prevTouchData.reportNum; j++) {
+            if (prevTouchData.report[j].id == curr->id) {
+				found = true;
+				break;
+			}
+		}
         if (!found) {
             int slot = allocSlot(curr->id);
             if (slot == -1) continue;
@@ -194,9 +197,9 @@ void handleTouch() {
     }
 
     // touchMove
-    for (int i = 0; i < currTouchData.reportNum; i++) {
+    for (size_t i = 0; i < currTouchData.reportNum; i++) {
         SceTouchReport* curr = &currTouchData.report[i];
-        for (int j = 0; j < prevTouchData.reportNum; j++) {
+        for (size_t j = 0; j < prevTouchData.reportNum; j++) {
             if (prevTouchData.report[j].id == curr->id) {
                 int slot = findSlot(curr->id);
                 if (slot == -1) break;
@@ -211,10 +214,10 @@ void handleTouch() {
     }
 
     // touchUp
-    for (int i = 0; i < prevTouchData.reportNum; i++) {
+    for (size_t i = 0; i < prevTouchData.reportNum; i++) {
         SceTouchReport* prev = &prevTouchData.report[i];
         bool found = false;
-        for (int j = 0; j < currTouchData.reportNum; j++)
+        for (size_t j = 0; j < currTouchData.reportNum; j++)
             if (currTouchData.report[j].id == prev->id) { found = true; break; }
         if (!found) {
             int slot = findSlot(prev->id);

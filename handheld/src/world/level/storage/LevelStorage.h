@@ -23,9 +23,6 @@ public:
 	virtual ChunkStorage* createChunkStorage(Dimension* dimension) = 0;
 
     virtual void saveLevelData(LevelData& levelData, std::vector<Player*>* players) = 0;
-	virtual void saveLevelData(LevelData& levelData) {
-		saveLevelData(levelData, NULL);
-	}
 
     virtual void closeAll() = 0;
 

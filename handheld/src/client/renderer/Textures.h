@@ -70,7 +70,7 @@ private:
 	bool clamp;
 	bool blur;
 
-	int lastBoundTexture;
+	TextureId lastBoundTexture;
 	std::vector<DynamicTexture*> dynamicTextures;
 };
 

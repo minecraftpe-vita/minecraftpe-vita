@@ -23,7 +23,7 @@ public:
     void addAdditonalSaveData(CompoundTag* tag);
     void readAdditionalSaveData(CompoundTag* tag);
 
-    bool interact(Player* player);
+    bool interact(Entity* entity) override;
 protected:
     const char* getAmbientSound();
     std::string getHurtSound();

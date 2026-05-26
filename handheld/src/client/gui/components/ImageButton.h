@@ -62,7 +62,7 @@ public:
 	void renderBg(Minecraft* minecraft, int xm, int ym) {}
 
 protected:
-	virtual void setupDefault();
+	void setupDefault();
 	virtual bool isSecondImage(bool hovered) { return hovered; }
 
 	ImageDef _imageDef;

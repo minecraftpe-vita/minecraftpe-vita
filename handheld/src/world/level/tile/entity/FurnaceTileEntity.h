@@ -22,8 +22,8 @@ public:
 
 	// Container
     ItemInstance* getItem(int slot);
-	void setItem(int slot, ItemInstance* item);
-    ItemInstance removeItem(int slot, int count);
+	void setItem(int slot, const ItemInstance& item);
+    ItemInstance removeItemSlot(int slot, int count);
 
 	std::string getName() const;
 	int getMaxStackSize() const;

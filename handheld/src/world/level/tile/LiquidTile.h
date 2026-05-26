@@ -108,7 +108,7 @@ public:
                     float xx = x + random->nextFloat();
                     float yy = y + yy1;
                     float zz = z + random->nextFloat();
-                    level->addParticle(PARTICLETYPE(lava), xx, yy, zz, 0, 0, 0);
+                    level->addParticle(ParticleType::lava, xx, yy, zz, 0, 0, 0);
                 }
             }
         }
@@ -144,7 +144,7 @@ protected:
 	void fizz(Level* level, int x, int y, int z) {
         //level->playSound(x + 0.5f, y + 0.5f, z + 0.5f, "random.fizz", 0.5f, 2.6f + (level->random.nextFloat() - level->random.nextFloat()) * 0.8f);
         for (int i = 0; i < 8; i++) {
-            level->addParticle(PARTICLETYPE(largesmoke), (float)x + Mth::random(), (float)y + 1.2f, (float)z + Mth::random(), 0, 0, 0);
+            level->addParticle(ParticleType::largesmoke, (float)x + Mth::random(), (float)y + 1.2f, (float)z + Mth::random(), 0, 0, 0);
         }
     }
     int getDepth(Level* level, int x, int y, int z) {

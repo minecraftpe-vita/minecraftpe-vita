@@ -73,7 +73,6 @@ void renderCursor(float x, float y, Minecraft* minecraft) {
 	minecraft->textures->loadAndBindTexture("gui/cursor.png");
 	glEnable(GL_BLEND);
 
-	const float s = 32;
 	const float width = 16;
 	const float height = 16;
 	t.begin();
@@ -914,11 +913,6 @@ void GameRenderer::saveMatrices()
 	#if defined(RPI)
 		return;
 	#endif
-
-	static bool saved = false;
-	//if (saved) return;
-
-	saved = true;
 
 	glGetFloatv(GL_PROJECTION_MATRIX, lastProjMatrix);
 	glGetFloatv(GL_MODELVIEW_MATRIX, lastModelMatrix);

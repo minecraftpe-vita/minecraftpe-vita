@@ -25,6 +25,9 @@ public:
 
 	void updateShape(LevelSource* level, int x, int y, int z);
 	void setShape();
+	void setShape(float x0, float y0, float z0, float x1, float y1, float z1) override {
+		super::setShape(x0, y0, z0, x1, y1, z1);
+	}
 
 	void neighborChanged(Level* level, int x, int y, int z, int type);
 

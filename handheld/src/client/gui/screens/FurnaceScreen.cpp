@@ -509,7 +509,7 @@ void FurnaceScreen::takeAndClearSlot( int slot )
 	ItemInstance oldItem = *furnace->getItem(slot);
 	ItemInstance blank;
 
-	furnace->setItem(slot, &blank);
+	furnace->setItem(slot, blank);
 	if (minecraft->level->isClientSide) {
 		ContainerSetSlotPacket p(menu->containerId, slot, blank);
 		minecraft->raknetInstance->send(p);
@@ -542,7 +542,7 @@ bool FurnaceScreen::handleAddItem( int slot, const ItemInstance* item )
 			return false;//takeAndClearSlot(slot);
 
 		ItemInstance moved = moveOver(item, item->getMaxStackSize());
-		player->containerMenu->setSlot(slot, &moved);
+		player->containerMenu->setSlot(slot, moved);
 	}
 	 
 	if (minecraft->level->isClientSide) {

@@ -284,13 +284,13 @@ void Player::spawnEatParticles(const ItemInstance* useItem, int count) {
 			p.xRot(xx);
 			p.yRot(yy);
 			p = p.add(x, y + getHeadHeight(), z);
-			level->addParticle(PARTICLETYPE(iconcrack), p.x, p.y, p.z, d.x, d.y + 0.05f, d.z, useItem->getItem()->id);
+			level->addParticle(ParticleType::iconcrack, p.x, p.y, p.z, d.x, d.y + 0.05f, d.z, useItem->getItem()->id);
 		}
 		level->playSound(this, "random.eat", .5f + .5f * random.nextInt(2), (random.nextFloat() - random.nextFloat()) * 0.2f + 1.0f);
 	}
 }
 
-void Player::startUsingItem(ItemInstance instance, int duration) {
+void Player::startUsingItem(const ItemInstance& instance, int duration) {
 	if(instance == useItem) return;
 	useItem = instance;
 	useItemDuration = duration;
@@ -693,8 +693,8 @@ bool Player::hurt(Entity* source, int dmg) {
     return super::hurt(source, dmg);
 }
 
-void Player::interact(Entity* entity) {
-    if (entity->interact(this)) return;
+bool Player::interact(Entity* entity) {
+    if (entity->interact(this)) return true;
 	ItemInstance* item = inventory->getSelected();
 	if (item != NULL && entity->isMob()) {
         item->interactEnemy((Mob*)entity);
@@ -703,6 +703,7 @@ void Player::interact(Entity* entity) {
             inventory->clearSlot(inventory->selected);
         }
     }
+    return false;
 }
 
 //void Player::swing() {
