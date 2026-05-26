@@ -992,11 +992,10 @@ void Minecraft::handleMouseDown(int button, bool down) {
 #ifndef STANDALONE_SERVER
 #ifndef RPI
 	if(player->isUsingItem()) {
-#if defined(__VITA__) || defined(WIN32) || 1
-		// honestly this seems like just a genuine bug in the game tbh
-		if(!down && !Keyboard::isKeyDown(options.keyUse.key) && !Mouse::isButtonDown(MouseAction::ACTION_RIGHT)) {
-#else
+#if defined(__APPLE__) || defined(ANDROID)
 		if(!down && !Keyboard::isKeyDown(options.keyUse.key)) {
+#else
+		if(!down && !Keyboard::isKeyDown(options.keyUse.key) && !Mouse::isButtonDown(MouseAction::ACTION_RIGHT)) {
 #endif
 			gameMode->releaseUsingItem(player);
 		}
@@ -1229,7 +1228,7 @@ bool Minecraft::useTouchscreen() {
 bool Minecraft::supportNonTouchScreen() {
 	return _supportsNonTouchscreen;
 }
-void Minecraft::init()
+void Minecraft::initInternal()
 {
 	options.minecraft = this;
 	options.initDefaultValues();

@@ -39,9 +39,9 @@ public:
 	}
 	virtual ~App() {}
 
-	void init_ctx(AppContext& c) {
+	void init(AppContext& c) {
         _context = c;
-		init();
+		initInternal();
 		_inited = true;
     }
 	bool isInited() { return _inited; }
@@ -77,7 +77,7 @@ public:
 	virtual bool handleBack(bool isDown) { return false; }
 
 protected:
-	virtual void init() {}
+	virtual void initInternal() {}
 	//virtual void onGraphicsLost() = 0;
 	virtual void onGraphicsReset() = 0;
 

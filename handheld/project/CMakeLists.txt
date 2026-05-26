@@ -53,6 +53,7 @@ endif()
 
 if(PUBLISH)
   add_compile_definitions(PUBLISH)
+  add_compile_definitions(NDEBUG)
 endif()
 
 add_library(raknet

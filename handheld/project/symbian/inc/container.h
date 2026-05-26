@@ -13,8 +13,12 @@
 #include <commdb.h>
 #include <commdbconnpref.h>
 #include <extendedconnpref.h>
+#include <remconcoreapitarget.h>
+#include <remconcoreapitargetobserver.h>
+#include <remconinterfaceselector.h>
 
 #include <list>
+#include <queue>
 #include <set>
 
 #include "../../../src/NinecraftApp.h"
@@ -30,8 +34,13 @@ struct SoundHandlerSymbian;
 
 struct CMcpeAppUi;
 struct CNetKeepAlive;
+struct CBasicRemConObserver;
 
-struct CMcpeContainer : CCoeControl, MAknWsEventObserver {
+struct MBasicRemConObserver {
+	virtual void HandleVolumeKeyL(TKeyCode) = 0;
+};
+
+struct CMcpeContainer : CCoeControl, MAknWsEventObserver, MBasicRemConObserver {
 	friend struct CMcpeAppUi;
 
 	friend struct SoundHandlerSymbian;
@@ -48,6 +57,8 @@ struct CMcpeContainer : CCoeControl, MAknWsEventObserver {
 
 	void HandleWsEventL(const TWsEvent &aEvent, CCoeControl *aDestination) override;
 
+	void HandleVolumeKeyL(TKeyCode aKey) override;
+
 	static TInt DrawCallBack(TAny *aInstance);
 
 	inline static CMcpeContainer *instance() { return gInstance; }
@@ -57,13 +68,13 @@ private:
 
 	void HandleResourceChange(TInt aType) override;
 
+	TKeyResponse OfferKeyEventL(const TKeyEvent& aKeyEvent, TEventCode aType) override;
+
 	inline TInt CountComponentControls() const override { return 0; }
 
 	inline CCoeControl *ComponentControl(TInt aIndex) const override { return NULL; }
 
 	inline void Draw(const TRect &aRect) const override {}
-
-	static bool IsScanCodeNonModifier(TInt iScanCode);
 
 private:
 	enum TStatus {
@@ -94,9 +105,8 @@ private:
 #ifndef NO_NETWORK
 	CNetKeepAlive *iNetKeepAlive;
 #endif
+	CBasicRemConObserver *iRcObserver;
 
-	TInt iVolume;
-	TUint iVolumeStep;
 	TStatus iOutputStatus;
 };
 
@@ -136,5 +146,37 @@ private:
 	TNifProgressBuf iProgress;
 };
 #endif
+
+struct CBasicRemConObserver : CActive, MRemConCoreApiTargetObserver {
+	static CBasicRemConObserver *NewL(MBasicRemConObserver& aObserver);
+
+	virtual ~CBasicRemConObserver();
+
+private:
+	void RunL() override;
+
+	void DoCancel() override;
+
+	void FinishCommandL(TRemConCoreApiOperationId aId);
+
+private:
+	CBasicRemConObserver(MBasicRemConObserver& aObserver);
+	void ConstructL();
+
+	void MrccatoCommand(TRemConCoreApiOperationId, TRemConCoreApiButtonAction) override;
+
+	inline void MrccatoPlay(TRemConCoreApiPlaybackSpeed, TRemConCoreApiButtonAction) override {}
+	inline void MrccatoSelectAudioInputFunction(TUint8, TRemConCoreApiButtonAction) override {}
+	inline void MrccatoSelectAvInputFunction(TUint8, TRemConCoreApiButtonAction) override {}
+	inline void MrccatoSelectDiskFunction(TUint, TRemConCoreApiButtonAction) override {}
+	inline void MrccatoTuneFunction(TBool, TUint, TUint, TRemConCoreApiButtonAction) override {}
+
+private:
+	MBasicRemConObserver& iTarget;
+	CRemConInterfaceSelector *iInterfaceSelector;
+	CRemConCoreApiTarget *iCoreTarget;
+
+	std::queue<TRemConCoreApiOperationId> iQueue;
+};
 
 #endif

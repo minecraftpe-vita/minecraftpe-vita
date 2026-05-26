@@ -9,7 +9,7 @@ This repository contains a port of Minecraft Pocket Edition 0.6.1 to the followi
 to build it, make sure you have the latest VitaSDK from vitasdk.org
 
 ```
-cmake -DPUBLISH=on -B build -S handheld/project/vita
+cmake -DPLATFORM=vita -DPUBLISH=on -B buid -S handheld/project
 cd build
 make -j$(nproc)
 ```

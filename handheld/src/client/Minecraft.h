@@ -56,7 +56,7 @@ protected:
 public:
 	virtual ~Minecraft();
 
-	void init();
+	void initInternal() override;
 	void setSize(int width, int height);
 	void reloadOptions();
 

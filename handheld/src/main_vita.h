@@ -117,7 +117,7 @@ static void initEgl(App* app, AppContext* state, uint32_t w, uint32_t h)
 	_inited_egl = true;
 	if (!_app_inited) {
 		_app_inited = true;
-		app->init_ctx(*state);
+		app->init(*state);
 	} else {
 		app->onGraphicsReset(*state);
 	}
@@ -206,8 +206,8 @@ void handleTouch() {
                 int16_t x = touch_to_screen_x(curr->x);
                 int16_t y = touch_to_screen_y(curr->y);
                 //sceClibPrintf("touchMove %d %d %d\n", curr->id, x, y);
-                if (slot == 0) Mouse::feed(MouseAction::ACTION_MOVE, MouseAction::DATA_DOWN, x, y);
-                Multitouch::feed(1, MouseAction::DATA_DOWN, x, y, slot);
+                if (slot == 0) Mouse::feed(MouseAction::ACTION_MOVE, MouseAction::DATA_UP, x, y);
+                Multitouch::feed(0, MouseAction::DATA_UP, x, y, slot);
                 break;
             }
         }
@@ -376,10 +376,14 @@ int main(int argc, char** argv) {
 
 	MAIN_CLASS* app = new MAIN_CLASS();
 
-	// savedata0 is too slow .. (probably bcs pfs)
+	// savedata0 is slow .. causes lag on every autosave, (probably because pfs)
+#ifdef RETAIL
+	app->externalStoragePath = "savedata0:/data/minecraftpe";
+	app->externalCacheStoragePath = "savedata0:/data/minecraftpe";
+#else
 	app->externalStoragePath = "ux0:/data/minecraftpe";
 	app->externalCacheStoragePath = "ux0:/data/minecraftpe";
-
+#endif
 	AppContext context;
 	AppPlatform_Vita platform;
 	context.doRender = true;

@@ -66,7 +66,7 @@ NinecraftApp::~NinecraftApp()
 	teardown();
 }
 
-void NinecraftApp::init()
+void NinecraftApp::initInternal()
 {
 	// Global initialization goes here
 	Mth::initMth();
@@ -98,7 +98,7 @@ void NinecraftApp::init()
 	I18n::loadLanguage(platform(), "en_US");
 #endif
 
-	Minecraft::init();
+	Minecraft::initInternal();
 
 #if !defined(DEMO_MODE) && !defined(APPLE_DEMO_PROMOTION) && !defined(NO_STORAGE)
 	storageSource = new ExternalFileLevelStorageSource(externalStoragePath, externalCacheStoragePath);

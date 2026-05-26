@@ -22,6 +22,7 @@ void CMcpeAppUi::ConstructL() {
 	AddToStackL(iAppContainer);
 
 	SetOrientationL(EAppUiOrientationLandscape);
+	SetKeyBlockMode(ENoKeyBlock);
 }
 
 void CMcpeAppUi::HandleCommandL(TInt aCommand) {

@@ -18,7 +18,7 @@ public:
     NinecraftApp();
 	~NinecraftApp();
 
-	void init();
+	void initInternal() override;
 	void teardown();
 
 	void update();
