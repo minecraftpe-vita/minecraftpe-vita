@@ -57,7 +57,7 @@ void Font::init( Options* options )
 		size_t xt = i % _cols;
 		size_t yt = i / _cols;
 
-		size_t x = 7;
+		int x = 7;
 		for (; x >= 0; x--) {
 			size_t xPixel = _x + xt * 8 + x;
 			bool emptyColumn = true;
