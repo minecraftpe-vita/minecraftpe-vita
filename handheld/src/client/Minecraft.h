@@ -200,6 +200,7 @@ public:
     PixelCalc pixelCalcUi;
 
 	HitResult hitResult;
+	
 	Atomic<int> progressStagePercentage;
 
 	// This field is initialized in main()

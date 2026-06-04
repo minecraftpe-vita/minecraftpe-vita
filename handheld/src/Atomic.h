@@ -54,9 +54,8 @@ private:
 #else
 
 #include <atomic>
+#define Atomic std::atomic
 
-template <class T>
-using Atomic = std::atomic<T>;
 
 #endif
 
