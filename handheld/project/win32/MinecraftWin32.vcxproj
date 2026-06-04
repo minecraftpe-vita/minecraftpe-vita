@@ -361,6 +361,7 @@
     <ClInclude Include="..\..\src\AppPlatform.h" />
     <ClInclude Include="..\..\src\AppConstants.h" />
     <ClInclude Include="..\..\src\AppPlatform_win32.h" />
+    <ClInclude Include="..\..\src\Atomic.h" />
     <ClInclude Include="..\..\src\client\gamemode\CreatorMode.h" />
     <ClInclude Include="..\..\src\client\gamemode\GameMode.h" />
     <ClInclude Include="..\..\src\client\gamemode\SurvivalMode.h" />

@@ -73,15 +73,15 @@ public:
 			png_read_info(pngPtr, infoPtr);
 
 			// Set up the texdata properties
-			out.w = png_get_image_width(pngPtr, infoPtr);
-			out.h = png_get_image_height(pngPtr, infoPtr);
+			out.width = png_get_image_width(pngPtr, infoPtr);
+			out.height = png_get_image_height(pngPtr, infoPtr);
 
-			png_bytep* rowPtrs = new png_bytep[out.h];
-			out.data = new unsigned char[4 * out.w * out.h];
+			png_bytep* rowPtrs = new png_bytep[out.height];
+			out.data = new unsigned char[4 * out.width * out.height];
 			out.memoryHandledExternally = false;
 
-			int rowStrideBytes = 4 * out.w;
-			for (int i = 0; i < out.h; i++) {
+			int rowStrideBytes = 4 * out.width;
+			for (int i = 0; i < out.height; i++) {
 				rowPtrs[i] = (png_bytep)&out.data[i*rowStrideBytes];
 			}
 			png_read_image(pngPtr, rowPtrs);

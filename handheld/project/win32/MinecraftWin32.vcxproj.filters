@@ -3194,5 +3194,6 @@
       <Filter>Source Files\client\gui\components</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\client\gui\screens\EnterIpAddressScreen.h" />
+    <ClInclude Include="..\..\src\Atomic.h" />
   </ItemGroup>
 </Project>
