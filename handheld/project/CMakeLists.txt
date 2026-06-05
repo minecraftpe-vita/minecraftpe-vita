@@ -4,6 +4,7 @@ option(PLATFORM "target platform, options: [vita, linux]" "vita")
 option(DEMO "build demo version" OFF)
 option(PUBLISH "build release version" OFF)
 option(ASAN "enable address sanitizer" OFF)
+option(PROFILER "enable profiler" OFF)
 
 if(${PLATFORM} STREQUAL "vita")
   set(VITA ON)
@@ -54,6 +55,10 @@ endif()
 if(PUBLISH)
   add_compile_definitions(PUBLISH)
   add_compile_definitions(NDEBUG)
+endif()
+
+if(PROFILER)
+  add_compile_definitions(PROFILER)
 endif()
 
 add_library(raknet

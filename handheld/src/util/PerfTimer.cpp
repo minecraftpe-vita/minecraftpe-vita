@@ -33,6 +33,7 @@ void PerfTimer::push( const std::string& name )
 	path += name;
 	paths.push_back(path);
 	startTimes.push_back(getTimeS());
+	//printf("push %s\n", path.c_str());
 }
 
 /*static*/
@@ -41,6 +42,7 @@ void PerfTimer::pop()
 	if (!enabled) return;
 	float endTime = getTimeS();
 	float startTime = startTimes.back();
+	//printf("pop  %s\n", path.c_str());
 
 	paths.pop_back();
 	startTimes.pop_back();
@@ -120,4 +122,14 @@ std::vector<PerfTimer::ResultField> PerfTimer::getLog(const std::string& rawPath
 	std::sort(result.begin(), result.end());
 	result.insert(result.begin(), ResultField(rawPath, 100, totalTime * 100.0f / globalTime));
 	return result;
+}
+
+void PerfTimer::checkLeak() {
+	if (!enabled) return;
+	if (paths.size() > 0) {
+		LOGI("PerfTimer leak: %d\n", (int)paths.size());
+		for (size_t i = 0; i < paths.size(); ++i) {
+			LOGI("  %s\n", paths[i].c_str());
+		}
+	}
 }

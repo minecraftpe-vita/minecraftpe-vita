@@ -75,9 +75,10 @@ void PerfRenderer::renderFpsMeter( float tickTime )
 	glDisable2(GL_TEXTURE_2D);
 	Tesselator& t = Tesselator::instance;
 
-	t.begin(GL_TRIANGLES);
-	int hh1 = (int) (usPer60Fps / 200);
 	float count = (float)frameTimes.size();
+	/* broken
+	int hh1 = (int) (usPer60Fps / 200);
+	t.begin(GL_TRIANGLES);
 	t.color(0x20000000);
 	t.vertex(0, (float)(_mc->height - hh1), 0);
 	t.vertex(0, (float)_mc->height, 0);
@@ -89,8 +90,9 @@ void PerfRenderer::renderFpsMeter( float tickTime )
 	t.vertex(0, (float)(_mc->height - hh1), 0);
 	t.vertex(count, (float)(_mc->height - hh1), 0);
 	t.vertex(count, (float)(_mc->height - hh1 * 2), 0);
-
 	t.draw();
+	*/
+
 	float totalTime = 0;
 	for (unsigned int i = 0; i < frameTimes.size(); i++) {
 		totalTime += frameTimes[i];

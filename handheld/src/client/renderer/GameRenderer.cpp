@@ -170,21 +170,22 @@ void GameRenderer::render(float a) {
 
 		TIMER_PUSH("level");
 		if (_t_keepPic < 0) {
-		if (!(mc->screen && !mc->screen->renderGameBehind())) {
+            if (!(mc->screen && !mc->screen->renderGameBehind())) {
 
-			if (mc->screen && mc->screen->hasClippingArea(screenScissorArea))
-				useScreenScissor = true;
+                if (mc->screen && mc->screen->hasClippingArea(screenScissorArea))
+                    useScreenScissor = true;
 
-			renderLevel(a);
-			hasClearedColorBuffer = true;
+                renderLevel(a);
+                hasClearedColorBuffer = true;
 
-			if (!mc->options.hideGui) {
-				TIMER_POP_PUSH("gui");
-				setupGuiScreen(false);
-				hasSetupGuiScreen = true;
-				mc->gui.render(a, mc->screen != NULL, xMouse, yMouse);
-			}
-		}}
+                if (!mc->options.hideGui) {
+                    TIMER_POP_PUSH("gui");
+                    setupGuiScreen(false);
+                    hasSetupGuiScreen = true;
+                    mc->gui.render(a, mc->screen != NULL, xMouse, yMouse);
+                }
+            }
+        }
 		TIMER_POP();
 
 	} else {

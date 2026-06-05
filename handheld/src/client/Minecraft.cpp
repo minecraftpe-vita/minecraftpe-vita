@@ -507,6 +507,9 @@ void Minecraft::update() {
 	} else {
 		PerfTimer::enabled = false;
 	}
+
+	PerfTimer::checkLeak();
+
 #endif
 	//LOGI("Exit Update\n");
 }
@@ -541,6 +544,7 @@ void Minecraft::tick(int nTick, int maxTick) {
 	// ready, _levelGenerated() is called once and any threads are deleted.
 	//
 	if (isGeneratingLevel) {
+		TIMER_POP();
 		return;
 	}
 	if (!_hasSignaledGeneratingLevelFinished) {

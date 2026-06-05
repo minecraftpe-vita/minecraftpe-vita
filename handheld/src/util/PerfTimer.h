@@ -48,6 +48,7 @@ public:
     static void push(const std::string& name);
     static void pop();
     static void popPush(const std::string& name);
+    static void checkLeak();
 
 	static std::vector<ResultField> getLog(const std::string& path);
 
