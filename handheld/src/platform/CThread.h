@@ -29,31 +29,32 @@
 class CThread
 {
 public:
-	using pthread_fn = void* (*)(void*);
+	typedef void* (*pthread_fn)(void*);
 
-	CThread( pthread_fn threadFunc, void* threadParam );
+	CThread(pthread_fn threadFunc, void* threadParam );
 	virtual ~CThread();
-
+#ifndef WIN32
 	CThread(const CThread&) = delete;
     CThread& operator=(const CThread&) = delete;
 
 	CThread(CThread&&) = delete;
     CThread& operator=(CThread&&) = delete;
-	
+#endif
+
 	static void sleep( const unsigned int millis );
 
 private:
-	bool m_started{false};
+	bool m_started;
 
 #if defined(WIN32)
-    void* m_threadHandle{nullptr};
-    unsigned long m_threadID{0};
-    void* (*mp_threadFunc)(void*){nullptr}; 
+    void* m_threadHandle;
+    unsigned long m_threadID;
+    void* (*mp_threadFunc)(void*); 
 #elif defined(__VITA__)
-    int m_thread{-1};
-    void* m_vitaArgs[2]{nullptr};
+    int m_thread;
+    void* m_vitaArgs[2];
 #elif defined(LINUX) || defined(ANDROID) || defined(__APPLE__) || defined(POSIX)
-    unsigned long m_thread{0};
+    unsigned long m_thread;
 #endif
 
 };

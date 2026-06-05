@@ -51,12 +51,18 @@ private:
 	T m_v;
 };
 
+#elif defined(WIN32)
+
+#include <atomic>
+#define Atomic std::atomic
+
 #else
 
 #include <atomic>
 
 template <class T>
 using Atomic = std::atomic<T>;
+
 
 #endif
 

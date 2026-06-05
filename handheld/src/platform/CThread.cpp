@@ -19,8 +19,19 @@ static int vita_thread_entry(SceSize argc, void* argv) {
 
 
 CThread::CThread( pthread_fn threadFunc, void* threadParam )
+	: m_started(false),
+#if defined(WIN32)
+	  mp_threadFunc(nullptr),
+	  m_threadHandle(0)
+#elif defined(__VITA__)
+	  m_thread(-1),
+	  m_vitaArgs(nullptr)
+#else
+	  m_thread(0)
+#endif
 {
 #ifdef WIN32
+	mp_threadFunc = threadFunc;
 	m_threadHandle = CreateThread(
 		NULL,				// pointer to security attributes
 		NULL,               // initial thread stack size
