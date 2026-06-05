@@ -15,7 +15,7 @@ public:
     PolygonQuad(VertexPT*,VertexPT*,VertexPT*,VertexPT*, float u0, float v0, float u1, float v1);
 
 	void mirror();
-	void render(Tesselator& t, float scale, int vboId = -1);
+	void render(Tesselator& t, float scale);
 	PolygonQuad* flipNormal();
 
 	VertexPT vertices[4];

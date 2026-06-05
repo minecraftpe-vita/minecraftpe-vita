@@ -1,9 +1,9 @@
 add_compile_definitions(LINUX)
 
 if(ASAN)
-  target_compile_options(mcpe PUBLIC -fsanitize=address,undefined)
-  target_link_options(mcpe PUBLIC -fsanitize=address,undefined)
-  target_compile_options(mcpe PUBLIC -g -fno-omit-frame-pointer)
+  target_compile_options(mcpe INTERFACE -fsanitize=address,undefined)
+  target_link_options(mcpe INTERFACE -fsanitize=address,undefined)
+  target_compile_options(mcpe INTERFACE -g -fno-omit-frame-pointer)
 endif()
 
 #target_compile_options(mcpe PUBLIC -Wl,--wrap=malloc -Wl,--wrap=free)
@@ -19,9 +19,7 @@ target_sources(mcpe_client PRIVATE
   ${CMAKE_CURRENT_LIST_DIR}/src/gl.c
 )
 
-message(CMAKE_CURRENT_LIST_DIR "a ${CMAKE_CURRENT_LIST_DIR}")
-
-target_include_directories(mcpe PUBLIC
+target_include_directories(mcpe INTERFACE
   ${CMAKE_CURRENT_LIST_DIR}/include
 )
 

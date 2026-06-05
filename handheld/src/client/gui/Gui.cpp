@@ -7,6 +7,7 @@
 #include "../renderer/TileRenderer.h"
 #include "../renderer/LevelRenderer.h"
 #include "../renderer/GameRenderer.h"
+#include "../../util/PerfRenderer.h"
 #include "../renderer/entity/ItemRenderer.h"
 #include "../player/input/IInputHolder.h"
 #include "../gamemode/GameMode.h"
@@ -44,18 +45,71 @@ Gui::Gui(Minecraft* minecraft)
 	MAX_MESSAGE_WIDTH(240),
 	itemNameOverlayTime(2)
 {
-	glGenBuffers2(1, &_inventoryRc.vboId);
-	glGenBuffers2(1, &rcFeedbackInner.vboId);
-	glGenBuffers2(1, &rcFeedbackOuter.vboId);
 	//Gui::InvGuiScale = 1.0f / (int) (3 * Minecraft::width / 854);
 }
 
 Gui::~Gui()
 {
-	if (_slotFont)
-		delete _slotFont;
+	if (_slotFont) delete _slotFont;
+}
 
-	glDeleteBuffers(1, &_inventoryRc.vboId);
+#if defined(PROFILER) && defined(__VITA__)
+#define DEBUG_OVERLAY
+#endif
+
+const int debugButtonCount = 10;
+const int debugButtonWidth = 20;
+const int debugTotalWidth = debugButtonCount * debugButtonWidth;
+
+void debugButtonsX(int& xBase, int& yBase, const int screenWidth) {
+	xBase = screenWidth / 2 - debugTotalWidth / 2;
+	yBase = 20 * Gui::InvGuiScale;
+}
+
+int debugButtonIndex(Minecraft* minecraft, int x, int y) {
+	int screenWidth = (int)(minecraft->width * Gui::InvGuiScale);
+	int screenHeight = (int)(minecraft->height * Gui::InvGuiScale);
+
+	int xBase, yBase;
+	debugButtonsX(xBase, yBase, screenWidth);
+	if (y < yBase || y > yBase + (22 * Gui::InvGuiScale)) {
+		return -1;
+	}
+	int xRel = x - xBase;
+	if (xRel < 0 || xRel > (debugTotalWidth * Gui::InvGuiScale)) {
+		return -1;
+	}
+	return xRel / (debugButtonWidth * Gui::InvGuiScale);
+}
+
+void Gui::renderDebugButtons(Font* font, const int screenWidth) {
+	int xBase;
+	int yBase;
+	debugButtonsX(xBase, yBase, screenWidth);
+
+	Tesselator& t = Tesselator::instance;
+	t.beginOverride();
+	t.color(0.5f, 0.5f, 0.5f, 0.5f);
+	t.vertex(xBase, yBase, 0);
+	t.vertex(xBase + debugTotalWidth, yBase, 0);
+	t.vertex(xBase + debugTotalWidth, yBase + 22, 0);
+	t.vertex(xBase, yBase + 22, 0);
+	t.endOverrideAndDraw();
+
+	minecraft->textures->loadAndBindTexture("font/default8.png");
+	t.beginOverride();
+	float x = xBase;
+	for (int i = 0; i < debugButtonCount; i++) {
+		font->drawShadow(std::to_string(i), x, yBase + 6, 0xffffffff);
+		x += debugButtonWidth;
+	}
+	t.endOverrideAndDraw();
+}
+
+void Gui::handleDebugButton(int button) {
+	LOGI("button: %d\n", button);
+	PerfRenderer* perf = minecraft->perfRenderer();
+	perf->debugFpsMeterKeyPress(button);
 }
 
 void Gui::render(float a, bool mouseFree, int xMouse, int yMouse) {
@@ -101,7 +155,9 @@ void Gui::render(float a, bool mouseFree, int xMouse, int yMouse) {
 	}
 
 	renderToolBar(a, ySlot, screenWidth);
-
+#ifdef DEBUG_OVERLAY
+	renderDebugButtons(font, screenWidth);
+#endif
 
 	//font->drawShadow(APP_NAME, 2, 2, 0xffffffff);
 	//font->drawShadow("This is a demo, not the finished product", 2, 10 + 2, 0xffffffff);
@@ -145,7 +201,11 @@ int Gui::getSlotIdAt(int x, int y) {
 }
 
 bool Gui::isInside(int x, int y) {
-	return getSlotIdAt(x, y) != -1;
+	if(getSlotIdAt(x, y) != -1) return true;
+#ifdef DEBUG_OVERLAY
+	if(debugButtonIndex(minecraft, x, y) != -1) return true;
+#endif
+	return false;
 }
 
 int Gui::getNumSlots() {
@@ -194,6 +254,14 @@ void Gui::handleClick(int button, int x, int y) {
 			itemNameOverlayTime = 0;
 		}
 	}
+
+#ifdef DEBUG_OVERLAY
+	int debugButton = debugButtonIndex(minecraft, x, y);
+	LOGI("debugButtonIndex(%d, %d) = %d\n", x, y, debugButton);
+	if (debugButton != -1) {
+		handleDebugButton(debugButton);
+	}
+#endif
 }
 
 void Gui::handleKeyPressed(int key)
@@ -376,7 +444,7 @@ void Gui::onConfigChanged( const Config& c ) {
 		t.vertexUV(x10, y10, 0, 1, 0);
 		t.vertexUV(x00, y00, 0, 0, 0);
 	}
-	rcFeedbackOuter = t.end(true, rcFeedbackOuter.vboId);
+	t.end(rcFeedbackOuter);
 
 	//
 	// Create the inner feedback ring
@@ -390,7 +458,7 @@ void Gui::onConfigChanged( const Config& c ) {
 		t.vertex(xx, yy, 0);
 		//LOGI("x,y: %f, %f\n", xx, yy);
 	}
-	rcFeedbackInner = t.end(true, rcFeedbackInner.vboId);
+	t.end(rcFeedbackInner);
 
 	if (c.minecraft->useTouchscreen()) {
 		// I'll bump this up to 6.
@@ -529,7 +597,7 @@ void Gui::renderProgressIndicator( const bool isTouchInterface, const int screen
 			const float x = InvGuiScale * minecraft->inputHolder->mousex;
 			const float y = InvGuiScale * minecraft->inputHolder->mousey;
 			glTranslatef2(x, y, 0);
-			drawArrayVT(rcFeedbackOuter.vboId, rcFeedbackOuter.vertexCount, 24);
+			drawArrayVT(rcFeedbackOuter);
 			glTranslatef2(-x, -y, 0);
 
 			glEnable2(GL_TEXTURE_2D);
@@ -550,12 +618,12 @@ void Gui::renderProgressIndicator( const bool isTouchInterface, const int screen
 			const float y = InvGuiScale * minecraft->inputHolder->mousey;
 			glPushMatrix2();
 			glTranslatef2(x, y, 0);
-			drawArrayVT(rcFeedbackOuter.vboId, rcFeedbackOuter.vertexCount, 24);
+			drawArrayVT(rcFeedbackOuter);
 			glScalef2(0.5f + progress, 0.5f + progress, 1);
 			//glDisable2(GL_CULL_FACE);
 			glColor4f2(1, 1, 1, 1);
 			glBlendFunc2(GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR);
-			drawArrayVT(rcFeedbackInner.vboId, rcFeedbackInner.vertexCount, 24, GL_TRIANGLE_FAN);
+			drawArrayVT(rcFeedbackInner, GL_TRIANGLE_FAN);
 			glPopMatrix2();
 
 			glDisable(GL_BLEND);

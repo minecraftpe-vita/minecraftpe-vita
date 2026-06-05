@@ -29,7 +29,7 @@ target_sources(mcpe_client PRIVATE
   ${HANDHELD}/platform/audio/SoundSystemVita.cpp
 )
 
-target_include_directories(mcpe PUBLIC
+target_include_directories(mcpe INTERFACE
   ${CMAKE_CURRENT_LIST_DIR}/include
 )
 

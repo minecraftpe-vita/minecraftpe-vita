@@ -12,7 +12,7 @@
 const TextureId Textures::InvalidId;
 #endif
 
-#define glCheck(f) do { int err = glGetError(); if(err != 0) { printf("GL Error: " #f ": %d\n", err); fflush(0); exit(1); } } while(0)
+#define glCheck(f) do { int err = glGetError(); if(err != 0) { printf("GL Error: " #f ": 0x%x\n", err); fflush(0); exit(1); } } while(0)
 
 Textures::Textures( Options* options_, AppPlatform* platform_ )
 :	clamp(false),
@@ -123,20 +123,23 @@ TextureId Textures::assignTexture( const std::string& resourceName, const Textur
         }
 
         default:
-            const GLint mode = img.transparent? GL_RGBA : GL_RGB;
-
-            if (img.format == TEXF_UNCOMPRESSED_565) {
-                glTexImage2D2(GL_TEXTURE_2D, 0, mode, img.width, img.height, 0, mode, GL_UNSIGNED_SHORT_5_6_5, img.data);
-            }
-            else if (img.format == TEXF_UNCOMPRESSED_4444) {
-                glTexImage2D2(GL_TEXTURE_2D, 0, mode, img.width, img.height, 0, mode, GL_UNSIGNED_SHORT_4_4_4_4, img.data);
-            }
-            else if (img.format == TEXF_UNCOMPRESSED_5551) {
-                glTexImage2D2(GL_TEXTURE_2D, 0, mode, img.width, img.height, 0, mode, GL_UNSIGNED_SHORT_5_5_5_1, img.data);
-            }
-            else {
-                glTexImage2D2(GL_TEXTURE_2D, 0, mode, img.width, img.height, 0, mode, GL_UNSIGNED_BYTE, img.data);
-            }
+			GLenum glType;
+			switch(img.format) {
+			case TEXF_UNCOMPRESSED_565:
+				glType = GL_UNSIGNED_SHORT_5_6_5;
+				break;
+			case TEXF_UNCOMPRESSED_4444:
+				glType = GL_UNSIGNED_SHORT_4_4_4_4;
+				break;
+			case TEXF_UNCOMPRESSED_5551:
+				glType = GL_UNSIGNED_SHORT_5_5_5_1;
+				break;
+			default:
+				glType = GL_UNSIGNED_BYTE;
+				break;
+			}
+			GLenum mode = img.transparent ? GL_RGBA : GL_RGB;
+            glTexImage2D2(GL_TEXTURE_2D, 0, mode, img.width, img.height, 0, mode, glType, img.data);
 			glCheck(glTexImage2D2);
             break;
     }

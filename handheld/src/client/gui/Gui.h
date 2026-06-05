@@ -39,11 +39,13 @@ public:
 
 	void handleClick(int button, int x, int y);
 	void handleKeyPressed( int key );
+	void handleDebugButton(int button);
 
 	void tick();
 	void render(float a, bool mouseFree, int xMouse, int yMouse);
 
 	void renderToolBar( float a, int ySlot, const int screenWidth );
+	void renderDebugButtons( Font* font, const int screenWidth );
 
 	void renderChatMessages( const int screenHeight, unsigned int max, bool isChatting, Font* font );
 

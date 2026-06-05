@@ -189,7 +189,14 @@ target_compile_definitions(raknet PRIVATE
   _RAKNET_SUPPORT_TwoWayAuthentication=0
 )
 
-add_library(mcpe STATIC
+if(EXISTS ${HANDHELD}/../vendor/meshoptimizer/CMakeLists.txt)
+  add_subdirectory(${HANDHELD}/../vendor/meshoptimizer meshoptimizer EXCLUDE_FROM_ALL)
+  set(WITH_MESHOPT ON)
+else()
+  message(NOTICE "meshoptimizer disabled")
+endif()
+
+set(common_srcs
   ${HANDHELD}/NinecraftApp.cpp
   ${HANDHELD}/network/ClientSideNetworkHandler.cpp
   ${HANDHELD}/network/Packet.cpp
@@ -446,7 +453,10 @@ add_executable(mcpe_client
   ${HANDHELD}/client/gui/screens/JoinGameScreen.cpp
   ${HANDHELD}/client/gui/screens/PauseScreen.cpp
   ${HANDHELD}/client/gui/screens/EnterIpAddressScreen.cpp
+  ${common_srcs}
 )
+
+add_library(mcpe INTERFACE)
 
 target_link_libraries(mcpe_client PUBLIC
   mcpe
@@ -455,9 +465,24 @@ target_link_libraries(mcpe_client PUBLIC
   z
 )
 
+set(WITH_MESHOPT OFF) # seems to make lag spikes and not render faster, it does reduce vertex count by about 50% though
+if(WITH_MESHOPT)
+  target_compile_definitions(mcpe_client PUBLIC
+    WITH_MESHOPT
+  )
+  target_link_libraries(mcpe_client PUBLIC
+    meshoptimizer
+  )
+endif()
+
 if(BUILD_SERVER)
   add_executable(mcpe_server
     ${HANDHELD}/main_dedicated.cpp
+    ${common_srcs}
+  )
+
+  target_compile_definitions(mcpe_server PRIVATE
+    STANDALONE_SERVER
   )
 
   target_link_libraries(mcpe_server PUBLIC

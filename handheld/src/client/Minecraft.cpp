@@ -159,6 +159,7 @@ Minecraft::Minecraft()
 #ifndef STANDALONE_SERVER
 	gui(this),
 #endif
+	mouseHandler(this, nullptr),
 	netCallback(NULL),
 #ifndef STANDALONE_SERVER
 	screen(NULL),
@@ -494,6 +495,7 @@ void Minecraft::update() {
 #ifndef STANDALONE_SERVER
 	checkGlError("Update finished");
 
+#ifdef PROFILER
 	if (options.renderDebug) {
 		if (!PerfTimer::enabled) {
 			PerfTimer::reset();
@@ -509,6 +511,7 @@ void Minecraft::update() {
 	}
 
 	PerfTimer::checkLeak();
+#endif
 
 #endif
 	//LOGI("Exit Update\n");
@@ -661,14 +664,13 @@ void Minecraft::tickInput() {
 		// But since it might be rewritten anyway (and hopefully there aren't a lot of messages, we just continue.
 
 		const MouseAction& e = Mouse::getEvent();
-
-#ifdef RPI // If clicked when not having focus, get focus @keyboard
+		
+		// If clicked when not having focus, get focus @keyboard
 		if (!mouseGrabbed) {
 			if (!screen && e.data == MouseAction::DATA_DOWN) {
 				grabMouse();
 			}
 		}
-#endif
 
 		if (allowGuiClicks && e.action == MouseAction::ACTION_LEFT && e.data == MouseAction::DATA_DOWN) {
 			gui.handleClick(MouseAction::ACTION_LEFT, Mouse::getX(), Mouse::getY());
@@ -970,7 +972,7 @@ void Minecraft::tickInput() {
 	handleMouseDown(MouseAction::ACTION_LEFT, isTryingToDestroyBlock);
 	handleMouseClick(buildHandled && bai.isInteract()
 		|| options.useMouseForDigging && Mouse::isButtonDown(MouseAction::ACTION_RIGHT));
-#elif __VITA__
+#elif defined(__VITA__)
 	// can someone explain why ??!!! is interact is dig??
 	handleMouseDown(MouseAction::ACTION_LEFT, isTryingToDestroyBlock && buildHandled);
 #else

@@ -1,6 +1,8 @@
 #include "gles.h"
 #include <cmath>
 #include <cstdio>
+#include "RenderChunk.h"
+#include "Tesselator.h"
 
 static const float __glPi = 3.14159265358979323846f;
 
@@ -52,14 +54,18 @@ void anGenBuffers(GLsizei n, GLuint* buffers) {
 }
 
 #ifdef USE_VBO
-void drawArrayVT(int bufferId, int vertices, int vertexSize /* = 24 */, unsigned int mode /* = GL_TRIANGLES */) {
+void drawArrayVT(const RenderChunk& rc, unsigned int mode /* = GL_TRIANGLES */) {
 	//if (Options::debugGl) LOGI("drawArray\n");
-	glBindBuffer2(GL_ARRAY_BUFFER, bufferId);
-	glTexCoordPointer2(2, GL_FLOAT, vertexSize, (GLvoid*) (3 * 4));
+	glBindBuffer2(GL_ARRAY_BUFFER, rc.vboId);
 	glEnableClientState2(GL_TEXTURE_COORD_ARRAY);
-	glVertexPointer2(3, GL_FLOAT, vertexSize, 0);
 	glEnableClientState2(GL_VERTEX_ARRAY);
-	glDrawArrays2(mode, 0, vertices);
+	glVertexPointer2(3,   GL_FLOAT, sizeof(VERTEX), 0);
+	glTexCoordPointer2(2, GL_FLOAT, sizeof(VERTEX), (GLvoid*) (3 * 4));
+	if(rc.indices.size() == 0) {
+		glDrawArrays2(mode, 0, rc.vertexCount);
+	} else {
+		glDrawElements(mode, rc.indices.size(), GL_UNSIGNED_SHORT, rc.indices.data());
+	}
 	glDisableClientState2(GL_VERTEX_ARRAY);
 	glDisableClientState2(GL_TEXTURE_COORD_ARRAY);
 }
@@ -78,6 +84,7 @@ void drawArrayVT_NoState(int bufferId, int vertices, int vertexSize /* = 24 */) 
 }
 #endif
 
+#if 0
 void drawArrayVTC(int bufferId, int vertices, int vertexSize /* = 24 */) {
 	//if (Options::debugGl) LOGI("drawArray\n");
 	//LOGI("draw-vtc: %d, %d, %d\n", bufferId, vertices, vertexSize);
@@ -97,6 +104,7 @@ void drawArrayVTC(int bufferId, int vertices, int vertexSize /* = 24 */) {
 	glDisableClientState2(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState2(GL_COLOR_ARRAY); 
 }
+#endif
 
 #ifndef drawArrayVTC_NoState
 void drawArrayVTC_NoState(int bufferId, int vertices, int vertexSize /* = 24 */) {

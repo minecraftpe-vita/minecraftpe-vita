@@ -1,16 +1,19 @@
 #include "MouseHandler.h"
 #include "player/input/ITurnInput.h"
+#include "Minecraft.h"
 
 #ifdef RPI
 #include <SDL/SDL.h>
 #endif
 
-MouseHandler::MouseHandler( ITurnInput* turnInput )
-:	_turnInput(turnInput)
+MouseHandler::MouseHandler( Minecraft* minecraft, ITurnInput* turnInput )
+:	_turnInput(turnInput),
+	minecraft(minecraft)
 {}
 
 MouseHandler::MouseHandler()
-:	_turnInput(0)
+:	_turnInput(0),
+	minecraft(nullptr)
 {}
 
 MouseHandler::~MouseHandler() {
@@ -29,6 +32,8 @@ void MouseHandler::grab() {
 	SDL_WM_GrabInput(SDL_GRAB_ON);
 	SDL_ShowCursor(0);
 #endif
+
+	minecraft->platform()->mouseGrab(true);
 }
 
 void MouseHandler::release() {
@@ -37,6 +42,8 @@ void MouseHandler::release() {
 	SDL_WM_GrabInput(SDL_GRAB_OFF);
 	SDL_ShowCursor(1);
 #endif
+
+	minecraft->platform()->mouseGrab(false);
 }
 
 void MouseHandler::poll() {

@@ -48,13 +48,15 @@
 void anGenBuffers(GLsizei n, GLuint* buffer);
 
 #ifdef USE_VBO
+class RenderChunk;
+
 #define drawArrayVT_NoState drawArrayVT
 #define drawArrayVTC_NoState drawArrayVTC
-void drawArrayVT(int bufferId, int vertices, int vertexSize = 24, unsigned int mode = GL_TRIANGLES);
+void drawArrayVT(const RenderChunk& rc, unsigned int mode = GL_TRIANGLES);
 #ifndef drawArrayVT_NoState
 //void drawArrayVT_NoState(int bufferId, int vertices, int vertexSize = 24);
 #endif
-void drawArrayVTC(int bufferId, int vertices, int vertexSize = 24);
+void drawArrayVTC(const RenderChunk& rc);
 #ifndef drawArrayVTC_NoState
 void drawArrayVTC_NoState(int bufferId, int vertices, int vertexSize = 24);
 #endif

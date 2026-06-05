@@ -42,7 +42,7 @@ void PolygonQuad::mirror() {
 	}
 }
 
-void PolygonQuad::render(Tesselator& t, float scale, int vboId /* = -1 */) {
+void PolygonQuad::render(Tesselator& t, float scale) {
 	for (int i = 0; i < 4; i++) {
 		VertexPT& v = vertices[i];
 		t.vertexUV(v.pos.x * scale, v.pos.y * scale, v.pos.z * scale, v.u, v.v);

@@ -35,8 +35,7 @@ bool TileRenderer::tesselateBlockInWorld(Tile* tt, int x, int y, int z) {
 
 	if (Minecraft::useAmbientOcclusion) {
 		return tesselateBlockInWorldWithAmbienceOcclusion(tt, x, y, z, r, g, b);
-	} else
-	{
+	} else {
 		return tesselateBlockInWorld(tt, x, y, z, r, g, b);
 	}
 }

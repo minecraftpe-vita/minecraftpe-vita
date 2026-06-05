@@ -44,9 +44,6 @@ void ModelPart::_init() {
 	compiled = false;
 	xTexSize = 64;
 	yTexSize = 32;
-
-	vboId = 0;
-	glGenBuffers2(1, &vboId);
 }
 
 void ModelPart::setModel(Model* model) {
@@ -181,7 +178,7 @@ void ModelPart::translateTo( float scale )
 
 void ModelPart::compile( float scale )
 {
-#ifndef OPENGL_ES
+#ifndef USE_VBO
 	list = glGenLists(1);
 	// FIX NORMAL BUG HERE
 	glNewList(list, GL_COMPILE);
@@ -193,8 +190,8 @@ void ModelPart::compile( float scale )
 		for (unsigned int i = 0; i < cubes.size(); ++i)
 			cubes[i]->compile(t, scale);
 	}
-	t.end(true, vboId);
-#ifndef OPENGL_ES
+	t.end(this->rc);
+#ifndef USE_VBO
 	glEndList();
 #endif
 	compiled = true;
@@ -202,8 +199,8 @@ void ModelPart::compile( float scale )
 
 void ModelPart::draw()
 {
-#ifdef OPENGL_ES
-	drawArrayVT_NoState(vboId, cubes.size() * 2 * 3 * 6, 24);
+#ifdef USE_VBO
+	drawArrayVT_NoState(rc);
 #else
 	glCallList(list);
 #endif
@@ -266,7 +263,7 @@ void ModelPart::drawSlow( float scale )
 	for (int j = 0; j < (int)cubes.size(); ++j) {
 		Cube* c = cubes[j];
 		for (int i = 0; i < 6; i++) {
-			c->polygons[i].render(t, scale, vboId);
+			c->polygons[i].render(t, scale);
 		}
 	}
 	t.draw();

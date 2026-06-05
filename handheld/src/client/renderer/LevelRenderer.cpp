@@ -64,12 +64,8 @@ LevelRenderer::LevelRenderer( Minecraft* mc)
 #ifdef USE_VBO
 	int maxChunksWidth = 2 * LEVEL_WIDTH / CHUNK_SIZE + 1;
 	numListsOrBuffers = maxChunksWidth * maxChunksWidth * (128/CHUNK_SIZE) * 3;
-	chunkBuffers = new GLuint[numListsOrBuffers];
-	glGenBuffers2(numListsOrBuffers, chunkBuffers);
-	LOGI("numBuffers: %d\n", numListsOrBuffers);
 	//for (int i = 0; i < numListsOrBuffers; ++i) printf("bufId %d: %d\t", i, chunkBuffers[i]);
 
-	glGenBuffers2(1, &skyBuffer);
 	generateSky();
 #else
 	int maxChunksWidth = 1024 / CHUNK_SIZE;
@@ -85,24 +81,17 @@ LevelRenderer::~LevelRenderer()
 
 	deleteChunks();
 
-#ifdef OPENGL_ES
-	glDeleteBuffers(numListsOrBuffers, chunkBuffers);
-	glDeleteBuffers(1, &skyBuffer);
-	delete[] chunkBuffers;
-#else
+#ifndef USE_VBO
 	glDeleteLists(numListsOrBuffers, chunkLists);
 #endif
 }
 
 void LevelRenderer::generateSky() {
 	Tesselator& t = Tesselator::instance;
-	float yy;
 	int s = 128;
 	int d = (256 / s) + 2;
-	yy = (float) (16);
+	float yy = 16.0f;
 	t.begin();
-
-	skyVertexCount = 0;
 	for (int xx = -s * d; xx <= s * d; xx += s) {
 		for (int zz = -s * d; zz <= s * d; zz += s) {
 			t.vertex((float) xx + 0,  yy, (float) zz + 0);
@@ -110,11 +99,9 @@ void LevelRenderer::generateSky() {
 			t.vertex((float)(xx + s), yy, (float)(zz + s));
 			t.vertex((float) xx + 0,  yy, (float)(zz + s));
 			//LOGI("x, z: %d, %d\n", xx, zz);
-			skyVertexCount += 4;
 		}
 	}
-
-	t.end(true, skyBuffer);
+	t.end(this->skyBuffer);
 	//LOGI("skyvertexcount: %d\n", skyVertexCount);
 	//glEndList();
 }
@@ -188,7 +175,7 @@ void LevelRenderer::allChanged()
 		for (int y = 0; y < yChunks; y++) {
 			for (int z = 0; z < zChunks; z++) {
 				const int c = getLinearCoord(x, y, z);
-				Chunk* chunk = new Chunk(level, x * CHUNK_SIZE, y * CHUNK_SIZE, z * CHUNK_SIZE, CHUNK_SIZE, chunkLists + id, &chunkBuffers[id]);
+				Chunk* chunk = new Chunk(level, x * CHUNK_SIZE, y * CHUNK_SIZE, z * CHUNK_SIZE, CHUNK_SIZE, chunkLists + id);
 
 				if (occlusionCheck) {
 					chunk->occlusion_id = 0;//occlusionCheckIds.get(count);
@@ -565,7 +552,7 @@ int LevelRenderer::renderChunks( int from, int to, int layer, float alpha )
 	for (unsigned int i = 0; i < _renderChunks.size(); ++i) {
 		Chunk* chunk = _renderChunks[i];
 		#ifdef USE_VBO
-			renderList.addR(chunk->getRenderChunk(layer));
+			renderList.addR(chunk->getRenderChunk(layer), Vec3(chunk->x, chunk->y, chunk->z));
 		#else
 			renderList.add(chunk->getList(layer));
 		#endif
@@ -998,8 +985,8 @@ void LevelRenderer::renderSky(float alpha) {
     glEnable2(GL_FOG);
     glColor4f2(sr, sg, sb, 1.0f);
 
-#ifdef OPENGL_ES
-	drawArrayVT(skyBuffer, skyVertexCount);
+#ifdef USE_VBO
+	drawArrayVT(skyBuffer);
 #endif
     glEnable2(GL_TEXTURE_2D);
 }
@@ -1219,9 +1206,7 @@ void LevelRenderer::onGraphicsReset()
 	generateSky();
 
 	// Get new buffers
-#ifdef OPENGL_ES
-	glGenBuffers2(numListsOrBuffers, chunkBuffers);
-#else
+#ifndef USE_VBO
 	chunkLists = glGenLists(numListsOrBuffers);
 #endif
 

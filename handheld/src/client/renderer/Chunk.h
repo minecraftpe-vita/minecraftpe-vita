@@ -16,7 +16,7 @@ class Chunk
 {
     static const int NumLayers = 3;
 public:
-    Chunk(Level* level_, int x, int y, int z, int size, int lists_, GLuint* ptrBuf = NULL);
+    Chunk(Level* level_, int x, int y, int z, int size, int lists_);
 
     void setPos(int x, int y, int z);
 
@@ -65,7 +65,6 @@ public:
 private:
 	Tesselator& t;
 	int lists;
-	GLuint* vboBuffers;
 	bool compiled;
 	bool dirty;
     bool _empty;

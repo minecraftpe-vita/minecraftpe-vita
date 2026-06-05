@@ -4,6 +4,7 @@
 //package net.minecraft.client.renderer;
 
 class RenderChunk;
+class Vec3;
 
 class RenderList
 {
@@ -16,7 +17,7 @@ public:
     void init(float xOff, float yOff, float zOff);
 
 	void add(int list);
-	void addR(const RenderChunk& chunk);
+	void addR(const RenderChunk& chunk, const Vec3& pos);
 
 	__inline void next() { ++listIndex; }
 
@@ -29,6 +30,8 @@ public:
 	float xOff, yOff, zOff;
 	int* lists;
 	RenderChunk* rlists;
+	Vec3* rpos;
+
 
 	int listIndex;
 	bool inited;

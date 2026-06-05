@@ -10,15 +10,10 @@ class RenderChunk
 {
 public:
 	RenderChunk();
-	RenderChunk(GLuint vboId_, int vertexCount_);
 
 	GLuint vboId;
 	GLsizei vertexCount;
-	int id;
-	Vec3 pos;
-
-private:
-	static int runningId;
+	std::vector<uint16_t> indices;
 };
 
 #endif /*NET_MINECRAFT_CLIENT_RENDERER__RenderChunk_H__*/

@@ -8,8 +8,6 @@
 #include "gles.h"
 #include "VertecDecl.h"
 
-extern const int VertexSizeBytes;
-
 typedef VertexDeclPTC VERTEX;
 typedef std::map<GLuint, GLsizei> IntGLMap;
 
@@ -35,7 +33,7 @@ public:
     void begin();
     void begin(int mode);
 	void draw();
-	RenderChunk end(bool useMine, int bufferId);
+	void end(RenderChunk& rc);
 
 	void color(int c);
 	void color(int c, int alpha);
@@ -83,9 +81,9 @@ public:
 	__inline bool isOverridden() {
 		return _voidBeginEnd;
 	}
-	__inline RenderChunk endOverride(int bufferId) {
+	__inline void endOverride(RenderChunk& rc) {
 		voidBeginAndEndCalls(false);
-		return end(true, bufferId);
+		end(rc);
 	}
 
 private:

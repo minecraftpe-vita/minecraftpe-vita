@@ -46,7 +46,7 @@ public:
 	:	size(v.size()),
 		count(0)
 	{
-		base = new ItemInstance[size > 1000000 ? 1000000 : size /* make gcc happy */];
+		base = new ItemInstance[(size_t)size > 1000000 ? 1000000 : (size_t)size /* make gcc happy */];
 		init(v);
 	}
 

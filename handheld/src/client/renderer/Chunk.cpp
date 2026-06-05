@@ -14,7 +14,7 @@
 //int* _layerChunks[3] = {0, 0, 0}; //Chunk::NumLayers];
 //int _layerChunkCount[3] = {0, 0, 0};
 
-Chunk::Chunk( Level* level_, int x, int y, int z, int size, int lists_, GLuint* ptrBuf/*= NULL*/)
+Chunk::Chunk( Level* level_, int x, int y, int z, int size, int lists_)
 :	level(level_),
 	visible(false),
 	compiled(false),
@@ -24,7 +24,6 @@ Chunk::Chunk( Level* level_, int x, int y, int z, int size, int lists_, GLuint* 
 	occlusion_visible(true),
 	occlusion_querying(false),
 	lists(lists_),
-	vboBuffers(ptrBuf),
 	bb(0,0,0,1,1,1),
 	t(Tesselator::instance)
 {
@@ -157,12 +156,9 @@ void Chunk::rebuild()
 		if (started) {
 
 #ifdef USE_VBO
-			renderChunk[l] = t.end(true, vboBuffers[l]);
-			renderChunk[l].pos.x = (float)this->x;
-			renderChunk[l].pos.y = (float)this->y;
-			renderChunk[l].pos.z = (float)this->z;
+			t.end(renderChunk[l]);
 #else
-			t.end(false, -1);
+			t.end(renderChunk[l]);
 			glPopMatrix2();
 			glEndList();
 #endif

@@ -32,6 +32,11 @@ public:
 		return height;
 	}
 
+	void mouseGrab(bool grab) override {
+		int mode = grab ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL;
+		glfwSetInputMode(_window, mode, GLFW_TRUE);
+	}
+
 	bool isPowerVR() override { return true; }
 
 	std::string defaultUsername() override {

@@ -1,0 +1,3 @@
+[submodule "handheld/vendor/meshoptimizer"]
+	path = handheld/vendor/meshoptimizer
+	url = https://github.com/zeux/meshoptimizer

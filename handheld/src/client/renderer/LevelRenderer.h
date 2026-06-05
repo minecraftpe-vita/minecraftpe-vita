@@ -6,6 +6,7 @@
 #include "../../world/level/LevelListener.h"
 #include "../../world/phys/Vec3.h"
 #include "RenderList.h"
+#include "RenderChunk.h"
 #include "gles.h"
 #include <vector>
 
@@ -114,9 +115,7 @@ private:
     int starList, skyList, darkList;
 
 	int numListsOrBuffers;
-	GLuint* chunkBuffers;
-	GLuint skyBuffer;
-	int skyVertexCount;
+	RenderChunk skyBuffer;
 
 //    /*public*/ std::vector<TileEntity*> renderableTileEntities;
     Textures* textures;

@@ -76,6 +76,7 @@ public:
 
 	virtual void showDialog(int dialogId) {}
     virtual void createUserInput() {}
+	virtual void mouseGrab(bool grab) {}
 	
 	bool is_big_endian(void)  {
 		union {

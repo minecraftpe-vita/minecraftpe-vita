@@ -4,11 +4,12 @@
 //package net.minecraft.client;
 
 class ITurnInput;
+class Minecraft;
 
 class MouseHandler
 {
 public:
-	MouseHandler(ITurnInput* turnInput);
+	MouseHandler(Minecraft* minecraft, ITurnInput* turnInput);
 	MouseHandler();
 	~MouseHandler();
 
@@ -23,6 +24,7 @@ public:
 private:
 	int toSkip;
 	ITurnInput* _turnInput;
+	Minecraft* minecraft;
 };
 
 #endif /*NET_MINECRAFT_CLIENT__MouseHandler_H__*/

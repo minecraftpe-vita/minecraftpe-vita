@@ -11,9 +11,7 @@ RenderList::RenderList()
 {
 	lists = new int[MAX_NUM_OBJECTS];
 	rlists = new RenderChunk[MAX_NUM_OBJECTS];
-
-	for (int i = 0; i < MAX_NUM_OBJECTS; ++i)
-		rlists[i].vboId = -1;
+	rpos = new Vec3[MAX_NUM_OBJECTS];
 }
 
 RenderList::~RenderList() {
@@ -35,8 +33,9 @@ void RenderList::add(int list) {
 	if (listIndex == MAX_NUM_OBJECTS) /*lists.remaining() == 0)*/ render();
 }
 
-void RenderList::addR(const RenderChunk& chunk) {
+void RenderList::addR(const RenderChunk& chunk, const Vec3& pos) {
 	rlists[listIndex] = chunk;
+	rpos[listIndex] = pos;
 }
 
 void RenderList::render() {
@@ -66,20 +65,23 @@ void RenderList::renderChunks() {
 	glEnableClientState2(GL_COLOR_ARRAY);
 	glEnableClientState2(GL_TEXTURE_COORD_ARRAY);
 
-	const int Stride = VertexSizeBytes;
-
 	for (int i = 0; i < bufferLimit; ++i) {
 		RenderChunk& rc = rlists[i];
+		Vec3& pos = rpos[i];
 
 		glPushMatrix2();
-		glTranslatef2(rc.pos.x, rc.pos.y, rc.pos.z);
+		glTranslatef2(pos.x, pos.y, pos.z);
 		glBindBuffer2(GL_ARRAY_BUFFER, rc.vboId);
 
-		glVertexPointer2	(3, GL_FLOAT, Stride,  0);
-		glTexCoordPointer2	(2, GL_FLOAT, Stride, (GLvoid*) (3 * 4));
-		glColorPointer2		(4, GL_UNSIGNED_BYTE, Stride, (GLvoid*) (5 * 4));
+		glVertexPointer2	(3, GL_FLOAT, sizeof(VERTEX),  0);
+		glTexCoordPointer2	(2, GL_FLOAT, sizeof(VERTEX), (GLvoid*) (3 * 4));
+		glColorPointer2		(4, GL_UNSIGNED_BYTE, sizeof(VERTEX), (GLvoid*) (5 * 4));
 
-		glDrawArrays2(GL_TRIANGLES, 0, rc.vertexCount);
+		if(rc.indices.size() == 0) {
+			glDrawArrays2(GL_TRIANGLES, 0, rc.vertexCount);
+		} else {
+			glDrawElements(GL_TRIANGLES, rc.indices.size(), GL_UNSIGNED_SHORT, rc.indices.data());
+		}
 
 		glPopMatrix2();
 	}

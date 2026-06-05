@@ -34,12 +34,8 @@ ItemInHandRenderer::ItemInHandRenderer( Minecraft* mc )
 	//selectedItem(NULL),
 	item(0, 1, 0)
 {
-	GLuint ids[MaxNumRenderObjects];
-	glGenBuffers2(MaxNumRenderObjects, ids);
-
 	for (int i = 0; i < MaxNumRenderObjects; ++i) {
 		renderObjects[i].itemId = -1;
-		renderObjects[i].chunk.vboId = ids[i];
 		//LOGI("IDS: %d\n", ids[i]);
 	}
 
@@ -111,7 +107,7 @@ void ItemInHandRenderer::renderItem(Mob* mob,  ItemInstance* item )
 			if (renderedItemId == Tile::grass->id)
 				renderedItemId = Tile::grass_carried->id;
 			tileRenderer.renderTile(Tile::tiles[renderedItemId], item->getAuxValue());
-			renderObject.chunk = t.endOverride(renderObject.chunk.vboId);
+			t.endOverride(renderObject.chunk);
 
 			renderObject.texture = "terrain.png";
 			renderObject.itemId = itemId;
@@ -199,7 +195,7 @@ void ItemInHandRenderer::renderItem(Mob* mob,  ItemInstance* item )
 				t.vertexUV(0, yy, 0 - dd, u0, vv);
 				t.vertexUV(r, yy, 0 - dd, u1, vv);
 			}
-			renderObject.chunk = t.endOverride(renderObject.chunk.vboId);
+			t.endOverride(renderObject.chunk);
 		}
 	}
 
@@ -219,7 +215,7 @@ void ItemInHandRenderer::renderItem(Mob* mob,  ItemInstance* item )
 		}
 		mc->textures->loadAndBindTexture(renderObject.texture);
 
-		drawArrayVT_NoState(renderObject.chunk.vboId, renderObject.chunk.vertexCount);
+		drawArrayVT_NoState(renderObject.chunk);
 		if (renderObject.isFlat)
 			glPopMatrix2();
 	}
@@ -523,11 +519,7 @@ void ItemInHandRenderer::renderFire( float a )
 
 void ItemInHandRenderer::onGraphicsReset()
 {
-	GLuint ids[MaxNumRenderObjects];
-	glGenBuffers2(MaxNumRenderObjects, ids);
-
 	for (int i = 0; i < MaxNumRenderObjects; ++i) {
 		renderObjects[i].itemId = -1;
-		renderObjects[i].chunk.vboId = ids[i];
 	}
 }

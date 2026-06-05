@@ -127,6 +127,10 @@ public:
     bool isSuperFast() { return _isSuperFast; }
 #endif
 
+	inline PerfRenderer* perfRenderer() {
+		return _perfRenderer;
+	}
+
 #if defined(__EPOC32__) && !defined(NO_NETWORK)
 public:
 	bool needsClaimNetIf();
