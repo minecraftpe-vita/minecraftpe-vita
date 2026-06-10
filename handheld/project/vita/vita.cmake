@@ -13,7 +13,7 @@ set(VITA_ICON0 ${CMAKE_CURRENT_LIST_DIR}/sce_sys/icon0.png)
 set(VITA_PIC0 ${CMAKE_CURRENT_LIST_DIR}/sce_sys/pic0.png)
 set(VITA_BG ${CMAKE_CURRENT_LIST_DIR}/sce_sys/livearea/contents/bg.png)
 set(VITA_GATE ${CMAKE_CURRENT_LIST_DIR}/sce_sys/livearea/contents/gate.png)
-set(VITA_VPK minecraftcpp.vpk)
+set(VITA_VPK minecraftpe.vpk)
 
 if(DEMO)
   set(VITA_APP_NAME "Minecraft PE Demo")
@@ -22,7 +22,7 @@ if(DEMO)
   set(VITA_ICON0 ${CMAKE_CURRENT_LIST_DIR}/sce_sys/icon0_demo.png)
   set(VITA_BG ${CMAKE_CURRENT_LIST_DIR}/sce_sys/livearea/contents/bg_demo.png)
   set(VITA_GATE ${CMAKE_CURRENT_LIST_DIR}/sce_sys/livearea/contents/gate_demo.png)
-  set(VITA_VPK minecraftcpp-demo.vpk)
+  set(VITA_VPK minecraftpe_demo.vpk)
 endif()
 
 target_sources(mcpe_client PRIVATE

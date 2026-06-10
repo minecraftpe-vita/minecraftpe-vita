@@ -63,16 +63,30 @@ static void Utf16ToUtf8(const uint16_t *src, uint8_t *dst)
 	*dst = '\0';
 }
 
-
-static void Utf8ToUtf16(const uint8_t *src, uint16_t* dst)
+static void Utf8ToUtf16(const uint8_t *src, size_t src_size, uint16_t *dst)
 {
-	int i;
-	for(i = 0; src[i] != 0; i++) {
-		dst[i] = src[i];
+	for (size_t i = 0; i < src_size && src[i];) {
+		if ((src[i] & 0xE0) == 0xE0) {
+			if (i + 2 >= src_size) {
+				break;
+			}
+			*(dst++) = ((src[i] & 0x0F) << 12) | ((src[i + 1] & 0x3F) << 6) | (src[i + 2] & 0x3F);
+			i += 3;
+		} else if ((src[i] & 0xC0) == 0xC0) {
+			if (i + 1 >= src_size) {
+				break;
+			}
+			*(dst++) = ((src[i] & 0x1F) << 6) | (src[i + 1] & 0x3F);
+			i += 2;
+		} else {
+			*(dst++) = src[i];
+			i += 1;
+		}
 	}
 
-	dst[++i] = 0;
+	*dst = '\0';
 }
+
 
 
 static SceWChar16 ime_out[SCE_IME_MAX_PREEDIT_LENGTH + SCE_IME_MAX_TEXT_LENGTH + 1] = {0};
@@ -179,16 +193,20 @@ public:
 			maxLength = SCE_IME_MAX_TEXT_LENGTH;
 
 		memset(ime_inital, 0x00, sizeof(ime_inital));
-		Utf8ToUtf16((const uint8_t*)defaultText.c_str(), ime_inital);
+		Utf8ToUtf16((const uint8_t*)defaultText.c_str(), defaultText.size(), ime_inital);
 
 		static SceUInt32 ime_workram[SCE_IME_WORK_BUFFER_SIZE / sizeof(SceInt32)] = {0};
 	
 		SceImeParam param;
 		sceImeParamInit(&param);
 
-		param.supportedLanguages = SCE_IME_LANGUAGE_ENGLISH_GB;
+		// fixed utf8 encode function so .. 
+		// add support for all languages; 
+	
+		param.supportedLanguages = (SCE_IME_LANGUAGE_DANISH | SCE_IME_LANGUAGE_GERMAN | SCE_IME_LANGUAGE_ENGLISH | SCE_IME_LANGUAGE_SPANISH | SCE_IME_LANGUAGE_FRENCH | SCE_IME_LANGUAGE_ITALIAN | SCE_IME_LANGUAGE_DUTCH | SCE_IME_LANGUAGE_NORWEGIAN | SCE_IME_LANGUAGE_POLISH | SCE_IME_LANGUAGE_PORTUGUESE | SCE_IME_LANGUAGE_RUSSIAN | SCE_IME_LANGUAGE_FINNISH | SCE_IME_LANGUAGE_SWEDISH | SCE_IME_LANGUAGE_JAPANESE | SCE_IME_LANGUAGE_KOREAN | SCE_IME_LANGUAGE_SIMPLIFIED_CHINESE | SCE_IME_LANGUAGE_TRADITIONAL_CHINESE | SCE_IME_LANGUAGE_PORTUGUESE_BR | SCE_IME_LANGUAGE_ENGLISH_GB | SCE_IME_LANGUAGE_TURKISH);
 		param.languagesForced = SCE_FALSE;
-		param.type = SCE_IME_TYPE_BASIC_LATIN;
+		
+		param.type = SCE_IME_TYPE_DEFAULT;
 		param.option = 0;
 
 		param.inputTextBuffer = ime_out;
