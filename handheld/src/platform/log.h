@@ -11,7 +11,7 @@
 #include <psp2/kernel/clib.h>
 #endif
 
-#define __LOG_PUBLISH(...) do { __VA_ARGS__; } while(0)
+#define __LOG_PUBLISH(...) /**/
 
 #ifdef ANDROID
 	#include <android/log.h>

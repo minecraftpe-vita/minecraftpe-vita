@@ -5,7 +5,6 @@
 
 #include "EGL/egl.h"
 #include "EGL/eglext.h"
-#include "np_mgr.h"
 
 #include <psp2/kernel/modulemgr.h>
 #include <psp2/sysmodule.h>
@@ -18,6 +17,8 @@
 #include <psp2/power.h>
 #include <psp2/net/netctl.h>
 #include <gpu_es4/psp2_pvr_hint.h>
+#include <psp2/np/mgr.h>
+
 
 #include "App.h"
 #include "AppPlatform_Vita.h"

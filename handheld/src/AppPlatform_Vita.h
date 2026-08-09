@@ -11,12 +11,12 @@
 #include <psp2/registrymgr.h>
 #include <psp2/kernel/processmgr.h>
 #include <psp2/rtc.h>
+#include <psp2/np/mgr.h>
 
 #include <cstdlib>
 
 #include "NinecraftApp.h"
 
-#include "np_mgr.h"
 
 static int64_t vbTimeStart = 0;
 static int64_t vbTimeElapsed = 0;
@@ -174,7 +174,7 @@ public:
 		SceNpCountryCode code = { 0 };
 		sceNpManagerGetAccountRegion(&code, &lang);
 
-		std::string region = std::string(code.data, sizeof(code.data));
+		std::string region = std::string((char*)code.data, sizeof(code.data));
 
 		if (region == "jp") {
 			sceAppMgrLaunchAppByUri(0x60000, "psts:browse?product=JP0127-PCSG00302_00-MINECRAFTVIT0000");
@@ -268,7 +268,7 @@ public:
 		int ret = sceNpManagerGetNpId(&npid);
 
 		if(ret >= 0) {
-			return std::string(npid.handle.data);
+			return std::string((char*)npid.onlineId.data, sizeof(npid.onlineId.data));
 		}
 		else {
 			LOGI("Failed to read npid: %x\n", ret);
