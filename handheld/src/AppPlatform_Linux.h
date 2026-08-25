@@ -66,7 +66,7 @@ public:
 		blob.size = file_stat.st_size;
 		blob.data = new unsigned char[blob.size];
 
-		size_t rd = fread(blob.data, blob.size, 1, file);
+		size_t rd = fread(blob.data, 1, blob.size, file);
 		if(rd != blob.size) {
 			LOGI("wrong size: %lx %s\n", rd, fullAssetPath.c_str());
 
