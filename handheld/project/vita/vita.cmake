@@ -2,11 +2,15 @@ include("${VITASDK}/share/vita.cmake" REQUIRED)
 
 add_compile_definitions(__VITA__)
 
-set(VITA_APP_NAME "Minecraft PE")
+set(VITA_APP_TITLE "Minecraft: Pocket Edition")
+set(VITA_APP_STITLE "Minecraft_PE")
 set(VITA_TITLEID  "MCPE00000")
 set(VITA_APP_CONTENT_ID "UP0000-MCPE00000_00-MINECRAFTPE00000")
-set(VITA_PARENTAL_LEVEL 3) # PEGI-7, ESRB E, CERO A, PG, etc
 set(VITA_VERSION  "00.61")
+
+set(VITA_PARENTAL_LEVEL 3) # PEGI-7, ESRB E, CERO A, PG, etc
+set(VITA_ATTRIBUTE2 12) # The Application uses the enlarged memory. (+109MiB)
+set(VITA_ATTRIBUTE_MINOR 6) # Enter button assignment | Bootable on VitaTV
 
 
 set(VITA_ICON0 ${CMAKE_CURRENT_LIST_DIR}/sce_sys/icon0.png)
@@ -16,7 +20,8 @@ set(VITA_GATE ${CMAKE_CURRENT_LIST_DIR}/sce_sys/livearea/contents/gate.png)
 set(VITA_VPK minecraftpe.vpk)
 
 if(DEMO)
-  set(VITA_APP_NAME "Minecraft PE Demo")
+  set(VITA_APP_TITLE "Minecraft: Pocket Edition Demo")
+  set(VITA_APP_STITLE "Minecraft_PE_Demo")
   set(VITA_TITLEID  "MCPEDEMO0")
   set(VITA_APP_CONTENT_ID "UP0000-MCPEDEMO0_00-MINECRAFTPE00000")
   set(VITA_ICON0 ${CMAKE_CURRENT_LIST_DIR}/sce_sys/icon0_demo.png)
@@ -83,11 +88,11 @@ add_assets(images/mob/*)
 add_assets(fonts/*)
 add_assets(lang/*)
 
-set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=${VITA_PARENTAL_LEVEL} -s CONTENT_ID=${VITA_APP_CONTENT_ID}")
+set(VITA_MKSFOEX_FLAGS ${VITA_MKSFOEX_FLAGS} -s STITLE=${VITA_APP_STITLE} -s CONTENT_ID=${VITA_APP_CONTENT_ID} -d PARENTAL_LEVEL=${VITA_PARENTAL_LEVEL} -d ATTRIBUTE_MINOR=${VITA_ATTRIBUTE_MINOR} -d ATTRIBUTE2=${VITA_ATTRIBUTE2})
 
 vita_create_vpk(${VITA_VPK} ${VITA_TITLEID} mcpe_client.self
   VERSION ${VITA_VERSION}
-  NAME ${VITA_APP_NAME}
+  NAME ${VITA_APP_TITLE}
   ${VPK_ARGS}
 
   FILE ${CMAKE_CURRENT_LIST_DIR}/module/libGLESv1_CM.suprx                     module/libGLESv1_CM.suprx
